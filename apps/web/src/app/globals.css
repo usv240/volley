@@ -1,0 +1,400 @@
+@import "tailwindcss";
+
+/*
+  Earshot's design tokens.
+
+  Two principles drive every value in here, and both come from who this
+  is for. The people it is written for skew older than the people who
+  usually get designed for, and they have arrived because something is
+  wrong with a sense. So the type is one size larger than a marketing
+  page would use, contrast sits above the AA threshold everywhere, and
+  nothing important is carried by colour alone.
+
+  The palette is warm paper rather than grey. A page about the body
+  should not look like a dashboard, and warmth reads as care in a way
+  that neutral grey does not. The accent is one blue, validated for
+  contrast against both surfaces; the greens that would have suited the
+  subject fail the lightness band a mark needs on a dark surface, so
+  they are not used.
+
+  Light is the default. Dark is an explicit choice, or the system
+  preference when no choice has been made, and every token is defined
+  once per mode so nothing has to be overridden in a component.
+*/
+
+:root {
+  --bg: #f7f4ee;
+  --surface: #fffdf9;
+  --raised: #efe9df;
+  --ink: #1c1a17;
+  --muted: #5f5a52;
+  --faint: #8a847a;
+  --line: #e2dbcf;
+  --line-strong: #cfc6b6;
+  --accent: #1f4fd8;
+  --accent-ink: #ffffff;
+  --accent-soft: #e8edfb;
+  --warn: #9a6b12;
+  --warn-bg: #fbf1dc;
+  --chart-mark: #1f4fd8;
+  --chart-track: #e6e0d4;
+  --shadow: 0 1px 2px rgba(28, 26, 23, 0.04), 0 8px 24px -12px rgba(28, 26, 23, 0.18);
+  --shadow-lift: 0 1px 2px rgba(28, 26, 23, 0.05), 0 20px 40px -16px rgba(28, 26, 23, 0.25);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12151b;
+    --surface: #191d25;
+    --raised: #222732;
+    --ink: #f3f1ec;
+    --muted: #aeb3bd;
+    --faint: #7c828d;
+    --line: #2a303b;
+    --line-strong: #3a414e;
+    --accent: #5b86e5;
+    --accent-ink: #0d1118;
+    --accent-soft: #1b2740;
+    --warn: #e0b45c;
+    --warn-bg: #2a220f;
+    --chart-mark: #5b86e5;
+    --chart-track: #2a303b;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+    --shadow-lift: 0 1px 2px rgba(0, 0, 0, 0.35), 0 20px 40px -16px rgba(0, 0, 0, 0.6);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #12151b;
+  --surface: #191d25;
+  --raised: #222732;
+  --ink: #f3f1ec;
+  --muted: #aeb3bd;
+  --faint: #7c828d;
+  --line: #2a303b;
+  --line-strong: #3a414e;
+  --accent: #5b86e5;
+  --accent-ink: #0d1118;
+  --accent-soft: #1b2740;
+  --warn: #e0b45c;
+  --warn-bg: #2a220f;
+  --chart-mark: #5b86e5;
+  --chart-track: #2a303b;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+  --shadow-lift: 0 1px 2px rgba(0, 0, 0, 0.35), 0 20px 40px -16px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, serif;
+}
+
+html {
+  background: var(--bg);
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Display type: a serif with real optical sizing, for the few lines that carry the argument. */
+.display {
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 144, "SOFT" 30;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+}
+
+.display-sm {
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 48, "SOFT" 20;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+/* Section eyebrow: small caps in the accent, so a section can be found at a glance. */
+.eyebrow {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* Cards share one surface treatment so the page reads as one system. */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow);
+}
+
+.card-lift {
+  box-shadow: var(--shadow-lift);
+}
+
+/*
+  Controls.
+
+  Large on purpose. The person this is for is, on the balance of who that
+  is, somebody for whom a small tap target is a nuisance, and the keypad is
+  the thing pressed twenty-four times in two minutes.
+*/
+button.primary,
+button.secondary,
+button.key,
+button.ghost {
+  border-radius: 0.85rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease,
+    transform 140ms ease,
+    box-shadow 140ms ease;
+}
+
+button.primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+  padding: 0.85rem 1.6rem;
+  font-size: 1.02rem;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08), 0 8px 20px -10px var(--accent);
+}
+
+button.primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08), 0 12px 24px -10px var(--accent);
+}
+
+button.secondary {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  padding: 0.85rem 1.35rem;
+  font-size: 1.02rem;
+}
+
+button.secondary:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+button.ghost {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid transparent;
+  padding: 0.5rem 0.8rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+button.ghost:hover:not(:disabled) {
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+button.key {
+  background: var(--raised);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  font-size: 1.75rem;
+  font-variant-numeric: tabular-nums;
+  padding: 1.1rem 0;
+  min-height: 4.5rem;
+}
+
+button.key:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+button.key:active:not(:disabled) {
+  background: var(--accent);
+  color: var(--accent-ink);
+  transform: scale(0.98);
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Focus has to be visible. Some of this is driven from a keyboard. */
+button:focus-visible,
+a:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 0.5rem;
+}
+
+/* Skip link for keyboard and screen-reader users. */
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0.75rem;
+  z-index: 50;
+  background: var(--accent);
+  color: var(--accent-ink);
+  padding: 0.6rem 1rem;
+  border-radius: 0.6rem;
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  left: 0.75rem;
+}
+
+/*
+  Chart marks. One series, one hue, validated against both surfaces. The
+  fill is a percentage of a fixed track so 83.8, 99.4 and 100 draw as
+  three different lengths, and zero draws nothing at all.
+*/
+.ew-track {
+  display: inline-block;
+  width: 9rem;
+  flex: none;
+  height: 0.6rem;
+  border-radius: 999px;
+  background: var(--chart-track);
+  overflow: hidden;
+}
+
+.ew-bar {
+  display: block;
+  height: 100%;
+  min-width: 2px;
+  border-radius: 999px;
+  background: var(--chart-mark);
+}
+
+/* The answer slots, drawn like the keys so they read as the same instrument. */
+.slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4.75rem;
+  border-radius: 0.9rem;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.slot-active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* Progress: a track with a moving fill, no animation on the number. */
+.progress-track {
+  height: 0.4rem;
+  width: 100%;
+  border-radius: 999px;
+  background: var(--chart-track);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 300ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button.primary:hover:not(:disabled) {
+    transform: none;
+  }
+  .progress-fill {
+    transition: none;
+  }
+}
+
+/*
+  The (i) beside a term, and the note it opens.
+
+  A real button, not a title attribute: title is invisible to touch and
+  to screen readers, and a third of the people this page is for are on a
+  phone. The note is positioned below the button so it never covers the
+  term it explains.
+*/
+.info-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.15em;
+  height: 1.15em;
+  margin-left: 0.3em;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.8em;
+  line-height: 1;
+  vertical-align: 0.1em;
+  cursor: help;
+  transition: border-color 120ms ease, background-color 120ms ease;
+}
+
+.info-btn:hover,
+.info-btn[aria-expanded="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.info-pop {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 0.5rem);
+  z-index: 30;
+  width: min(22rem, 80vw);
+  padding: 0.9rem 1rem;
+  border-radius: 0.9rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  text-align: left;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  /*
+    The button sits inside a span the page marks whitespace-nowrap so a
+    term and its (i) never split across a line. The note inherits that
+    and its text runs straight out of the box and across the next
+    column. Seen in a screenshot; no test looks at wrapping.
+  */
+  white-space: normal;
+  cursor: pointer;
+}

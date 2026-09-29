@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "volley-server"
+version = "0.1.0"
+description = "Volley service: households and their counts behind API keys, the day and week views, the one thing for tomorrow phrased on Bedrock with a template floor, and the MCP server that is the Alexa+ surface. Receives counts only, never text."
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn>=0.30",
+  "mangum>=0.17",
+  "boto3>=1.34",
+  "anthropic>=0.40",
+  "serve-return>=0.1.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "httpx>=0.27"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["volley_server*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

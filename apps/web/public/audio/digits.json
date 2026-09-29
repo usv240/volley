@@ -1,0 +1,71 @@
+{
+  "builtAt": "2026-09-28",
+  "voice": "Joanna",
+  "engine": "neural",
+  "sampleRate": 16000,
+  "digits": [
+    {
+      "digit": 1,
+      "word": "one",
+      "file": "digit-1.wav",
+      "levelDbfs": -26
+    },
+    {
+      "digit": 2,
+      "word": "two",
+      "file": "digit-2.wav",
+      "levelDbfs": -26
+    },
+    {
+      "digit": 3,
+      "word": "three",
+      "file": "digit-3.wav",
+      "levelDbfs": -26
+    },
+    {
+      "digit": 4,
+      "word": "four",
+      "file": "digit-4.wav",
+      "levelDbfs": -26
+    },
+    {
+      "digit": 5,
+      "word": "five",
+      "file": "digit-5.wav",
+      "levelDbfs": -26
+    },
+    {
+      "digit": 6,
+      "word": "six",
+      "file": "digit-6.wav",
+      "levelDbfs": -26
+    },
+    {
+      "digit": 8,
+      "word": "eight",
+      "file": "digit-8.wav",
+      "levelDbfs": -26
+    },
+    {
+      "digit": 9,
+      "word": "nine",
+      "file": "digit-9.wav",
+      "levelDbfs": -26
+    }
+  ],
+  "noise": {
+    "file": "noise.wav",
+    "seconds": 45,
+    "levelDbfs": -26
+  },
+  "levelling": {
+    "spreadBeforeDb": 4.37,
+    "spreadAfterDb": 0
+  },
+  "noiseMatch": {
+    "meanDb": 1.12,
+    "maxDb": 5.64,
+    "band": "100 Hz to 6 kHz"
+  },
+  "provenance": "Synthesised with Amazon Polly. Not a normed corpus, so thresholds from this material are provisional; see docs/EVAL.md."
+}

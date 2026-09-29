@@ -13,6 +13,7 @@ package serialises them from a transcript full of names and asserts that
 not one name survives.
 """
 
+from .coach import Fact, accept, note, pick, template
 from .rule import (
     WINDOW_SECONDS,
     DayCounts,
@@ -24,6 +25,11 @@ from .rule import (
 )
 
 __all__ = [
+    "Fact",
+    "accept",
+    "note",
+    "pick",
+    "template",
     "WINDOW_SECONDS",
     "DayCounts",
     "HourCounts",
