@@ -166,6 +166,8 @@ body {
   the thing pressed twenty-four times in two minutes.
 */
 button.primary,
+a.primary,
+a.secondary,
 button.secondary,
 button.key,
 button.ghost {
@@ -180,7 +182,8 @@ button.ghost {
     box-shadow 140ms ease;
 }
 
-button.primary {
+button.primary,
+a.primary {
   background: var(--accent);
   color: var(--accent-ink);
   padding: 0.85rem 1.6rem;
@@ -193,7 +196,8 @@ button.primary:hover:not(:disabled) {
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08), 0 12px 24px -10px var(--accent);
 }
 
-button.secondary {
+button.secondary,
+a.secondary {
   background: var(--surface);
   color: var(--ink);
   border: 1px solid var(--line-strong);

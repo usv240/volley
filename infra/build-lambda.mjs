@@ -6,7 +6,7 @@
 // runs, so the asset built on Windows or macOS is the one that runs there.
 // boto3 is provided by the runtime and is left out to keep the asset small.
 //
-// spaCy is deliberately absent. Extraction runs where the transcript is.
+// Nothing that reads a transcript is in this asset. Counting runs where the transcript is.
 
 import { execSync } from "node:child_process";
 import * as fs from "node:fs";
@@ -40,18 +40,9 @@ run(
 // Our own packages, pure Python, without re-resolving their dependencies.
 run(
   `"${python}" -m pip install --quiet --target "${out}" --no-deps ` +
-    `"${path.join(root, "packages", "speech-vitals")}" ` +
-    `"${path.join(root, "apps", "engine")}" ` +
+    `"${path.join(root, "packages", "serve-return")}" ` +
     `"${path.join(root, "apps", "server")}"`,
 );
-
-// The simulated persona, so the demo profile seeds itself on first request.
-const persona = path.join(root, "fixtures", "personas", "alex-drift");
-const dest = path.join(out, "fixtures", "personas", "alex-drift");
-fs.mkdirSync(dest, { recursive: true });
-for (const f of ["days.json", "meta.json", "summary.json"]) {
-  fs.copyFileSync(path.join(persona, f), path.join(dest, f));
-}
 
 // Trim what Lambda never needs.
 for (const d of fs.readdirSync(out)) {

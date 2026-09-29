@@ -19,13 +19,13 @@ import { ThemeToggle } from "./ThemeToggle";
  */
 
 const LINKS = [
-  { href: "#outcomes", label: "What it says" },
-  { href: "#what", label: "What, why, how" },
-  { href: "#firetv", label: "Fire TV" },
+  { href: "#how", label: "How it counts" },
+  { href: "#day", label: "Your day" },
+  { href: "#privacy", label: "Privacy" },
+  { href: "#yours", label: "Your Bee" },
   { href: "#alexa", label: "Alexa+" },
   { href: "#evidence", label: "Evidence" },
   { href: "#developers", label: "Developers" },
-  { href: "#privacy", label: "Privacy" },
 ];
 
 export function Nav() {
@@ -34,7 +34,7 @@ export function Nav() {
     <header className="sticky top-0 z-40 border-b border-line bg-[color-mix(in_srgb,var(--bg)_82%,transparent)] backdrop-blur">
       <div className="mx-auto flex h-16 max-w-[1120px] items-center justify-between px-5 sm:px-8">
         <a href="#top" className="display-sm text-2xl text-ink">
-          Earshot
+          Volley
         </a>
         <nav className="hidden items-center gap-5 xl:flex" aria-label="Main">
           {LINKS.map((l) => (
@@ -50,10 +50,10 @@ export function Nav() {
         <div className="hidden items-center gap-3 md:flex">
           <ThemeToggle />
           <a
-            href="#test"
+            href="#yours"
             className="whitespace-nowrap rounded-[0.85rem] bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-[var(--accent-ink)] transition-transform hover:-translate-y-px"
           >
-            Take the check
+            Count your own
           </a>
         </div>
         <button
@@ -74,8 +74,8 @@ export function Nav() {
                 {l.label}
               </a>
             ))}
-            <a href="#test" onClick={() => setOpen(false)} className="text-sm font-semibold text-[var(--accent)]">
-              Take the check
+            <a href="#yours" onClick={() => setOpen(false)} className="text-sm font-semibold text-[var(--accent)]">
+              Count your own
             </a>
             <div className="pt-2 md:hidden">
               <ThemeToggle />

@@ -25,9 +25,9 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "Earshot",
+  title: "Volley",
   description:
-    "You passed the hearing test and you still can't hear the television. A speech-in-noise check on the device where you noticed the problem.",
+    "Counts the back-and-forth between you and your child from the Bee on your wrist, keeps the counts and throws the words away, and puts one thing to try tomorrow into your Bee as a reminder.",
 };
 
 export const viewport: Viewport = { width: "device-width", initialScale: 1 };
@@ -37,7 +37,7 @@ export const viewport: Viewport = { width: "device-width", initialScale: 1 };
   from light to dark for somebody who chose dark. It is deliberately the
   only script that runs before hydration and it touches one attribute.
 */
-const themeScript = `(function(){try{var t=localStorage.getItem("earshot-theme");if(t==="dark"||t==="light"){document.documentElement.setAttribute("data-theme",t);}}catch(e){}})();`;
+const themeScript = `(function(){try{var t=localStorage.getItem("volley-theme");if(t==="dark"||t==="light"){document.documentElement.setAttribute("data-theme",t);}}catch(e){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

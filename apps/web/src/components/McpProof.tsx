@@ -12,11 +12,10 @@ import { useState } from "react";
  * the time it took. Nothing is recorded or mocked; the endpoint is the
  * one Alexa+ would use.
  *
- * The tool it calls is deliberate. `what_the_television_watches`
- * describes the mechanism and returns none of the numbers, which is the
- * honest answer to "why did my television ask me that", and it proves
- * the point on the privacy section: the server can explain the
- * television and cannot report on it.
+ * The tool it calls is deliberate. `what_volley_counts` describes the
+ * rule and returns none of the numbers, which is the honest answer to
+ * "what is this thing counting", and it proves the point of the privacy
+ * section: the server can explain the count and cannot repeat a word.
  *
  * Origin is the interesting part of this. The server validates it, the
  * site's own origin is handed to the server by the stack that knows it,
@@ -24,7 +23,7 @@ import { useState } from "react";
  * is also the proof that the allowlist is wired rather than intended.
  */
 
-const MCP_URL = "https://inwrmblw32v4iyzsxkr5bfpidu0izuah.lambda-url.us-east-1.on.aws/mcp";
+const MCP_URL = process.env.NEXT_PUBLIC_MCP_URL ?? "http://localhost:8791/mcp";
 const PROTOCOL = "2025-11-25";
 
 interface Line {
@@ -76,7 +75,7 @@ export function McpProof() {
         params: {
           protocolVersion: PROTOCOL,
           capabilities: {},
-          clientInfo: { name: "earshot-site", version: "1" },
+          clientInfo: { name: "volley-site", version: "1" },
         },
       });
       const session = init.session;
@@ -91,16 +90,16 @@ export function McpProof() {
       const list = await rpc({ jsonrpc: "2.0", id: 2, method: "tools/list" }, session);
       const tools =
         (list.json as { result?: { tools?: { name: string }[] } })?.result?.tools?.map((t) => t.name) ?? [];
-      push({ request: "tools/list", status: list.status, ok: tools.length === 5, ms: list.ms, note: `${tools.length} tools` });
+      push({ request: "tools/list", status: list.status, ok: tools.length === 7, ms: list.ms, note: `${tools.length} tools` });
 
       const call = await rpc(
-        { jsonrpc: "2.0", id: 3, method: "tools/call", params: { name: "what_the_television_watches", arguments: {} } },
+        { jsonrpc: "2.0", id: 3, method: "tools/call", params: { name: "what_volley_counts", arguments: {} } },
         session,
       );
       const text = (call.json as { result?: { content?: { text: string }[] } })?.result?.content?.[0]?.text;
-      const parsed = text ? (JSON.parse(text) as { whyItIsNotAJudgement?: string }) : null;
-      push({ request: "tools/call what_the_television_watches", status: call.status, ok: !!parsed, ms: call.ms });
-      setAnswer(parsed?.whyItIsNotAJudgement ?? text ?? null);
+      const parsed = text ? (JSON.parse(text) as { rule?: string }) : null;
+      push({ request: "tools/call what_volley_counts", status: call.status, ok: !!parsed, ms: call.ms });
+      setAnswer(parsed?.rule ?? text ?? null);
 
       const bye = await fetch(MCP_URL, { method: "DELETE", headers: { "mcp-session-id": session } });
       push({ request: "DELETE session", status: bye.status, ok: bye.status === 204, ms: 0 });
@@ -117,9 +116,9 @@ export function McpProof() {
         <div className="max-w-[60ch]">
           <p className="eyebrow">Live, from this page</p>
           <p className="mt-2 leading-relaxed text-muted">
-            Open a session against the deployed server, list its tools, and ask it what the
-            television watches. Every request below is real and timed. The tool chosen is
-            the one that returns no data, because that is the point.
+            Open a session against the deployed server, list its tools, and ask it what
+            Volley counts. Every request below is real and timed. The tool chosen is the one
+            that returns no data, because that is the point.
           </p>
         </div>
         <button type="button" onClick={() => void run()} disabled={running} className="primary">

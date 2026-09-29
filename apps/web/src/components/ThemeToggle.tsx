@@ -14,7 +14,7 @@ import { useCallback, useSyncExternalStore } from "react";
  * root element is the truth and useSyncExternalStore reads it.
  */
 
-const KEY = "earshot-theme";
+const KEY = "volley-theme";
 
 function subscribe(onChange: () => void) {
   const observer = new MutationObserver(onChange);
