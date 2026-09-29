@@ -35,7 +35,7 @@ def test_every_public_document_exists_and_is_read():
 
 def test_no_em_dashes_anywhere_public():
     for p in PUBLIC:
-        assert "—" not in p.read_text(encoding="utf8"), p
+        assert chr(0x2014) not in p.read_text(encoding="utf8"), p
 
 
 def test_no_public_text_claims_validation_on_children():
