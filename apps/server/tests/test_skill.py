@@ -25,6 +25,17 @@ def listed_tools() -> list[str]:
     return re.findall(r"^- \*\*`([a-z_]+)`\*\*", section, flags=re.M)
 
 
+def bullets_of(section: str) -> list[str]:
+    """Each bullet as one line, however it wrapped in the file."""
+    out: list[str] = []
+    for paragraph in re.split(r"\n\s*\n", section):
+        for part in re.split(r"\n(?=- )", paragraph):
+            joined = " ".join(part.split())
+            if joined:
+                out.append(joined)
+    return out
+
+
 def test_the_skill_lists_every_tool_and_nothing_else():
     assert SKILL.exists()
     listed = listed_tools()
@@ -37,14 +48,7 @@ def test_the_skill_says_there_is_no_transcript_and_keeps_the_forbidden_words_out
     assert "no transcript" in text.lower() or "none exists" in text.lower()
     advice = text.split("## What the numbers mean")[1]
     # The forbidden words may appear only in the bullet that forbids them.
-    # Bullets wrap, so each is joined back into one line before the check.
-    bullets = [" ".join(b.split()) for b in advice.replace("
-- ", "
-
-- ").split("
-
-")]
-    for bullet in bullets:
+    for bullet in bullets_of(advice):
         if "never mention" in bullet.lower():
             continue
         for word in FORBIDDEN:
