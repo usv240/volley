@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "serve-return"
+version = "0.1.0"
+description = "Count adult-child conversational turns from any speaker-labelled transcript, by the published five-second rule, and keep no words."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Ujwal Vanjare" }]
+keywords = ["conversational turns", "serve and return", "child language", "LENA", "Bee"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "hypothesis>=6"]
+
+[project.urls]
+Homepage = "https://github.com/usv240/volley"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["serve_return*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

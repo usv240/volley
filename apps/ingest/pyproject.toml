@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "volley"
+version = "0.1.0"
+description = "Counts the back-and-forth between you and your child from the Bee on your wrist, keeps the counts and throws the words away, and puts one thing to try tomorrow into your Bee as a reminder."
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Ujwal Vanjare" }]
+dependencies = ["serve-return>=0.1.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+volley = "volley_ingest.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["volley_ingest*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
