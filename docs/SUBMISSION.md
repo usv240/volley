@@ -107,9 +107,9 @@ numbers.
 
 ## Live
 
-- Site: filled in on deploy.
-- API: filled in on deploy, with interactive docs at `/v1/docs`.
-- MCP server: `<ApiUrl>/mcp`.
+- Site: https://da78ygi6ol1oi.cloudfront.net
+- API: https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws with interactive docs at https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws/v1/docs
+- MCP server: https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws/mcp, spec 2025-11-25 over Streamable HTTP, seven tools
 
 ## Honest limits
 

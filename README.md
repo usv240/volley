@@ -9,8 +9,11 @@ thing to try tomorrow. The number it counts is the most validated one in
 early childhood; the only instrument that measures it has never been
 sold to a parent.
 
-Status: planned, not built. The plan is in `docs/`, written before the
-first line of code so that the build is judged against it.
+Status: built on 2026-09-29 against the plan in `docs/`, which was
+written first so the build is judged against it. The API and MCP server
+are live at https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws (interactive docs at `/v1/docs`) and the site at https://da78ygi6ol1oi.cloudfront.net.
+What is not yet measured says so on the site in the same type size as
+the numbers.
 
 | Document | What it answers |
 |---|---|
