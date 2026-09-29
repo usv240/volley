@@ -1,0 +1,98 @@
+{
+ "date": "2026-09-30",
+ "tz_offset_hours": 5.5,
+ "roles": {
+  "adult": [
+   "Ujwal"
+  ],
+  "child": [
+   "Unknown"
+  ]
+ },
+ "utterances": [
+  {
+   "start": 1790714400.0,
+   "speaker": "Ujwal",
+   "text": "What did you build today?",
+   "end": 1790714402.0
+  },
+  {
+   "start": 1790714402.4,
+   "speaker": "Unknown",
+   "text": "A tower and it fell.",
+   "end": 1790714404.4
+  },
+  {
+   "start": 1790714404.0,
+   "speaker": "Ujwal",
+   "text": "How tall was it?",
+   "end": 1790714405.6
+  },
+  {
+   "start": 1790714406.1,
+   "speaker": "Unknown",
+   "text": "Taller than me.",
+   "end": 1790714407.3
+  },
+  {
+   "start": 1790714407.9,
+   "speaker": "Ujwal",
+   "text": "Did it fall before dinner?",
+   "end": 1790714409.9
+  },
+  {
+   "start": 1790714409.6,
+   "speaker": "Unknown",
+   "text": "Yes twice.",
+   "end": 1790714410.6
+  },
+  {
+   "start": 1790714424.0,
+   "speaker": "Ujwal",
+   "text": "Bath time now.",
+   "end": 1790714425.2
+  },
+  {
+   "start": 1790714426.2,
+   "speaker": "Unknown",
+   "text": "No.",
+   "end": 1790714427.2
+  },
+  {
+   "start": 1790714427.5,
+   "speaker": "Ujwal",
+   "text": "Five more minutes then?",
+   "end": 1790714429.1
+  },
+  {
+   "start": 1790714429.3,
+   "speaker": "Unknown",
+   "text": "Ten.",
+   "end": 1790714430.3
+  },
+  {
+   "start": 1790718000.0,
+   "speaker": "Ujwal",
+   "text": "Story time. Which one?",
+   "end": 1790718001.6
+  },
+  {
+   "start": 1790718002.6,
+   "speaker": "Unknown",
+   "text": "The one with the bear.",
+   "end": 1790718004.6
+  },
+  {
+   "start": 1790718004.5,
+   "speaker": "Ujwal",
+   "text": "Again?",
+   "end": 1790718005.5
+  },
+  {
+   "start": 1790718006.0,
+   "speaker": "Unknown",
+   "text": "Again.",
+   "end": 1790718007.0
+  }
+ ]
+}
