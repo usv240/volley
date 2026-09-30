@@ -55,6 +55,16 @@ The second number, from outside our keyboard.
 - On no: the number is published as it came out, and the site says what
   it means. There is no version of this gate that hides a result.
 
+Update 2026-09-30: TalkBank put every corpus download behind a free
+login, Playlogue is gated on Hugging Face, and childes-db moved to
+Redivis behind a token, so no corpus can be fetched by a script. A
+second harness, `harness/childes/run.py`, reads any media-linked
+corpus in CHAT format and runs the same evaluation, so whichever door
+the operator's account opens first, the number lands the same day.
+The Gleason corpus (24 families, 2;1 to 5;2, mother-child, father-child
+and dinner, audio-linked) is the first to run: it sits inside Volley's
+talking-age range.
+
 ### Gate 3: a real day, on camera (by 2026-10-13)
 
 - Test: one afternoon of the operator's own Bee data reduced to counts,

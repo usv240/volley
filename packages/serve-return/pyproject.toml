@@ -21,7 +21,7 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "hypothesis>=6"]
+dev = ["pytest>=8", "hypothesis>=6", "pylangacq>=0.20"]
 
 [project.urls]
 Homepage = "https://github.com/usv240/volley"

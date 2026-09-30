@@ -14,7 +14,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -e "packages/serve-return[dev]" -e "apps/ingest[dev]" -e "apps/server[dev]" -e "apps/agent[dev]"
-      - run: python -m pytest packages apps -q
+      - run: python -m pytest packages apps harness -q
       - run: volley verify --repo .
   web:
     runs-on: ubuntu-latest
