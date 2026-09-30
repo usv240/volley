@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { ThemeToggle } from "./ThemeToggle";
 
 /**
@@ -19,13 +20,14 @@ import { ThemeToggle } from "./ThemeToggle";
  */
 
 const LINKS = [
-  { href: "#how", label: "How it counts" },
-  { href: "#day", label: "Your day" },
-  { href: "#privacy", label: "Privacy" },
-  { href: "#yours", label: "Your Bee" },
-  { href: "#alexa", label: "Alexa+" },
-  { href: "#evidence", label: "Evidence" },
-  { href: "#developers", label: "Developers" },
+  { href: "/#how", label: "How it counts" },
+  { href: "/#day", label: "Your day" },
+  { href: "/#privacy", label: "Privacy" },
+  { href: "/#yours", label: "Your Bee" },
+  { href: "/#alexa", label: "Alexa+" },
+  { href: "/#evidence", label: "Evidence" },
+  { href: "/#developers", label: "Developers" },
+  { href: "/mine/", label: "Mine" },
 ];
 
 export function Nav() {
@@ -33,28 +35,28 @@ export function Nav() {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-[color-mix(in_srgb,var(--bg)_82%,transparent)] backdrop-blur">
       <div className="mx-auto flex h-16 max-w-[1120px] items-center justify-between px-5 sm:px-8">
-        <a href="#top" className="display-sm text-2xl text-ink">
+        <Link href="/#top" className="display-sm text-2xl text-ink">
           Volley
-        </a>
+        </Link>
         <nav className="hidden items-center gap-5 xl:flex" aria-label="Main">
           {LINKS.map((l) => (
-            <a
+            <Link
               key={l.href}
               href={l.href}
               className="whitespace-nowrap text-sm text-muted transition-colors hover:text-ink"
             >
               {l.label}
-            </a>
+            </Link>
           ))}
         </nav>
         <div className="hidden items-center gap-3 md:flex">
           <ThemeToggle />
-          <a
-            href="#yours"
+          <Link
+            href="/#yours"
             className="whitespace-nowrap rounded-[0.85rem] bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-[var(--accent-ink)] transition-transform hover:-translate-y-px"
           >
             Count your own
-          </a>
+          </Link>
         </div>
         <button
           type="button"
@@ -70,13 +72,13 @@ export function Nav() {
         <div className="border-t border-line bg-surface px-5 py-4 xl:hidden">
           <nav className="flex flex-col gap-3" aria-label="Mobile">
             {LINKS.map((l) => (
-              <a key={l.href} href={l.href} onClick={() => setOpen(false)} className="text-sm text-muted">
+              <Link key={l.href} href={l.href} onClick={() => setOpen(false)} className="text-sm text-muted">
                 {l.label}
-              </a>
+              </Link>
             ))}
-            <a href="#yours" onClick={() => setOpen(false)} className="text-sm font-semibold text-[var(--accent)]">
+            <Link href="/#yours" onClick={() => setOpen(false)} className="text-sm font-semibold text-[var(--accent)]">
               Count your own
-            </a>
+            </Link>
             <div className="pt-2 md:hidden">
               <ThemeToggle />
             </div>

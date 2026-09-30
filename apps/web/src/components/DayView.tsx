@@ -39,14 +39,14 @@ export function clock(h: number): string {
   return x < 12 ? `${x}am` : `${x - 12}pm`;
 }
 
-export function DayView({ day, child, simulated }: { day: Day; child: string | null; simulated: boolean }) {
+export function DayView({ day, child, simulated, label }: { day: Day; child: string | null; simulated: boolean; label?: string }) {
   const width = Math.max(1, ...day.hours.map((h) => h.turns));
   const who = child ?? "your child";
   return (
     <div className="card p-6 sm:p-8">
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <div>
-          <p className="eyebrow">{simulated ? "A simulated family, labelled as one" : "The operator's own day"}</p>
+          <p className="eyebrow">{label ?? (simulated ? "A simulated family, labelled as one" : "The operator's own day")}</p>
           <p className="mt-2 flex items-baseline gap-3">
             <span className="display text-5xl text-ink">{day.turns}</span>
             <span className="text-muted">
@@ -79,7 +79,7 @@ export function DayView({ day, child, simulated }: { day: Day; child: string | n
           const away = h.utterances_child === 0;
           const best = h.hour === day.best_hour;
           return (
-            <li key={h.hour} className="flex min-w-0 flex-1 flex-col items-center gap-1">
+            <li key={h.hour} className="flex min-w-0 max-w-20 flex-1 flex-col items-center gap-1">
               <span className="text-xs text-faint">{away ? "" : h.turns}</span>
               <div className="flex h-32 w-full items-end">
                 <div

@@ -8,7 +8,6 @@ const nextConfig: NextConfig = {
   output: "export",
   trailingSlash: true,
   images: { unoptimized: true },
-  transpilePackages: ["digits-in-noise", "@earshot/core"],
   // Workspace packages live two levels up. Without this Turbopack roots
   // at apps/web and refuses to compile them.
   turbopack: { root: path.join(here, "../..") },

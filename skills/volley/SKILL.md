@@ -22,7 +22,7 @@ counting. Use the tools below; report only the numbers they return.
 - **`what_volley_counts`**: the rule in words and the published target. Returns no data about anybody. Use it to explain; it is the honest answer to "what is this".
 - **`how_was_our_talking_today`**: turns today, the best hour, the quietest hour with the child present, the longest exchange, the questions asked. `household_id` and `api_key` for a real household; omit both for the simulated one.
 - **`one_thing_for_tomorrow`**: the note, with the fact it was written from and which layer wrote it (a model, or the template when the model broke a rule).
-- **`week_trend`**: seven days of turns and whether they are going up, down or holding level, plus the published target stated as its source's.
+- **`week_trend`**: seven days of turns, the best and the quietest day, whether they are going up, down or holding level, and the published target stated as its source's.
 - **`best_hour_this_week`**: the hour of the day with the most turns across the week.
 - **`record_day`**: store a day of counts a client computed with the serve-return package. Requires the household's key. Any field that is not a count is dropped.
 - **`household_settings`**: the household's name and the child's name or nickname, so you can address them. No counts.

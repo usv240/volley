@@ -25,6 +25,7 @@ the numbers.
 | [docs/HONESTY.md](docs/HONESTY.md) | Privacy, consent, what it never does, the limits, and the kill criteria |
 | [docs/RULES_MAP.md](docs/RULES_MAP.md) | Every line of the rules and every judging criterion, and where it is met |
 | [docs/WINNER_PATTERNS.md](docs/WINNER_PATTERNS.md) | The twelve patterns from top-placed projects, where Volley passes, and what closing each miss costs |
+| [docs/AGENT.md](docs/AGENT.md) | The two Strands agents over the MCP server, their gate, and two real runs |
 
 Track: Bee (primary), Alexa+ (an Agent Skill backed by an MCP server).
 Mini challenges: AWS Builder, Open Source (`serve-return` on PyPI, MIT).

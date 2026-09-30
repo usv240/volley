@@ -20,6 +20,18 @@
   view until the operator's own day replaces it, and then it is labelled
   as the operator's.
 
+- The Tuesday agent (AGENT.md) is the one place text about the
+  parent's day is read by a model: the Bee's own summary of the day,
+  fetched on the parent's machine through Bee's MCP server, sent to
+  Bedrock in the parent's own account for one answer, and stored
+  nowhere. The transcript tools are not offered to that agent, so no
+  word a child said can make the trip. Volley's service is not in the
+  loop and never sees it.
+- The parent's own page (`/mine`) reads counts with the household's key
+  from the parent's browser. The key arrives in a link fragment, which
+  browsers do not send to servers, and is kept in that browser's local
+  storage only.
+
 ## Consent
 
 - The wearer is the adult. The child wears nothing.

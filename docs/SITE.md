@@ -119,10 +119,25 @@ that is not ours to promise.
 
 ### 8. Your Bee, in ten minutes
 
-Five steps, each badged "works today" or "needs your Bee": install the
+Six steps, each badged "works today" or "needs your Bee": install the
 CLI, enable Developer Mode (tap the version five times), `bee login`,
-`pip install volley`, `volley setup` and `volley today`. The exact
+`pip install volley`, `volley setup` and `volley today`, and, if the
+parent wants their days in a browser, `volley connect`. The exact
 commands, copyable, and what the screen shows at each step.
+
+### 8b. Mine: the parent's own page
+
+`/mine` shows one household's counts, read from the API with the
+household's key from the browser. The key arrives once in the fragment
+of the link `volley connect` prints (`/mine/#h=<id>&k=<key>`); a
+fragment is never sent to a server, so the site, its CDN and its logs
+never see it. The page moves it into local storage and clears the
+address bar. Three honest states (no key here, a key but no days, days)
+each say what to run next. Two buttons remove things: forget this
+browser, and delete the household with every count, which asks first.
+The day card, the week and the note are the same components the front
+page uses for the simulated family, labelled "Your own day, from your
+Bee" instead.
 
 ### 9. Bring your own data
 

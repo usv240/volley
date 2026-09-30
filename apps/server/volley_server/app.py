@@ -114,6 +114,16 @@ def seed_demo(store: Store) -> int:
     return len(rows)
 
 
+def site_url() -> str | None:
+    """The site this deployment serves, taken from the same setting that
+    names it as an allowed origin; the CLI turns it into the link a
+    parent opens to see their own days."""
+    for o in os.environ.get("VOLLEY_ALLOWED_ORIGINS", "").split(","):
+        if o.strip().startswith("http"):
+            return o.strip().rstrip("/")
+    return None
+
+
 def week_view(days: list[dict]) -> dict:
     last = days[-7:]
     turns = [d["turns"] for d in last]
@@ -125,10 +135,12 @@ def week_view(days: list[dict]) -> dict:
         elif before > 0 and recent < before * 0.9:
             direction = "down"
     best = max(last, key=lambda d: d["turns"]) if last else None
+    quietest = min(last, key=lambda d: d["turns"]) if last else None
     return {
         "days": [{"date": d["date"], "turns": d["turns"], "best_hour": d.get("best_hour")} for d in last],
         "direction": direction,
         "best_day": best["date"] if best else None,
+        "quietest_day": quietest["date"] if quietest else None,
         "target_turns_per_hour": TARGET_TURNS_PER_HOUR,
         "target_source": "LENA, Every Interaction Counts: their figure, stated as theirs",
     }
@@ -196,7 +208,7 @@ def build_app(store: Store | None = None, seed: bool = True, note_deps: dict | N
         hid = "h_" + secrets.token_urlsafe(9)
         key = new_api_key()
         store.create_household(hid, name, child[:MAX_SHORT_TEXT] if child else None, key_hash(key))
-        return {"household_id": hid, "api_key": key, "note": "the key is shown once; only its hash is stored"}
+        return {"household_id": hid, "api_key": key, "site_url": site_url(), "note": "the key is shown once; only its hash is stored"}
 
     @app.get("/v1/households/{hid}")
     def get_household(hid: str, request: Request):

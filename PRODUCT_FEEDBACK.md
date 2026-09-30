@@ -96,6 +96,30 @@ lines and pinned to the Python package by a shared set of examples.
 
 **Would we build with them again:** yes.
 
+## Strands Agents SDK (1.57)
+
+- What worked: `MCPClient(url=...)` for Streamable HTTP and a
+  `transport_callable` for stdio, so Volley's server and Bee's sat side
+  by side in one agent with no glue; `tool_filters={"allowed": [...]}`
+  made the Bee allow-list one line; `ModelRouter` with
+  `FallbackStrategy` replaced a hand-written Bedrock ladder; a custom
+  `Model` subclass that yields stream events was enough to drive the
+  whole agent loop in tests with no AWS account.
+- What got in the way: nothing in the SDK lets a tool's credential
+  arguments be filled in outside the model. Volley wraps each MCP tool
+  in a `PythonAgentTool` with the credential properties removed from
+  the schema and added back on the way out; it is forty lines, but an
+  `inject={"api_key": ...}` on `MCPClient` would make the pattern
+  obvious rather than something each project rediscovers.
+- What was missing: a gate on the final answer. Strands has hooks and
+  interventions, but "every number in the answer must have come from a
+  tool result" had to be written against `agent.messages` after the
+  call. A `validate_output` hook with the tool results in hand would
+  make that a declared property of the agent.
+- The `mcp` 2.x rename (`FastMCP` to `MCPServer`) broke the stand-in
+  server used in tests on the day it was written; the SDK's own
+  examples still show the 1.x import.
+
 ## Still to record
 
 Amazon Transcribe, Rekognition and any service that would see a child

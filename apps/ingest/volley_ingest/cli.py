@@ -1,7 +1,8 @@
 """The command a parent runs.
 
     volley status              is the Bee installed and signed in, and is a household set up
-    volley setup               which label is you, which is your child, and where the counts go
+    volley setup               which label is you, which is your child
+    volley connect             make a household on the service so your own days show on the site
     volley today               count the day, show it, post the counts, write tomorrow's reminder
     volley evidence            write a publishable record that live Bee data flowed, with no words
     volley live                count turns as they happen, from the Bee's live stream
@@ -30,6 +31,9 @@ from .household import Household, home
 from .reminder import write as write_reminder
 
 
+DEFAULT_API_URL = "https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws"
+
+
 def _hour(h: int) -> str:
     return f"{h:02d}:00"
 
@@ -50,21 +54,58 @@ def render_day(day: DayCounts, child: str | None) -> str:
     return "\n".join(lines)
 
 
-def _post(h: Household, days: list[DayCounts]) -> str | None:
-    """Counts only, to the household's API, if one is configured."""
-    if not h.api_url or not h.api_key:
-        return None
+def _request(url: str, body: dict | None, headers: dict[str, str]) -> tuple[int, dict]:
+    """One HTTP call with the standard library, so the parent's machine
+    needs nothing installed beyond this package. Tests replace it."""
     import urllib.request
 
-    body = json.dumps({"days": [d.to_dict() for d in days]}).encode("utf8")
-    req = urllib.request.Request(
-        h.api_url.rstrip("/") + "/v1/days",
-        data=body,
-        headers={"content-type": "application/json", "x-api-key": h.api_key},
-        method="POST",
-    )
+    data = json.dumps(body).encode("utf8") if body is not None else None
+    req = urllib.request.Request(url, data=data, headers={"content-type": "application/json", **headers}, method="POST")
     with urllib.request.urlopen(req, timeout=30) as res:  # noqa: S310
-        return f"{res.status}"
+        return res.status, json.loads(res.read().decode("utf8") or "{}")
+
+
+def _post(h: Household, days: list[DayCounts], request=None) -> str | None:
+    """Counts only, to the household's own route on the service, if the
+    parent connected one. The body is the day's `to_dict()`, which has
+    no field that can hold a word."""
+    if not h.connected:
+        return None
+    status, _ = (request or _request)(
+        f"{h.api_url.rstrip('/')}/v1/households/{h.household_id}/days",
+        {"days": [d.to_dict() for d in days]},
+        {"x-api-key": h.api_key},
+    )
+    return f"{status}"
+
+
+def cmd_connect(args, request=None) -> int:
+    """Makes a household on the service and keeps its key here. The
+    service answers with a link to the page that shows this household
+    only; the key travels in the link's fragment, which a browser never
+    sends to any server, and the page moves it into local storage."""
+    h = Household.load() or Household()
+    if h.connected and not args.again:
+        print(f"already connected as {h.household_id}; run with --again to make a new household")
+        if h.mine_url:
+            print(f"your days: {h.mine_url}")
+        return 0
+    api = (args.api_url or h.api_url or DEFAULT_API_URL).rstrip("/")
+    status, answer = (request or _request)(f"{api}/v1/households", {"name": args.name, "child_name": h.child_name}, {})
+    if status != 200 or "api_key" not in answer:
+        print(f"the service did not make a household ({status})", file=sys.stderr)
+        return 1
+    h.api_url = api
+    h.household_id = answer["household_id"]
+    h.api_key = answer["api_key"]
+    site = answer.get("site_url")
+    h.mine_url = f"{site.rstrip('/')}/mine/#h={h.household_id}&k={h.api_key}" if site else None
+    h.save()
+    print(f"connected: household {h.household_id} on {api}")
+    print("only counts will ever be sent there; the key is shown once by the service and kept in household.json")
+    if h.mine_url:
+        print(f"your days, in your browser: {h.mine_url}")
+    return 0
 
 
 def cmd_status(cli: BeeCli) -> int:
@@ -147,6 +188,8 @@ def cmd_today(cli: BeeCli, args) -> int:
     posted = _post(h, days)
     if posted:
         print(f"  counts posted ({posted})")
+        if h.mine_url:
+            print(f"  see them: {h.mine_url}")
     if new_cursor:
         cursors.save(new_cursor)
     print(f"  {read} words read on this machine, 0 kept")
@@ -193,6 +236,10 @@ def main(argv: list[str] | None = None, cli: BeeCli | None = None) -> int:
     s.add_argument("--api-url", dest="api_url")
     s.add_argument("--api-key", dest="api_key")
     s.add_argument("--reminders", type=lambda v: v.lower() in ("1", "true", "yes"), help="write tomorrow's one thing into your Bee: yes or no")
+    c = sub.add_parser("connect", help="make a household on the service so your own days show on the site")
+    c.add_argument("--name", default="ours", help="a name you choose; it is the only text the service keeps")
+    c.add_argument("--api-url", dest="api_url", help="another deployment of the service, if you run your own")
+    c.add_argument("--again", action="store_true", help="make a new household even if one is connected")
     t = sub.add_parser("today", help="count the day, show it, post the counts, write tomorrow's reminder")
     t.add_argument("--now", action="store_true", help="the last several hours rather than everything since the last run")
     e = sub.add_parser("evidence", help="a publishable record that live Bee data flowed, with no words in it")
@@ -209,6 +256,8 @@ def main(argv: list[str] | None = None, cli: BeeCli | None = None) -> int:
             return cmd_status(cli)
         if args.command == "setup":
             return cmd_setup(cli, args)
+        if args.command == "connect":
+            return cmd_connect(args)
         if args.command == "today":
             return cmd_today(cli, args)
         if args.command == "evidence":

@@ -26,10 +26,12 @@ Transport behaviour, per the spec:
 
 from __future__ import annotations
 
+import hashlib
+import hmac
 import json
 import os
+import secrets
 import re
-import uuid
 
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
@@ -105,7 +107,7 @@ TOOLS = [
     },
     {
         "name": "week_trend",
-        "description": "Seven days of turns and whether they are going up, down or holding level.",
+        "description": "Seven days of turns, the best and the quietest day, and whether they are going up, down or holding level.",
         "inputSchema": {"type": "object", "properties": {"household_id": {"type": "string"}, "api_key": {"type": "string"}}, "additionalProperties": False},
     },
     {
@@ -157,8 +159,38 @@ class ToolError(Exception):
         self.code = code
 
 
+_LOCAL_SECRET = secrets.token_hex(16)
+
+
+def _session_secret() -> bytes:
+    """Sessions are signed, not remembered. On Lambda a client's second
+    request may land on another instance, which has never seen the id
+    the first one issued; a signature the whole deployment can check
+    makes the id valid everywhere, with no table and no state. The key
+    is the function's own name and version unless one is configured."""
+    configured = os.environ.get("VOLLEY_SESSION_SECRET")
+    if configured:
+        return configured.encode("utf8")
+    fn = os.environ.get("AWS_LAMBDA_FUNCTION_NAME")
+    if fn:
+        return (fn + ":" + os.environ.get("AWS_LAMBDA_FUNCTION_VERSION", "")).encode("utf8")
+    return _LOCAL_SECRET.encode("utf8")
+
+
+def new_session_id() -> str:
+    nonce = secrets.token_hex(8)
+    return nonce + "." + hmac.new(_session_secret(), nonce.encode("utf8"), hashlib.sha256).hexdigest()[:24]
+
+
+def session_is_ours(session_id: str) -> bool:
+    nonce, dot, sig = session_id.partition(".")
+    if not dot or len(nonce) != 16 or len(sig) != 24:
+        return False
+    return hmac.compare_digest(hmac.new(_session_secret(), nonce.encode("utf8"), hashlib.sha256).hexdigest()[:24], sig)
+
+
 def register_mcp(app: FastAPI, store: Store, demo_household: str, note_deps: dict | None = None) -> None:
-    sessions: set[str] = set()
+    terminated: set[str] = set()
 
     def resolve(args: dict, write: bool = False) -> dict:
         hid = args.get("household_id") if isinstance(args.get("household_id"), str) and args.get("household_id").strip() else demo_household
@@ -272,8 +304,7 @@ def register_mcp(app: FastAPI, store: Store, demo_household: str, note_deps: dic
             return JSONResponse(_error(msg_id, -32600, f"Unsupported protocol version: {version}"), status_code=400)
 
         if method == "initialize":
-            new_session = str(uuid.uuid4())
-            sessions.add(new_session)
+            new_session = new_session_id()
             return JSONResponse(
                 _result(msg_id, {"protocolVersion": MCP_PROTOCOL_VERSION, "capabilities": {"tools": {"listChanged": False}}, "serverInfo": SERVER_INFO, "instructions": INSTRUCTIONS}),
                 headers={"MCP-Session-Id": new_session},
@@ -281,7 +312,7 @@ def register_mcp(app: FastAPI, store: Store, demo_household: str, note_deps: dic
 
         if not session_id:
             return JSONResponse(_error(msg_id, -32600, "Missing MCP-Session-Id header"), status_code=400)
-        if session_id not in sessions:
+        if not session_is_ours(session_id) or session_id in terminated:
             return JSONResponse(_error(msg_id, -32001, "Unknown or terminated session"), status_code=404)
 
         if msg_id is None:
@@ -312,7 +343,7 @@ def register_mcp(app: FastAPI, store: Store, demo_household: str, note_deps: dic
         # Never reads a body: a real client sends one, empty, with a JSON
         # content-type, and parsing it is how the siblings got a 500.
         session_id = request.headers.get("mcp-session-id")
-        if session_id and session_id in sessions:
-            sessions.discard(session_id)
+        if session_id and session_is_ours(session_id) and session_id not in terminated:
+            terminated.add(session_id)
             return Response(status_code=204)
         return Response(status_code=404)

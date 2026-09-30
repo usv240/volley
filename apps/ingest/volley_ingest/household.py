@@ -31,7 +31,13 @@ class Household:
     tz_offset_hours: float = 0.0
     api_url: str | None = None
     api_key: str | None = None
+    household_id: str | None = None
+    mine_url: str | None = None
     write_reminders_to_bee: bool = False
+
+    @property
+    def connected(self) -> bool:
+        return bool(self.api_url and self.api_key and self.household_id)
 
     @staticmethod
     def path() -> Path:

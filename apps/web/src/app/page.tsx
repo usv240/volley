@@ -55,6 +55,7 @@ const STEPS = [
   { title: "Sign in the tool to your Bee", body: "bee login, then approve it in the app.", live: true },
   { title: "Install Volley", body: "pip install volley", live: true },
   { title: "Say who is who, then count the day", body: "volley setup --parent <label> --child <label> --child-name Asha --tz 5.5\nvolley today", live: true },
+  { title: "See your days in a browser, if you want to", body: "volley connect\nvolley today", live: true, term: "mine" as const },
 ];
 
 const FAQ = [
@@ -291,7 +292,7 @@ export default function Home() {
           <div className="mt-10 grid gap-6 md:grid-cols-3">
             <div className="card p-6">
               <p className="font-semibold text-ink">Parents: your Bee, on your computer</p>
-              <p className="mt-2 text-sm leading-relaxed text-muted">The five steps above. The only door that reads a transcript, and it reads it where you are.</p>
+              <p className="mt-2 text-sm leading-relaxed text-muted">The steps above. The only door that reads a transcript, and it reads it where you are; the counts, and nothing else, can go to a page that is yours.</p>
             </div>
             <div className="card p-6">
               <p className="font-semibold text-ink">Anyone curious: a Bee export, in this tab</p>

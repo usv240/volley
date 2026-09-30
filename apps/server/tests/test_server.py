@@ -181,6 +181,22 @@ def test_batches_are_refused_and_notifications_are_accepted(client):
     assert mcp(client, {"jsonrpc": "2.0", "method": "notifications/initialized"}, s).status_code == 202
 
 
+def test_a_session_from_one_instance_is_valid_on_another(client):
+    """On Lambda the next request may land on a fresh instance. The id
+    is signed, so a second app built from nothing accepts it; an id
+    nobody signed is still refused."""
+    from fastapi.testclient import TestClient
+
+    from volley_server.app import build_app
+
+    s = session(client)
+    other = TestClient(build_app())
+    r = other.post("/mcp", json={"jsonrpc": "2.0", "id": 3, "method": "ping"}, headers={**H, "mcp-session-id": s})
+    assert r.status_code == 200, r.text
+    forged = other.post("/mcp", json={"jsonrpc": "2.0", "id": 4, "method": "ping"}, headers={**H, "mcp-session-id": "0123456789abcdef.000000000000000000000000"})
+    assert forged.status_code == 404
+
+
 def test_get_405_and_delete_lifecycle(client):
     assert client.get("/mcp").status_code == 405
     s = session(client)

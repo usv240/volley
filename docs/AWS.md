@@ -14,12 +14,15 @@ happens on the parent's machine, and only counts cross into the stack.
 
 ## Strands Agents SDK
 
-Two agents in `apps/agent` (planned in this window, see PLAN.md): one
-consumes Volley's MCP server as an outside client to answer "how was
-our talking today" the way Alexa+ would; the other holds Bee's own MCP
-server beside Volley's so that "why was Tuesday quiet" can be answered
-from the parent's own calendar without either server seeing the other's
-data.
+Two agents in `apps/agent`, documented in [AGENT.md](AGENT.md): the
+coach, a Strands agent over Volley's MCP server that answers a parent
+the way Alexa+ would and cannot say a number no tool returned; and the
+Tuesday agent, which holds Bee's own MCP server beside Volley's so a
+quiet day can be explained from the parent's own calendar without
+either server seeing the other's data. Both run the same Bedrock
+ladder as the note, as a Strands `ModelRouter` with `FallbackStrategy`.
+Fifteen tests drive them with a scripted model and a real server on a
+free port; two real runs on Bedrock are in AGENT.md.
 
 ## Permissions
 

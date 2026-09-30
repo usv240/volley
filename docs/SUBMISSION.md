@@ -37,6 +37,11 @@ parent's own Bee as a reminder at the hour it names.
 4. **Close the loop.** With consent, the sentence becomes a reminder in
    the parent's Bee (`bee todos create --alarm-at`), and Alexa+ can read
    it back through the MCP server.
+5. **See it.** `volley connect` makes a household on the service and
+   prints a link to `/mine`, the parent's own page: the day, the week
+   and the note, read from the API with the household's key from the
+   browser. The key travels in the link's fragment, which no server
+   receives, and lives in that browser only.
 
 ## The Bee track requirement, answered directly
 
@@ -56,9 +61,13 @@ household's day is what Bellwether, the sibling entry, already proved
 live on 2026-09-29. What Volley needs from the device is speaker
 labels, which the Bee produces only after the wearer's voice is trained
 in the app; on 2026-09-29 every utterance was "Unknown" (friction log
-entry 1). Gate 1 of the plan is one conversation with labels; the video
-is recorded from the operator's own day the moment it passes, and this
-document will say the date.
+entry 1), and on 2026-09-30 a 270-utterance conversation was checked
+again and every label was still "Unknown". Gate 1 of the plan is one
+conversation with labels; the video is recorded from the operator's own
+day the moment it passes, and this document will say the date. The
+Tuesday agent has already run against the operator's real Bee through
+its MCP server (AGENT.md); that is live Bee data, but it is the day's
+summary and not the count this entry is about.
 
 ## Tracks and mini challenges
 
@@ -69,7 +78,9 @@ document will say the date.
   server implementing revision 2025-11-25 over Streamable HTTP with
   seven tools. Held live from the site.
 - **Mini challenge: AWS Builder.** Bedrock, DynamoDB, Lambda, S3,
-  CloudFront, CDK, and the Strands agents; see [AWS.md](AWS.md).
+  CloudFront, CDK, and two Strands agents over the MCP server, one of
+  which holds Bee's MCP server beside Volley's; see [AWS.md](AWS.md)
+  and [AGENT.md](AGENT.md).
 - **Mini challenge: Open Source.** `serve-return`, a dependency-free
   Python package under MIT.
 
@@ -125,7 +136,7 @@ numbers.
 
 ```
 python -m venv .venv
-.venv/Scripts/pip install -e "packages/serve-return[dev]" -e "apps/ingest[dev]" -e "apps/server[dev]"
+.venv/Scripts/pip install -e "packages/serve-return[dev]" -e "apps/ingest[dev]" -e "apps/server[dev]" -e "apps/agent[dev]"
 .venv/Scripts/python -m pytest packages apps
 cd apps/web && npm install && npm test && npm run dev
 ```

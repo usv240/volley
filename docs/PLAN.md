@@ -117,9 +117,20 @@ one session with the band, two projects served.
    the CLI the product already uses, and readable back through Alexa+.
    Test: the argv is pinned; the text contains the fact's number and no
    other; nothing is written without the parent's setup consent.
+10. **The parent's own page.** `volley connect` makes a household and
+    prints a link to `/mine`; the page reads the day, the week and the
+    note with the household's key from the browser. Test: the link's
+    fragment carries the key and `today` posts counts with no word from
+    the transcript to the household's own route. Built 2026-09-30.
+11. **Two Strands agents.** The coach over Volley's MCP server with a
+    gate that refuses any number no tool returned; the Tuesday agent
+    holding Bee's MCP server beside Volley's under a five-tool
+    allow-list. Test: a scripted model invents a number and the parent
+    hears the tool results instead; the transcript tools are never
+    offered. Built 2026-09-30; two real runs in AGENT.md.
 
-See [WINNER_PATTERNS.md](WINNER_PATTERNS.md) for the audit these three
-were added from.
+See [WINNER_PATTERNS.md](WINNER_PATTERNS.md) for the audit the seventh,
+eighth and ninth were added from.
 
 ## The twelve winner patterns, built in
 

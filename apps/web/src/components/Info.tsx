@@ -88,6 +88,10 @@ export const TERMS = {
     label: "an API key",
     text: "A secret shown once when you create a household. It lets your computer post counts and lets you read them back. Only its hash is stored, so nobody at Volley can read your counts without it.",
   },
+  mine: {
+    label: "this page",
+    text: "It reads your household's counts from the service with your key, straight from your browser. The key arrived in the link volley connect printed, in the part after the # that a browser never sends to any server, and it now lives only in this browser's local storage. Forget it here and the page shows nothing.",
+  },
   household: {
     label: "a household",
     text: "A name you chose and, if you want, your child's first name or a nickname so the note can address them. Nothing else. Delete it in one request and every count goes with it.",

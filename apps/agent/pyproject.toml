@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "volley-agent"
+version = "0.1.0"
+description = "Two Strands agents over Volley's MCP server: the coach, which answers a parent the way Alexa+ would and cannot say a number no tool returned; and the Tuesday agent, which holds Bee's own MCP server beside Volley's so a quiet day can be explained from the parent's own calendar without either server seeing the other's data."
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+  "strands-agents>=1.50",
+  "mcp>=1.10",
+  "serve-return>=0.1.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "uvicorn>=0.30", "volley-server"]
+
+[project.scripts]
+volley-agent = "volley_agent.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["volley_agent*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
