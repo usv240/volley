@@ -75,11 +75,22 @@ The CHILDES Gleason corpus (Jean Berko Gleason, Boston University, doi
 families in the 1970s, each recorded with their mother, with their
 father and at the family dinner; transcribed by researchers with
 speaker labels; time-aligned by TalkBank's aligner in 2026. Used under
-the TalkBank ground rules, never shipped, and cited as they require
-(Masur and Gleason, Developmental Psychology 1980, doi
-10.1037/0012-1649.16.5.404). Downloaded with the operator's TalkBank
-account; the harness at `harness/childes/run.py` reads any corpus in
-CHAT format the same way.
+the TalkBank ground rules, never shipped, and cited as they require:
+the corpus's own reference (Masur and Gleason, Developmental
+Psychology 1980, doi 10.1037/0012-1649.16.5.404), its DOI with the
+year retrieved (2026), and the database (MacWhinney B. The CHILDES Project: Tools for analyzing talk. Third edition. Mahwah, NJ: Lawrence Erlbaum Associates, 2000. CHILDES is supported by NICHD grant HD082736.)
+Downloaded with the operator's TalkBank account; the harness at
+`harness/childes/run.py` reads any corpus in CHAT format the same way.
+
+The rules and what Volley does under them: CC BY-NC-SA 3.0 forbids
+putting the data into a commercial product or a model and allows using
+it to develop algorithms. The transcripts stay on the operator's
+machine, are not committed, uploaded, trained on, or sent to Bedrock,
+the API or the MCP server; the results file carries numbers and the
+corpus's own file names and nothing anyone said. About twenty lines of
+one transcript were read in the coding session that wrote the harness,
+to confirm the time bullets; that session runs with model training
+turned off, as the rules ask of such systems.
 
 What the rule produced, with the corpus's own speaker labels:
 

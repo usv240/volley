@@ -166,7 +166,7 @@ export const TERMS = {
   },
   playlogueLicence: {
     label: "CC BY-NC-SA",
-    text: "The corpus is shared for non-commercial use with attribution under the TalkBank ground rules. Volley uses it as evidence about the counter, not as a part of the product, and cites TalkBank as required.",
+    text: "TalkBank shares its corpora under CC BY-NC-SA 3.0 and its ground rules, which forbid putting the data into a product or a model and allow using it to develop and evaluate algorithms. Volley does the allowed thing only: the transcripts evaluate the counter on the operator's machine, are never shipped, uploaded or trained on, and what reaches this page is the counts. The rules ask for three citations: the corpus's own reference, its DOI with the year retrieved, and MacWhinney (2000) for CHILDES with its NICHD grant; all three are in the list.",
   },
 } as const;
 

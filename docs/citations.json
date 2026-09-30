@@ -258,6 +258,16 @@
    "key": "playlogue",
    "url": "https://huggingface.co/datasets/playlogue/playlogue-v1",
    "what": "33 hours of adult-child play, speaker-attributed and time-aligned, CC BY-NC-SA 3.0 behind the TalkBank ground rules."
+  },
+  {
+   "key": "macwhinney2000",
+   "url": "https://talkbank.org/0share/citation.html",
+   "what": "MacWhinney B. The CHILDES Project: Tools for analyzing talk. Third edition. Mahwah, NJ: Lawrence Erlbaum Associates, 2000. CHILDES is supported by NICHD grant HD082736. The TalkBank citation rules ask for this reference in every article using a CHILDES corpus, beside the corpus's own reference and its DOI with the year retrieved (2026)."
+  },
+  {
+   "key": "talkbankrules",
+   "url": "https://talkbank.org/0share/rules.html",
+   "what": "CC BY-NC-SA 3.0 and the ground rules: no incorporation of the data in commercial products or models; use for developing algorithms allowed; data not to be uploaded to systems that keep it; identifiable data stored locally only and not circulated. Volley evaluates the counter on the operator's machine, ships nothing from the corpus, and publishes counts only."
   }
  ]
 }

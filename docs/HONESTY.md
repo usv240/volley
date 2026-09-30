@@ -32,6 +32,13 @@
   browsers do not send to servers, and is kept in that browser's local
   storage only.
 
+- The public corpus (CHILDES Gleason) is used under CC BY-NC-SA 3.0
+  and the TalkBank ground rules for the one thing they allow, developing
+  and evaluating an algorithm: it stays on the operator's machine, is
+  never committed, uploaded, trained on or sent to any model, and only
+  counts reach the site. The three citations the rules ask for are on
+  the site and in EVIDENCE.md.
+
 ## Consent
 
 - The wearer is the adult. The child wears nothing.

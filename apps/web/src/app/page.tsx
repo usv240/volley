@@ -502,8 +502,10 @@ export default function Home() {
                 The corpus: Gleason JB, CHILDES English Gleason Corpus, doi 10.21415/T5101R, used under the TalkBank ground rules{" "}
                 <Info term="playlogueLicence" />, and cited as they require through Masur EF, Gleason JB. Parent-child interaction and
                 the acquisition of lexical information during play. Developmental Psychology 1980. doi 10.1037/0012-1649.16.5.404.
-                Playlogue (Kalanadhabhatta et al., IMWUT 2024), the corpus first planned, is gated behind the same rules on Hugging Face;
-                the harness for it is in the repository and runs the day access opens.
+                The database, cited as the rules also ask: MacWhinney B. The CHILDES Project: Tools for analyzing talk. Third edition.
+                Mahwah, NJ: Lawrence Erlbaum Associates, 2000; CHILDES is supported by NICHD grant HD082736. Retrieved and analysed
+                2026-09-30. Playlogue (Kalanadhabhatta et al., IMWUT 2024), the corpus first planned, is gated behind the same rules
+                on Hugging Face; the harness for it is in the repository and runs the day access opens.
               </li>
             </ul>
           </div>
