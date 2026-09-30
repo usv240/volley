@@ -251,7 +251,9 @@ class Recorder:
 # --------------------------------------------------------------------------
 
 HERO = "h1"
-STATS = "dl"
+# The three figures are the dl that is a direct child of main; the day
+# card has a dl of its own, and "dl" alone pointed at that one.
+STATS = "main > dl"
 HOW = "#how"
 PLAY = "#how button:has-text('Play')"
 DAY = "#day"
@@ -339,7 +341,7 @@ def evidence(r: Recorder):
 
 
 def close(r: Recorder):
-    r.scroll_to(CLOSE, rest=URL_BAR_HEIGHT + 60 * SCALE)
+    r.scroll_to(CLOSE, rest=URL_BAR_HEIGHT + 140 * SCALE)
     r.page.evaluate("document.getElementById('__cursor').style.opacity='0'")
     yield
     r.hold_beat()
