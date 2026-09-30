@@ -149,7 +149,7 @@ the same words rather than hiding it.
 | 7 | Tagline as verbs | The four-verb tagline on the site, the repo and the submission | The same sentence in all three, checked by a test | 10-10 |
 | 8 | The demo cannot break | Counting from a `bee sync` export offline; the browser drop zone; committed corpus numbers; recorded fallbacks that say they are recorded | Each path exercised in a test; the video uses live calls | 10-10 |
 | 9 | A practitioner's sentence | One quoted sentence from one speech-language pathologist, paediatrician or preschool teacher, named with permission | On the site, or the site says nobody has yet | 10-10 |
-| 10 | A shipped surface | `pip install volley` and `pip install serve-return` on PyPI; API keys; a tagged GitHub release | A clean machine installs and runs `volley today` against a sync export | 10-10 |
+| 10 | A shipped surface | `pip install volley-bee` and `pip install serve-return` on PyPI; API keys; a tagged GitHub release | A clean machine installs and runs `volley today` against a sync export | 10-10 |
 | 11 | Limits as measured properties | The youngest-session undercount, the label disagreement, the corpus agreement, each a number; the rest named as the next study with its design | No public sentence says "unmeasured" without naming the study | 10-10 |
 | 12 | Inspect and rerun | `volley verify`; a hash-chained evidence record; the test total counted on the page | `volley verify` prints no diff on the shipped commit; a broken window fails it | 10-10 |
 

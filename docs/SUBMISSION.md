@@ -105,6 +105,24 @@ carried across from sibling entries of ours in the same window, which
 the commits say; every claim, every rule and every word on the site is
 Volley's.
 
+## Beyond this hackathon
+
+Cities have paid for this count: Providence won a Bloomberg
+Philanthropies grand prize to put the research recorder in families'
+homes with coaching, and community classes on the same instrument
+raised turns in an evaluation. It is coachable in randomised trials at
+the age Volley serves, and the gains from home visits fade when the
+visits end, which is the case for a daily count. The number reaches
+beyond language to how children handle feelings, and to the wiring of
+the brain's language pathway. About one child in ten arrives at school
+with a language disorder, and paediatricians are asked to promote talk
+at every well visit with no instrument a parent can bring. The Bee
+costs about fifty dollars and is already worn. Every sentence of that
+has its study on the site's Impact section and in
+[EVIDENCE.md](EVIDENCE.md); every study is resolved in
+[citations.json](citations.json) with what it showed and what it did
+not, and a test refuses any citation in public text that is not there.
+
 ## Evidence
 
 [EVIDENCE.md](EVIDENCE.md): every number, its study, what it showed and

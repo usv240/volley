@@ -72,6 +72,18 @@ Judges ask: a credible, specific case; an audience beyond the hackathon.
   by the day's own counts rather than by a visitor.
 - The honesty holds the line: associations stated as associations,
   LENA's figures as LENA's, a child never scored.
+- The case beyond the hackathon is made on the site, in its own
+  section, in the order a sceptic asks: cities have paid for this
+  count (Providence Talks, LENA Start); it is coachable in randomised
+  trials at this age (Romeo 2021, Suskind 2016, Leung 2020); the number
+  reaches beyond language (Gomez 2021, Romeo 2018); it does not rest on
+  the word gap (Sperry 2019, Golinkoff 2019); the phone is the mechanism
+  the quietest hour points at (Reed 2017, Radesky 2014); the research
+  instrument's own turn count is imperfect (Cristia 2020, Ferjan
+  Ramirez 2021); the scale and who is asked to act (Norbury 2016, the
+  AAP's 2014 and 2021 policies); and what changes at fifty dollars.
+  Every study is resolved in `docs/citations.json` with what it showed
+  and did not, and a test refuses a citation that is not there.
 - What would cost a point: one family. The site says so; the pilot
   paragraph names the study to run next: the Bee against a LENA
   recorder on the same afternoon.

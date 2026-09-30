@@ -68,3 +68,104 @@ source.
 A child under three on this device; a family other than the operator's;
 a comparison of the Bee's turn count with a LENA recorder on the same
 afternoon, which is the study we would run first with a grant.
+
+## The case that it serves people beyond this hackathon, in the order a sceptic would ask
+
+Every study below is resolved on PubMed or Crossref in
+[citations.json](citations.json), with what it showed and what it did
+not; a test asserts nothing is cited in public text that is not there.
+
+**Somebody has already paid for this count, at city scale.** Providence
+won the 2013 Bloomberg Philanthropies Mayors Challenge grand prize for
+Providence Talks, which put LENA recorders in families' homes with
+coaching (Wong, Thomas and Boben, Studies in Educational Evaluation
+2020, doi 10.1016/j.stueduc.2019.100818; the programme's own site
+claims 55 percent of families raised their daily adult word count).
+LENA Start, the same instrument in a community parent-education
+programme, produced significant between-group gains in conversational
+turns and child vocalisations, though not in adult words, in a
+nonequivalent-groups evaluation (Elmquist et al., Journal of Child
+Language 2021, PMID 32921333). The demand is proven; the barrier is
+that the instrument is a programme, not a purchase.
+
+**It is coachable, in randomised trials, in the age range Volley
+serves.** Beyond the infant trials the front page cites (Ferjan Ramirez
+2020, Huber 2023), a nine-week family intervention with 52 children
+aged 4 to 6 raised turns, the change in turns mediated the gains in
+language and executive function, and across the sample the change in
+turns correlated with cortical thickening in language regions (Romeo et
+al., Developmental Cognitive Neuroscience 2021, PMID 34052580). An
+eight-visit home programme raised turns during the visits and the gain
+faded afterwards (Suskind et al., Journal of Child Language 2016, PMID
+26041013; the full Thirty Million Words curriculum was then tested in a
+randomised trial measured with the same recorder, Leung, Hernandez and
+Suskind, Early Childhood Research Quarterly 2020, doi
+10.1016/j.ecresq.2018.12.005), which is the argument for a count that
+is there every day rather than a course that ends.
+
+**The number is about more than words.** Turns at 18 months predicted
+socioemotional competence at 30 months, controlling for warmth, risk
+and the child's own vocalisations, with the direction running from turns
+to competence (Gomez and Strasser, Developmental Science 2021, PMID
+33825290). Turns, independent of income and of how much adults spoke,
+related to white matter connectivity in the left arcuate fasciculus
+near Broca's area, and no other tract (Romeo et al., Journal of
+Neuroscience 2018, PMID 30104336).
+
+**Volley does not rest on the word gap.** The thirty-million-word
+figure did not replicate as stated (Sperry, Sperry and Miller, Child
+Development 2019, PMID 29707767); the reply holds that responsive,
+child-directed talk is what the evidence supports whatever the gap's
+size (Golinkoff et al., Child Development 2019, PMID 30102419). Turns
+are the measure that survived the income adjustment in Gilkerson 2018
+when words did not, which is why Volley counts them and not words.
+
+**The phone is the mechanism the quietest hour points at.** When a
+mother's teaching of a new word was interrupted by a phone call, the
+two-year-old did not learn it, though the word was said as often (Reed,
+Hirsh-Pasek and Golinkoff, Developmental Psychology 2017, PMID
+28650177). Of 55 caregivers observed at meals with young children, 40
+used a device, and the depth of absorption shaped how the child's bids
+were met (Radesky et al., Pediatrics 2014, PMID 24616357). Volley
+cannot see a phone or a television; it shows the hour, and the site
+says the rest is the parent's to notice.
+
+**The research instrument's own turn count is imperfect, which is why
+Volley publishes its agreement rather than assuming it.** Against
+manual annotation in three populations, LENA's adult word and child
+vocalisation counts were reasonably accurate and its conversational
+turn count was "more problematic" (Cristia et al., Behavior Research
+Methods 2020, PMID 32728916); an automatic count and a hand count under
+the five-second rule disagreed enough to earn "a word of caution"
+(Ferjan Ramirez, Hippe and Kuhl, Child Development 2021, doi
+10.1111/cdev.13495). An open count with its hand-count agreement on the
+front page is not a step down from a gold standard; there is no gold
+standard, and the front page says what this one's error is once it is
+measured.
+
+**The scale of the need, and who is asked to act on it.** At school
+entry, 9.92 percent of children in a population study had a language
+disorder, 7.58 percent of them with no known cause, and 88 percent of
+those children did not make expected academic progress (Norbury et al.,
+Journal of Child Psychology and Psychiatry 2016, PMID 27184709). The
+American Academy of Pediatrics asks paediatricians to promote talking
+and reading with young children at well visits from infancy (Council on
+Early Childhood, Pediatrics 2014, PMID 24962987) and names serve-and-
+return relationships as the thing paediatric care should protect
+(Garner and Yogman, Pediatrics 2021, PMID 34312296). Neither policy
+names an instrument a parent can bring to the visit, because none has
+been sold to one. Volley is not a screen for language disorder and the
+site says so; it is the count a parent could bring.
+
+**What changes at fifty dollars on the wrist.** The Bee Pioneer Edition
+lists at 49.99 dollars and ships only to the United States on the day
+this was written; Bee also runs on an Apple Watch. The research
+instrument is sold to programmes and researchers. The difference is not
+a better count; it is the first count a parent can own, on a device
+that is already worn for other reasons, with the words never leaving
+their computer.
+
+**What this section does not claim.** That Volley has changed any
+child's outcome; that its count equals LENA's; that a parent should aim
+for any number. One family has worn it. The first study to run with a
+grant is the Bee against a LENA recorder on the same afternoon.

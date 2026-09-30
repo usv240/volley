@@ -1,0 +1,243 @@
+{
+ "_about": "Every study the site or the documents cite, resolved on PubMed or Crossref on the date given rather than quoted from memory. A test asserts that every PMID or DOI that appears in public text is here, and that every entry says what the study showed and what it did not.",
+ "_resolved": "2026-09-30 via eutils.ncbi.nlm.nih.gov and api.crossref.org",
+ "citations": [
+  {
+   "key": "gilkerson2018",
+   "pmid": "30201624",
+   "first": "Gilkerson J",
+   "year": 2018,
+   "journal": "Pediatrics",
+   "title": "Language Experience in the Second Year of Life and Language Outcomes in Late Childhood",
+   "showed": "In 146 children with monthly daylong LENA recordings, conversational turns at 18 to 24 months explained 14 to 27 percent of the variance in IQ, verbal comprehension and vocabulary a decade later after adjusting for family income; adult word counts did not survive that adjustment. Three authors work for the LENA Foundation.",
+   "did_not": "Causation."
+  },
+  {
+   "key": "romeo2018psychsci",
+   "pmid": "29442613",
+   "first": "Romeo RR",
+   "year": 2018,
+   "journal": "Psychological Science",
+   "title": "Beyond the 30-Million-Word Gap: Children's Conversational Exposure Is Associated With Language-Related Brain Function",
+   "showed": "In 36 children aged 4 to 6, turns and not words heard predicted activation in the left inferior frontal region during language processing, independent of income, IQ and utterance count.",
+   "did_not": "Anything about children under four, or about later outcomes."
+  },
+  {
+   "key": "romeo2018jneurosci",
+   "pmid": "30104336",
+   "first": "Romeo RR",
+   "year": 2018,
+   "journal": "The Journal of Neuroscience",
+   "title": "Language Exposure Relates to Structural Neural Connectivity in Childhood",
+   "showed": "In 40 children aged 4 to 6, a preregistered hypothesis held: more adult-child conversational turns, independent of income and of the amount of adult speech, related to stronger white matter connectivity in the left arcuate and superior longitudinal fasciculi near Broca's area, and that connectivity mediated the link between turns and language skills. No other tract was related.",
+   "did_not": "A direction of effect; it is a cross-sectional association."
+  },
+  {
+   "key": "romeo2021",
+   "pmid": "34052580",
+   "first": "Romeo RR",
+   "year": 2021,
+   "journal": "Developmental Cognitive Neuroscience",
+   "title": "Neuroplasticity associated with changes in conversational turn-taking following a family-based intervention",
+   "showed": "52 children aged 4 to 6 from mostly lower-income families were randomised to a nine-week family-based intervention or no contact. Intervention families showed greater increases in turns; the change in turns mediated the intervention's effects on language and executive function; across groups, change in turns correlated with cortical thickening in left inferior frontal and supramarginal gyri.",
+   "did_not": "That any single family's change in turns changes a child's brain; it is a group result."
+  },
+  {
+   "key": "ferjan2020",
+   "pmid": "32015127",
+   "first": "Ferjan Ramirez N",
+   "year": 2020,
+   "journal": "PNAS",
+   "title": "Parent coaching increases conversational turns and advances infant language development",
+   "showed": "In a randomised trial of 71 families, coaching parents on their own recordings at 6, 10 and 14 months raised turns and children's language at 18 months.",
+   "did_not": "Anything about children of talking age; the infants were under two."
+  },
+  {
+   "key": "huber2023",
+   "pmid": "36999222",
+   "first": "Huber E",
+   "year": 2023,
+   "journal": "Developmental Science",
+   "title": "Parent coaching from 6 to 18 months improves child language outcomes through 30 months of age",
+   "showed": "The coached group's vocabulary growth was greater through 30 months, and turn-taking at 14 months mediated it.",
+   "did_not": "A randomised design in the follow-up alone."
+  },
+  {
+   "key": "suskind2016",
+   "pmid": "26041013",
+   "first": "Suskind DL",
+   "year": 2016,
+   "journal": "Journal of Child Language",
+   "title": "A parent-directed language intervention for children of low socioeconomic status: a randomized controlled pilot study",
+   "showed": "In 23 mother-child dyads randomised to eight weekly home visits or control, home LENA recordings showed adult words, conversational turns and child vocalisations rose significantly during the intervention.",
+   "did_not": "A lasting effect: the home gains were not significant after the visits ended, which is the case for a daily count rather than a course."
+  },
+  {
+   "key": "leung2020",
+   "doi": "10.1016/j.ecresq.2018.12.005",
+   "first": "Leung CYY",
+   "year": 2020,
+   "journal": "Early Childhood Research Quarterly",
+   "title": "Enriching home language environment among families from low-SES backgrounds: A randomized controlled trial of a home visiting curriculum",
+   "showed": "A randomised trial of the Thirty Million Words home-visiting curriculum with families from lower-income backgrounds, measured with LENA recordings.",
+   "did_not": "Anything a parent can do alone; it is a curriculum delivered by visitors."
+  },
+  {
+   "key": "elmquist2021",
+   "pmid": "32921333",
+   "first": "Elmquist M",
+   "year": 2021,
+   "journal": "Journal of Child Language",
+   "title": "Parent education to improve early language development: A preliminary evaluation of LENA Start",
+   "showed": "A community-based LENA Start programme (39 dyads against 17 in generic parent education): between-group effects favouring LENA Start were significant for conversational turns and child vocalisations, not for adult words; 72 percent of participants met the criteria to graduate.",
+   "did_not": "A randomised design; groups were nonequivalent."
+  },
+  {
+   "key": "wong2020",
+   "doi": "10.1016/j.stueduc.2019.100818",
+   "first": "Wong K",
+   "year": 2020,
+   "journal": "Studies in Educational Evaluation",
+   "title": "Providence talks: A citywide partnership to address early childhood language development",
+   "showed": "The evaluation of Providence Talks, the city programme that put LENA recorders in families' homes with coaching after Providence won the 2013 Bloomberg Philanthropies Mayors Challenge grand prize.",
+   "did_not": "A number Volley can quote from the abstract; the paper is behind a paywall and the programme's own site claims 55 percent of families increased their daily adult word count."
+  },
+  {
+   "key": "cristia2020",
+   "pmid": "32728916",
+   "first": "Cristia A",
+   "year": 2020,
+   "journal": "Behavior Research Methods",
+   "title": "A thorough evaluation of the Language Environment Analysis (LENA) system",
+   "showed": "Against manual annotation of clips from daylong recordings in three populations, the research instrument's adult word and child vocalisation counts were reasonably accurate and its conversational turn count was, in the authors' words, more problematic.",
+   "did_not": "That the instrument is unusable; whether it is accurate enough depends on the application, which is their conclusion and Volley's."
+  },
+  {
+   "key": "ferjan2021caution",
+   "doi": "10.1111/cdev.13495",
+   "first": "Ferjan Ramirez N",
+   "year": 2021,
+   "journal": "Child Development",
+   "title": "Comparing Automatic and Manual Measures of Parent-Infant Conversational Turns: A Word of Caution",
+   "showed": "The automatic turn count and a hand count under the five-second rule disagree in ways the authors thought worth a warning.",
+   "did_not": "A reason to trust any automated count without its own hand count beside it."
+  },
+  {
+   "key": "christakis2009",
+   "pmid": "19487612",
+   "first": "Christakis DA",
+   "year": 2009,
+   "journal": "Archives of Pediatrics and Adolescent Medicine",
+   "title": "Audible television and decreased adult words, infant vocalizations, and conversational turns",
+   "showed": "In home recordings of 329 children aged 2 to 48 months, each hour of audible television was associated with 0.22 SD fewer turns and 0.26 SD fewer child vocalisations.",
+   "did_not": "That any particular quiet hour was television."
+  },
+  {
+   "key": "reed2017",
+   "pmid": "28650177",
+   "first": "Reed J",
+   "year": 2017,
+   "journal": "Developmental Psychology",
+   "title": "Learning on hold: Cell phones sidetrack parent-child interactions",
+   "showed": "38 mothers each taught their two-year-old two new words; one teaching was interrupted by a phone call. Children learned the uninterrupted word and not the interrupted one, though the word was said the same number of times in both.",
+   "did_not": "Anything about longer-term outcomes; it is one experiment on word learning."
+  },
+  {
+   "key": "radesky2014",
+   "pmid": "24616357",
+   "first": "Radesky JS",
+   "year": 2014,
+   "journal": "Pediatrics",
+   "title": "Patterns of mobile device use by caregivers and children during meals in fast food restaurants",
+   "showed": "Of 55 caregivers observed eating with young children, 40 used a device during the meal; the degree of absorption in the device, not its mere presence, shaped how children's bids for attention were met.",
+   "did_not": "A count of anything; it is observational and qualitative."
+  },
+  {
+   "key": "gomez2021",
+   "pmid": "33825290",
+   "first": "Gomez E",
+   "year": 2021,
+   "journal": "Developmental Science",
+   "title": "Language and socioemotional development in early childhood: The role of conversational turns",
+   "showed": "In 43 infants, turns at 18 months predicted socioemotional competence at 30 months, controlling for initial levels, child vocalisations, maternal warmth and social risk; the cross-lagged direction ran from turns to socioemotional development rather than the reverse.",
+   "did_not": "A large sample; 43 children."
+  },
+  {
+   "key": "sperry2019",
+   "pmid": "29707767",
+   "first": "Sperry DE",
+   "year": 2019,
+   "journal": "Child Development",
+   "title": "Reexamining the Verbal Environments of Children From Different Socioeconomic Backgrounds",
+   "showed": "Across five communities, the number of words children heard varied as much within income groups as between them, and the thirty-million-word gap did not replicate as stated.",
+   "did_not": "That the amount or kind of talk does not matter; the reply below says why."
+  },
+  {
+   "key": "golinkoff2019",
+   "pmid": "30102419",
+   "first": "Golinkoff RM",
+   "year": 2019,
+   "journal": "Child Development",
+   "title": "Language Matters: Denying the Existence of the 30-Million-Word Gap Has Serious Consequences",
+   "showed": "The reply: the quality of child-directed, responsive talk is what the evidence supports, whatever the exact size of any gap in words.",
+   "did_not": "Settle the size of the gap; Volley does not rest on it."
+  },
+  {
+   "key": "norbury2016",
+   "pmid": "27184709",
+   "first": "Norbury CF",
+   "year": 2016,
+   "journal": "Journal of Child Psychology and Psychiatry",
+   "title": "The impact of nonverbal ability on prevalence and clinical presentation of language disorder: evidence from a population study",
+   "showed": "In a population study of 7,267 children screened at school entry in Surrey, England, the prevalence of language disorder was 9.92 percent, 7.58 percent of it with no known cause; 88 percent of affected children did not make expected academic progress.",
+   "did_not": "That any count predicts who those children are. Volley is not a screen and says so."
+  },
+  {
+   "key": "aap2014",
+   "pmid": "24962987",
+   "first": "Council on Early Childhood",
+   "year": 2014,
+   "journal": "Pediatrics",
+   "title": "Literacy promotion: an essential component of primary care pediatric practice",
+   "showed": "The American Academy of Pediatrics' policy that paediatricians promote reading aloud and talking with young children at well visits, from infancy.",
+   "did_not": "Name any instrument for a parent to bring to the visit; there is none they can buy."
+  },
+  {
+   "key": "garner2021",
+   "pmid": "34312296",
+   "first": "Garner A",
+   "year": 2021,
+   "journal": "Pediatrics",
+   "title": "Preventing Childhood Toxic Stress: Partnering With Families and Communities to Promote Relational Health",
+   "showed": "The American Academy of Pediatrics' policy statement that safe, stable, nurturing relationships, the serve-and-return interactions of early childhood, are the thing paediatric care should promote.",
+   "did_not": "A measurement; it is a statement of what matters."
+  }
+ ],
+ "non_study_sources": [
+  {
+   "key": "harvard",
+   "url": "https://developingchild.harvard.edu/science/key-concepts/serve-and-return/",
+   "what": "Harvard's Center on the Developing Child names serve and return as the interaction that builds brain architecture."
+  },
+  {
+   "key": "lena40",
+   "url": "https://www.lena.org/",
+   "what": "LENA publishes forty turns an hour as a target in Every Interaction Counts; the site states it as LENA's figure and sets none of its own."
+  },
+  {
+   "key": "providencetalks",
+   "url": "https://www.providencetalks.org/",
+   "what": "The programme's own site: ages 0 to 3, LENA as a partner, and the claim that 55 percent of families increased their daily adult word count after participating."
+  },
+  {
+   "key": "bee",
+   "url": "https://bee.computer/",
+   "what": "The Bee Pioneer Edition lists at 49.99 dollars and ships only to the United States on 2026-09-30; Bee also runs on an Apple Watch."
+  },
+  {
+   "key": "playlogue",
+   "url": "https://huggingface.co/datasets/playlogue/playlogue-v1",
+   "what": "33 hours of adult-child play, speaker-attributed and time-aligned, CC BY-NC-SA 3.0 behind the TalkBank ground rules."
+  }
+ ]
+}

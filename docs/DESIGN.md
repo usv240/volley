@@ -208,7 +208,7 @@ than a nickname, and a test asserts the schema.
 
 Every judge and every parent can use the product without us:
 
-1. **Your Bee, on your machine.** `pip install volley`, `volley setup`,
+1. **Your Bee, on your machine.** `pip install volley-bee`, `volley setup`,
    `volley today`. The only route that reads a transcript, and it reads
    it where you are.
 2. **A Bee export, in your browser.** The site has a drop zone for the

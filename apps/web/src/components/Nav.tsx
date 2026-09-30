@@ -25,6 +25,7 @@ const LINKS = [
   { href: "/#privacy", label: "Privacy" },
   { href: "/#yours", label: "Your Bee" },
   { href: "/#alexa", label: "Alexa+" },
+  { href: "/#impact", label: "Impact" },
   { href: "/#evidence", label: "Evidence" },
   { href: "/#developers", label: "Developers" },
   { href: "/mine/", label: "Mine" },

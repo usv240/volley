@@ -120,6 +120,42 @@ export const TERMS = {
     label: "validated",
     text: "The word is used here only for the published instrument and its studies. Volley's own count is checked against a hand count and against a public corpus, and the results are on this page. It has not been validated on children other than the corpus's, and the page says so.",
   },
+  paidFor: {
+    label: "already paid for",
+    text: "Providence won the 2013 Bloomberg Philanthropies Mayors Challenge grand prize for Providence Talks, which put LENA recorders in families' homes with coaching; the programme's own site says 55 percent of families raised their daily adult word count (Wong, Thomas and Boben, Studies in Educational Evaluation 2020, doi 10.1016/j.stueduc.2019.100818). LENA Start, the same instrument in a community class, produced significant gains in turns and child vocalisations but not adult words, in a nonequivalent-groups evaluation (Elmquist et al., Journal of Child Language 2021, PMID 32921333).",
+  },
+  coachable: {
+    label: "coachable at this age",
+    text: "A nine-week family intervention with 52 children aged 4 to 6, randomised against no contact, raised turns; the change in turns mediated gains in language and executive function, and correlated with cortical thickening in language regions (Romeo et al., Developmental Cognitive Neuroscience 2021, PMID 34052580). Eight home visits raised turns while they lasted and the gain faded after (Suskind et al., Journal of Child Language 2016, PMID 26041013), which is the case for a daily count over a course that ends.",
+  },
+  moreThanWords: {
+    label: "more than language",
+    text: "Turns at 18 months predicted socioemotional competence at 30 months, controlling for warmth, social risk and the child's own vocalisations, and the direction ran from turns to competence (Gomez and Strasser, Developmental Science 2021, PMID 33825290). Turns, independent of income and of how much adults spoke, related to white matter connectivity near Broca's area and to no other tract (Romeo et al., Journal of Neuroscience 2018, PMID 30104336).",
+  },
+  wordGap: {
+    label: "the word gap",
+    text: "The thirty-million-word figure did not replicate as stated (Sperry, Sperry and Miller, Child Development 2019, PMID 29707767); the reply holds that responsive, child-directed talk is what the evidence supports whatever the gap's size (Golinkoff et al., Child Development 2019, PMID 30102419). Volley does not rest on the gap. It counts turns because turns survived the income adjustment in Gilkerson 2018 when words did not.",
+  },
+  phone: {
+    label: "the phone",
+    text: "When a mother's teaching of a new word was interrupted by a phone call, her two-year-old did not learn it, though the word was said as often (Reed, Hirsh-Pasek and Golinkoff, Developmental Psychology 2017, PMID 28650177). Of 55 caregivers observed at meals with young children, 40 used a device (Radesky et al., Pediatrics 2014, PMID 24616357). Volley cannot see a phone; it shows the hour, and what was happening in it is yours to notice.",
+  },
+  imperfectInstrument: {
+    label: "the instrument's own error",
+    text: "Against manual annotation in three populations, the research recorder's word and child-vocalisation counts were reasonably accurate and its conversational turn count was, in the authors' words, more problematic (Cristia et al., Behavior Research Methods 2020, PMID 32728916); an automatic and a hand count under the five-second rule disagreed enough to earn a word of caution (Ferjan Ramirez, Hippe and Kuhl, Child Development 2021, doi 10.1111/cdev.13495). There is no gold standard. That is why this page publishes its own agreement rather than assuming it.",
+  },
+  scale: {
+    label: "the scale",
+    text: "In a population study of 7,267 children screened at school entry in England, 9.92 percent had a language disorder, 7.58 percent with no known cause, and 88 percent of them did not make expected academic progress (Norbury et al., Journal of Child Psychology and Psychiatry 2016, PMID 27184709). Volley is not a screen for any of this and never says a child is behind; it is the count a parent could bring to the visit where that conversation happens.",
+  },
+  wellVisit: {
+    label: "the well visit",
+    text: "The American Academy of Pediatrics asks paediatricians to promote talking and reading with young children at well visits from infancy (Council on Early Childhood, Pediatrics 2014, PMID 24962987) and names serve-and-return relationships as what paediatric care should protect (Garner and Yogman, Pediatrics 2021, PMID 34312296). Neither policy names an instrument a parent can bring, because none has been sold to one.",
+  },
+  fiftyDollars: {
+    label: "fifty dollars",
+    text: "The Bee Pioneer Edition listed at 49.99 dollars on 2026-09-30 and ships only to the United States; Bee also runs on an Apple Watch. The research recorder is sold to programmes and researchers. The difference Volley makes is not a better count; it is the first count a parent can own, on a device already worn for other reasons, with the words never leaving their computer.",
+  },
   playlogueLicence: {
     label: "CC BY-NC-SA",
     text: "The corpus is shared for non-commercial use with attribution under the TalkBank ground rules. Volley uses it as evidence about the counter, not as a part of the product, and cites TalkBank as required.",

@@ -53,9 +53,52 @@ const STEPS = [
   { title: "Install Bee's command line tool", body: "npm install -g @beeai/cli", live: true },
   { title: "Turn on Developer Mode in the Bee app", body: "Settings, then tap the version number five times.", live: true, term: "developerMode" as const },
   { title: "Sign in the tool to your Bee", body: "bee login, then approve it in the app.", live: true },
-  { title: "Install Volley", body: "pip install volley", live: true },
+  { title: "Install Volley", body: "pip install volley-bee", live: true },
   { title: "Say who is who, then count the day", body: "volley setup --parent <label> --child <label> --child-name Asha --tz 5.5\nvolley today", live: true },
   { title: "See your days in a browser, if you want to", body: "volley connect\nvolley today", live: true, term: "mine" as const },
+];
+
+const IMPACT = [
+  {
+    title: "Somebody has already paid for it, at city scale",
+    term: "paidFor" as const,
+    body: "Providence won a Bloomberg Philanthropies grand prize to put the research recorder in families' homes with coaching, and community classes built on the same instrument raised turns in an evaluation. The demand is proven. The barrier is that the instrument is a programme, not a purchase.",
+  },
+  {
+    title: "It is coachable, in randomised trials, at this age",
+    term: "coachable" as const,
+    body: "A nine-week family intervention with four-to-six-year-olds raised turns, and the change in turns carried the gains in language. Home-visit gains faded when the visits ended, which is the argument for a count that is there every day rather than a course.",
+  },
+  {
+    title: "The number is about more than words",
+    term: "moreThanWords" as const,
+    body: "Turns at 18 months predicted how children handled feelings a year later, with the direction running from turns outward; and turns, not the amount adults spoke, related to the wiring of the brain's language pathway.",
+  },
+  {
+    title: "It does not rest on the word gap",
+    term: "wordGap" as const,
+    body: "The thirty-million-word figure did not replicate as stated, and the field's reply was that responsive talk is what matters. Volley counts turns because turns kept predicting outcomes after income was accounted for, when words did not.",
+  },
+  {
+    title: "The quietest hour usually has a phone in it",
+    term: "phone" as const,
+    body: "One interrupted phone call was enough to stop a two-year-old learning a word said just as often. Volley cannot see the phone. It shows the hour, and the note names the quietest one with your child present, which is the only nudge it makes.",
+  },
+  {
+    title: "The research instrument's own turn count is imperfect",
+    term: "imperfectInstrument" as const,
+    body: "A thorough evaluation found its turn count more problematic than its word count, and a comparison with hand counts earned a word of caution. There is no gold standard, which is why this page will print its own agreement rather than assume it.",
+  },
+  {
+    title: "The scale, and who is asked to act on it",
+    term: "scale" as const,
+    body: "About one child in ten arrives at school with a language disorder, most with no known cause, and nearly nine in ten of them fall behind. Paediatricians are asked to promote talk at every well visit and have no instrument a parent can bring. Volley is not a screen; it is the count a parent could bring.",
+  },
+  {
+    title: "What changes at fifty dollars on the wrist",
+    term: "fiftyDollars" as const,
+    body: "The Bee costs about fifty dollars and is already worn for other reasons. The difference is not a better count; it is the first one a parent can own, on their own computer, with the words never leaving it.",
+  },
 ];
 
 const FAQ = [
@@ -340,6 +383,34 @@ export default function Home() {
 
         <div className="rule my-20" />
 
+        {/* 10b. Impact: who has paid for this count already, and what changes at fifty dollars. */}
+        <section id="impact" className="scroll-mt-24">
+          <p className="eyebrow">Beyond this hackathon</p>
+          <h2 className="display-sm mt-3 max-w-[24ch] text-3xl text-ink sm:text-4xl">Cities have paid for this count. Parents have never been able to buy it.</h2>
+          <p className="mt-4 max-w-[66ch] leading-relaxed text-muted">
+            The case for who this serves, in the order a sceptic would ask it, with the study behind every sentence on its i. What
+            it does not claim is at the end, in the same type.
+          </p>
+          <div className="mt-10 grid gap-6 md:grid-cols-2">
+            {IMPACT.map((c) => (
+              <div key={c.title} className="card min-w-0 p-6">
+                <p className="font-semibold text-ink">
+                  {c.title} <Info term={c.term} />
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{c.body}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-6 max-w-[66ch] text-sm leading-relaxed text-muted">
+            Not claimed: that Volley has changed any child&apos;s outcome; that its count equals the research recorder&apos;s; that
+            a parent should aim for any number. One family has worn it. Every study above is resolved on PubMed or Crossref in the
+            repository&apos;s citations file, with what it showed and what it did not, and a test refuses any citation in this page
+            that is not there.
+          </p>
+        </section>
+
+        <div className="rule my-20" />
+
         {/* 11. Evidence: refused first, then baselines, then agreement. */}
         <section id="evidence" className="scroll-mt-24">
           <p className="eyebrow">Evidence</p>
@@ -382,6 +453,20 @@ export default function Home() {
               <li>Ferjan Ramirez N, Lytle SR, Kuhl PK. Parent coaching increases conversational turns and advances infant language development. PNAS 2020. PMID 32015127.</li>
               <li>Huber E et al. Parent coaching from 6 to 18 months improves child language outcomes through 30 months of age. Developmental Science 2023. PMID 36999222.</li>
               <li>Christakis DA et al. Audible television and decreased adult words, infant vocalizations, and conversational turns. Archives of Pediatrics and Adolescent Medicine 2009. PMID 19487612.</li>
+              <li>Romeo RR et al. Language Exposure Relates to Structural Neural Connectivity in Childhood. Journal of Neuroscience 2018. PMID 30104336.</li>
+              <li>Romeo RR et al. Neuroplasticity associated with changes in conversational turn-taking following a family-based intervention. Developmental Cognitive Neuroscience 2021. PMID 34052580.</li>
+              <li>Suskind DL et al. A parent-directed language intervention for children of low socioeconomic status: a randomized controlled pilot study. Journal of Child Language 2016. PMID 26041013.</li>
+              <li>Leung CYY, Hernandez MW, Suskind DL. Enriching home language environment among families from low-SES backgrounds: A randomized controlled trial of a home visiting curriculum. Early Childhood Research Quarterly 2020. doi 10.1016/j.ecresq.2018.12.005.</li>
+              <li>Elmquist M et al. Parent education to improve early language development: A preliminary evaluation of LENA Start. Journal of Child Language 2021. PMID 32921333.</li>
+              <li>Wong K, Thomas C, Boben M. Providence talks: A citywide partnership to address early childhood language development. Studies in Educational Evaluation 2020. doi 10.1016/j.stueduc.2019.100818.</li>
+              <li>Gomez E, Strasser K. Language and socioemotional development in early childhood: The role of conversational turns. Developmental Science 2021. PMID 33825290.</li>
+              <li>Sperry DE, Sperry LL, Miller PJ. Reexamining the Verbal Environments of Children From Different Socioeconomic Backgrounds. Child Development 2019. PMID 29707767; and the reply, Golinkoff RM et al., PMID 30102419.</li>
+              <li>Reed J, Hirsh-Pasek K, Golinkoff RM. Learning on hold: Cell phones sidetrack parent-child interactions. Developmental Psychology 2017. PMID 28650177.</li>
+              <li>Radesky JS et al. Patterns of mobile device use by caregivers and children during meals in fast food restaurants. Pediatrics 2014. PMID 24616357.</li>
+              <li>Cristia A et al. A thorough evaluation of the Language Environment Analysis (LENA) system. Behavior Research Methods 2020. PMID 32728916.</li>
+              <li>Ferjan Ramirez N, Hippe DS, Kuhl PK. Comparing Automatic and Manual Measures of Parent-Infant Conversational Turns: A Word of Caution. Child Development 2021. doi 10.1111/cdev.13495.</li>
+              <li>Norbury CF et al. The impact of nonverbal ability on prevalence and clinical presentation of language disorder. Journal of Child Psychology and Psychiatry 2016. PMID 27184709.</li>
+              <li>Council on Early Childhood. Literacy promotion: an essential component of primary care pediatric practice. Pediatrics 2014. PMID 24962987. Garner A, Yogman M. Preventing Childhood Toxic Stress: Partnering With Families and Communities to Promote Relational Health. Pediatrics 2021. PMID 34312296.</li>
               <li>Harvard University Center on the Developing Child. Serve and Return.</li>
               <li>Playlogue (Kalanadhabhatta et al., IMWUT 2024), from CHILDES, for the corpus <Info term="corpus" /> <Info term="playlogueLicence" />.</li>
             </ul>
