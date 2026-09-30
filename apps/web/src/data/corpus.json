@@ -1,0 +1,57 @@
+{
+ "corpus": "CHILDES Gleason corpus (Jean Berko Gleason, Boston University; 24 children aged 2;1 to 5;2 recorded with their mother, with their father, and at the family dinner table; audio-linked), doi 10.21415/T5101R, under the TalkBank ground rules",
+ "sessions": 54,
+ "hours": 26.59,
+ "turns": 20344,
+ "turns_per_hour": 765.1,
+ "turns_per_hour_min": 171.2,
+ "turns_per_hour_median": 808.3,
+ "turns_per_hour_max": 1326.1,
+ "by_situation": {
+  "Dinner": {
+   "sessions": 20,
+   "hours": 9.1,
+   "turns_per_hour": 672.4
+  },
+  "Father": {
+   "sessions": 21,
+   "hours": 9.93,
+   "turns_per_hour": 892.0
+  },
+  "Mother": {
+   "sessions": 13,
+   "hours": 7.55,
+   "turns_per_hour": 710.0
+  }
+ },
+ "under_36_months": {
+  "sessions": 13,
+  "turns_per_hour": 776.3
+ },
+ "from_36_months": {
+  "sessions": 41,
+  "turns_per_hour": 761.3
+ },
+ "single_speaker_stretches": 34,
+ "turns_inside_them": 0,
+ "naive_speaker_changes": 20486,
+ "alternations_within_window_percent": 99.3,
+ "median_gap_seconds": 0.0,
+ "turns_with_50s_window": 20483,
+ "adult_words": 131211,
+ "spearman_adult_words_vs_turns": 0.51,
+ "same_words_different_turns": {
+  "ratio": 3.61,
+  "more": {
+   "session": "Mother/patricia",
+   "adult_words": 2456,
+   "turns": 574
+  },
+  "fewer": {
+   "session": "Dinner/john",
+   "adult_words": 2337,
+   "turns": 159
+  }
+ },
+ "files_without_time_marks": 13
+}

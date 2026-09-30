@@ -37,6 +37,29 @@ def run(repo: Path) -> int:
             checks["playlogue"] = (recompute(repo), harness)
         except Exception as err:  # noqa: BLE001
             print(f"playlogue: could not recompute ({type(err).__name__}: {err})")
+    corpus = repo / "harness/childes/results.json"
+    if corpus.exists():
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location("childes_run", repo / "harness/childes/run.py")
+        childes = importlib.util.module_from_spec(spec)
+        try:
+            spec.loader.exec_module(childes)
+            result = json.loads(corpus.read_text(encoding="utf8"))
+            # The site's copy must be what the results file derives to.
+            checks["corpus_site_copy"] = (childes.summarise(result), repo / "apps/web/src/data/corpus.json")
+            data = repo / "harness/childes/data/Gleason.zip"
+            if data.exists():
+                sessions, meta, skipped = childes.load(data)
+                playlogue = childes.playlogue_harness()
+                playlogue.role_map = childes.roles_for
+                fresh = playlogue.evaluate(sessions, meta)
+                checks["corpus_recount"] = ({k: fresh[k] for k in ("sessions", "hours", "turns", "turns_per_hour", "negative_control", "baselines")},
+                                            corpus)
+            else:
+                print("corpus_recount: the Gleason zip is not here (TalkBank rules forbid committing it); only the site copy is checked")
+        except Exception as err:  # noqa: BLE001
+            print(f"corpus: could not recompute ({type(err).__name__}: {err})")
     diffs = 0
     for name, (fresh, expected_path) in checks.items():
         if not expected_path.exists():
@@ -45,6 +68,8 @@ def run(repo: Path) -> int:
             continue
         expected = json.loads(expected_path.read_text(encoding="utf8"))
         for k, v in expected.items():
+            if k not in fresh and name == "corpus_recount":
+                continue  # the results file carries more than the recount compares
             if fresh.get(k) != v:
                 print(f"{name}: {k} committed {v!r}, recomputed {fresh.get(k)!r}")
                 diffs += 1

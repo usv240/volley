@@ -42,7 +42,7 @@ measured.
   section, and the counter's number is presented as an estimate with
   that error bar. The project continues; the claim shrinks to fit.
 
-### Gate 2b: the count holds on recordings we did not make (by 2026-10-09)
+### Gate 2b: the count holds on recordings we did not make (by 2026-10-09; passed 2026-09-30 on Gleason, see EVIDENCE.md)
 
 The second number, from outside our keyboard.
 

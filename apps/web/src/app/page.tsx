@@ -1,3 +1,4 @@
+import corpus from "../data/corpus.json";
 import demo from "../data/demo.json";
 import { DayView, clock, type Day } from "../components/DayView";
 import { DropZone } from "../components/DropZone";
@@ -148,11 +149,12 @@ export default function Home() {
               <Info term="onYourComputer" />.
             </p>
             <p className="mt-4 max-w-[62ch] text-sm leading-relaxed text-muted">
-              The two numbers a judge should read first: on 33 hours of public parent-child recordings we did not make, the count&apos;s
-              agreement with the human speaker labels is <strong className="text-ink">not yet measured</strong>; on the operator&apos;s
-              own Bee, the agreement with a blind hand count is <strong className="text-ink">not yet measured</strong>. Both are
-              scheduled, both will be published whichever way they come out, and this sentence changes only when they are{" "}
-              <Info term="validated" />.
+              The two numbers a judge should read first: on {corpus.hours} hours of public parent-child recordings we did not make, the
+              rule counted <strong className="text-ink">{corpus.turns.toLocaleString("en-US")} turns</strong> from the human speaker
+              labels, <strong className="text-ink">zero</strong> inside any stretch where one person spoke alone{" "}
+              <Info term="corpus" />; on the operator&apos;s own Bee, the agreement with a blind hand count is{" "}
+              <strong className="text-ink">not yet measured</strong>. The second is scheduled and will be published whichever way it
+              comes out; this sentence changes only when it is <Info term="validated" />.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a href="#how" className="primary">
@@ -423,17 +425,23 @@ export default function Home() {
             <div className="card min-w-0 p-6">
               <p className="eyebrow">Refusals, measured here</p>
               <p className="mt-3 leading-relaxed text-muted">
-                Zero turns on an adult-only conversation, on a podcast playing to an empty room, and on silence; zero in the
-                single-speaker stretches of the public corpus. <strong className="text-ink">Not yet measured.</strong> Scheduled, and
-                published whichever way it comes out.
+                On the public corpus, <strong className="text-ink">{corpus.turns_inside_them} turns</strong> inside its{" "}
+                {corpus.single_speaker_stretches} stretches of a minute or more where one person spoke alone{" "}
+                <Info term="corpus" />. On the device: zero on an adult-only conversation, on a podcast playing to an empty room, and
+                on silence. <strong className="text-ink">Not yet measured</strong>; scheduled, and published whichever way it comes
+                out.
               </p>
             </div>
             <div className="card min-w-0 p-6">
               <p className="eyebrow">Against the obvious alternatives</p>
               <p className="mt-3 leading-relaxed text-muted">
-                Word count, which the last consumer device sold and which the studies found stops predicting once income is accounted
-                for; and a naive speaker-change count with no window. Both on the same recordings as the rule.{" "}
-                <strong className="text-ink">Not yet measured.</strong>
+                Adult word count, which the last consumer device sold: across the corpus&apos;s {corpus.sessions} sessions it ranks
+                with turns at Spearman <strong className="text-ink">{corpus.spearman_adult_words_vs_turns}</strong>, and two sessions
+                with the same adult words carried turns{" "}
+                <strong className="text-ink">{corpus.same_words_different_turns?.ratio} times</strong> apart{" "}
+                <Info term="wordsVsTurns" />. A speaker-change count with no window agreed with the rule on{" "}
+                {corpus.alternations_within_window_percent} percent of alternations, because the corpus&apos;s aligned timing has no
+                gaps <Info term="windowOnCorpus" />; the window&apos;s work is in a day, not a lab session.
               </p>
             </div>
             <div className="card min-w-0 border-[var(--warn)] p-6">
@@ -444,6 +452,28 @@ export default function Home() {
                 one yet.
               </p>
             </div>
+          </div>
+          <div className="card mt-6 p-6 sm:p-8">
+            <p className="eyebrow">On recordings we did not make, measured 2026-09-30</p>
+            <p className="mt-3 max-w-[70ch] leading-relaxed text-muted">
+              The CHILDES Gleason corpus: {corpus.sessions} sessions, {corpus.hours} hours, 24 children aged 2;1 to 5;2 with their
+              mother, with their father and at the family dinner table, human speaker labels, aligned timing. The rule counted{" "}
+              {corpus.turns.toLocaleString("en-US")} turns: {corpus.turns_per_hour_min} to {corpus.turns_per_hour_max} an hour by
+              session, median {corpus.turns_per_hour_median}. Dinner {corpus.by_situation.Dinner.turns_per_hour}, with the mother{" "}
+              {corpus.by_situation.Mother.turns_per_hour}, with the father {corpus.by_situation.Father.turns_per_hour} an hour.
+              Children under three, {corpus.under_36_months.turns_per_hour} an hour across {corpus.under_36_months.sessions} sessions;
+              three and over, {corpus.from_36_months.turns_per_hour} across {corpus.from_36_months.sessions}. A fifty-second window
+              instead of five changed the count to {corpus.turns_with_50s_window.toLocaleString("en-US")}. {corpus.files_without_time_marks}{" "}
+              files had no timing and were skipped by name.
+            </p>
+            <p className="mt-3 max-w-[70ch] text-sm leading-relaxed text-muted">
+              What this shows: the rule, the roles and the alternation logic hold on human-labelled recordings at twenty times the
+              published daylong target, which is what half an hour of a parent&apos;s full attention looks like. What it does not show:
+              the window, because the aligner&apos;s timing is contiguous; the device&apos;s transcription of a two-year-old, because
+              these are human transcripts; and any family&apos;s day. The hand count on the operator&apos;s own Bee is the number
+              that answers the last two <Info term="harness" />. <code className="font-mono text-xs">volley verify</code> recomputes
+              every figure in this paragraph from the committed results, and from the corpus itself where it is present.
+            </p>
           </div>
           <div className="card mt-6 p-6 sm:p-8">
             <p className="eyebrow">Read from the literature</p>
@@ -468,7 +498,13 @@ export default function Home() {
               <li>Norbury CF et al. The impact of nonverbal ability on prevalence and clinical presentation of language disorder. Journal of Child Psychology and Psychiatry 2016. PMID 27184709.</li>
               <li>Council on Early Childhood. Literacy promotion: an essential component of primary care pediatric practice. Pediatrics 2014. PMID 24962987. Garner A, Yogman M. Preventing Childhood Toxic Stress: Partnering With Families and Communities to Promote Relational Health. Pediatrics 2021. PMID 34312296.</li>
               <li>Harvard University Center on the Developing Child. Serve and Return.</li>
-              <li>Playlogue (Kalanadhabhatta et al., IMWUT 2024), from CHILDES, for the corpus <Info term="corpus" /> <Info term="playlogueLicence" />.</li>
+              <li>
+                The corpus: Gleason JB, CHILDES English Gleason Corpus, doi 10.21415/T5101R, used under the TalkBank ground rules{" "}
+                <Info term="playlogueLicence" />, and cited as they require through Masur EF, Gleason JB. Parent-child interaction and
+                the acquisition of lexical information during play. Developmental Psychology 1980. doi 10.1037/0012-1649.16.5.404.
+                Playlogue (Kalanadhabhatta et al., IMWUT 2024), the corpus first planned, is gated behind the same rules on Hugging Face;
+                the harness for it is in the repository and runs the day access opens.
+              </li>
             </ul>
           </div>
         </section>

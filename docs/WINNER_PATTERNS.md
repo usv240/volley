@@ -21,6 +21,20 @@ Earshot's code to reuse. Blunt, as asked.
 
 Total to close everything: about 45 hours, inside the build week.
 
+## Where the audit stands on 2026-09-30
+
+Patterns 1 to 4 moved from PARTIAL or MISSING to done on the corpus
+side the day the operator's TalkBank account opened: the CHILDES
+Gleason corpus (54 sessions, 26.59 hours) ran through
+`harness/childes/run.py`, giving the first of the two numbers (Pattern
+1), a case set nobody here wrote (Pattern 2), both baselines with the
+same-words-different-turns pair (Pattern 3), and the corpus negative
+control at zero (Pattern 4). Playlogue stayed gated on Hugging Face;
+the CHAT harness took its place and its own harness waits. What is
+still open on those four: the hand count on the operator's own Bee and
+the three device refusals, which need speaker labels (Gate 1). The
+results and what they do not show are in EVIDENCE.md.
+
 ## The three public case sets, and which to wire first
 
 1. **Playlogue v1** (Hugging Face, `playlogue/playlogue-v1`; Kalanadhabhatta et al., IMWUT 2024). Preschool adult-child play, 33 hours, transcripts speaker-attributed and time-aligned, diarisation ground truth, DPICS codes on 4,773 parent and 3,895 child utterances. CC BY-NC-SA 3.0; audio is fetched from CHILDES after accepting the TalkBank ground rules. Fastest to wire: the transcripts already look like Bee utterances (speaker, start, end, text). This is the benchmark.

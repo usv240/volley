@@ -12,6 +12,9 @@ sold to a parent.
 Status: built on 2026-09-29 against the plan in `docs/`, which was
 written first so the build is judged against it. The API and MCP server
 are live at https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws (interactive docs at `/v1/docs`) and the site at https://da78ygi6ol1oi.cloudfront.net.
+The rule has run on 26.59 hours of public parent-child recordings
+(the CHILDES Gleason corpus, 2026-09-30): 20,344 turns from the
+human speaker labels, zero in any stretch where one person spoke alone.
 What is not yet measured says so on the site in the same type size as
 the numbers.
 

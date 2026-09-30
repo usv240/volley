@@ -108,7 +108,11 @@ def evaluate(sessions: dict[str, list[Utterance]], meta: dict[str, dict] | None 
         turns = count_turns(utts, roles)
         broken = count_turns(utts, roles, window=50.0)
         stretches = single_speaker_stretches(utts, roles)
-        inside = sum(count_turns([u for u in utts if a <= u.start <= b], roles) for a, b in stretches)
+        # Utterances that begin and end inside the stretch. A reply that
+        # starts the instant the stretch ends is the stretch ending, not
+        # a turn inside it; contiguous forced-aligner timing makes that
+        # exact case common.
+        inside = sum(count_turns([u for u in utts if a <= u.start and u.finish <= b], roles) for a, b in stretches)
         adult_words = sum(u.words for u in utts if roles.role(u.speaker) == "adult")
         per.append({
             "session": name,

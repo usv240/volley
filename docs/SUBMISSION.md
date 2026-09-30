@@ -128,11 +128,15 @@ not, and a test refuses any citation in public text that is not there.
 [EVIDENCE.md](EVIDENCE.md): every number, its study, what it showed and
 did not, and the words the site may use. [PRIOR_ART.md](PRIOR_ART.md):
 who has done what. [WINNER_PATTERNS.md](WINNER_PATTERNS.md): the twelve
-patterns and where this stands. The corpus benchmark, the negative
-controls, the two baselines and the hand count are scheduled in
-[PLAN.md](PLAN.md) and published whichever way they come out; until
-then the site says "not yet measured" in the same type size as the
-numbers.
+patterns and where this stands. The corpus benchmark ran on 2026-09-30
+on the CHILDES Gleason corpus: 54 sessions, 26.59
+hours, 20,344 turns from the human speaker labels, zero inside
+the 34 single-speaker stretches, both
+baselines beside it, and what it does not show said in the same
+paragraph. The device negative controls and the hand count are
+scheduled in [PLAN.md](PLAN.md) and published whichever way they come
+out; until then the site says "not yet measured" for them in the same
+type size as the numbers.
 
 ## Live
 

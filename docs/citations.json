@@ -211,6 +211,26 @@
    "title": "Preventing Childhood Toxic Stress: Partnering With Families and Communities to Promote Relational Health",
    "showed": "The American Academy of Pediatrics' policy statement that safe, stable, nurturing relationships, the serve-and-return interactions of early childhood, are the thing paediatric care should promote.",
    "did_not": "A measurement; it is a statement of what matters."
+  },
+  {
+   "key": "masur1980",
+   "doi": "10.1037/0012-1649.16.5.404",
+   "first": "Masur EF",
+   "year": 1980,
+   "journal": "Developmental Psychology",
+   "title": "Parent-child interaction and the acquisition of lexical information during play",
+   "showed": "One of the studies the Gleason corpus was collected for; cited because the TalkBank rules require any use of the corpus to cite at least one of its listed references.",
+   "did_not": "Anything Volley relies on for a number; it is the corpus's citation, not evidence for the count."
+  },
+  {
+   "key": "gleasoncorpus",
+   "doi": "10.21415/T5101R",
+   "first": "Gleason JB",
+   "year": 1988,
+   "journal": "CHILDES (TalkBank)",
+   "title": "CHILDES English Gleason Corpus",
+   "showed": "Twenty-four children aged 2;1 to 5;2 from middle-class Boston families in the 1970s, each recorded with their mother, with their father and at the family dinner, transcribed with speaker labels and time-aligned by TalkBank in 2026. Volley's corpus result on 2026-09-30 comes from it.",
+   "did_not": "Represent every family: all were White, English-speaking and middle-class, recruited through nursery schools; the corpus page says so."
   }
  ],
  "non_study_sources": [

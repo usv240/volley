@@ -58,10 +58,78 @@ source.
 
 ## Numbers measured here, re-derived by tests
 
-- The harness agreement, from `harness/handcount/results.json`.
+- The corpus result, from `harness/childes/results.json`, summarised
+  into `apps/web/src/data/corpus.json` by the harness itself; a test
+  re-derives the summary and `volley verify` recounts the corpus when
+  the zip is present.
+- The harness agreement, from `harness/handcount/results.json`, when
+  the hand count is done.
 - Counts from the device fixture, from `packages/serve-return/tests`.
 - The number of tests, the number of friction log entries, the number of
   MCP tools, each counted rather than remembered.
+
+## The corpus result, 2026-09-30
+
+The CHILDES Gleason corpus (Jean Berko Gleason, Boston University, doi
+10.21415/T5101R): 24 children aged 2;1 to 5;2 from middle-class Boston
+families in the 1970s, each recorded with their mother, with their
+father and at the family dinner; transcribed by researchers with
+speaker labels; time-aligned by TalkBank's aligner in 2026. Used under
+the TalkBank ground rules, never shipped, and cited as they require
+(Masur and Gleason, Developmental Psychology 1980, doi
+10.1037/0012-1649.16.5.404). Downloaded with the operator's TalkBank
+account; the harness at `harness/childes/run.py` reads any corpus in
+CHAT format the same way.
+
+What the rule produced, with the corpus's own speaker labels:
+
+- 54 sessions, 26.59 hours, 20,344 turns;
+  13 files had no time marks and were
+  skipped by name; one file carried diarised labels and no child code
+  and was skipped for roles.
+- Turns per hour by session: 171.2 to
+  1326.1, median 808.3;
+  dinner 672.4, with the mother
+  710.0, with the father
+  892.0. That is twenty times
+  the published daylong target of forty, which is what half an hour of
+  a parent's full attention looks like; a day's forty is that
+  concentration spread thin.
+- Children under three: 776.3 an hour
+  across 13 sessions; three and over,
+  761.3 across
+  41. On human transcripts the rule counts
+  the youngest at the same rate; whether the Bee transcribes a
+  two-year-old is a different question the corpus cannot answer.
+- Negative control: 0 turns inside the
+  34 stretches of a minute or more in which
+  one role spoke alone.
+- Baseline, words: adult word count ranks with turns at Spearman
+  0.51 across the sessions. One
+  mother's play session (2,456 adult words,
+  574 turns) and one family dinner
+  (2,337 adult words, 159
+  turns): the same words, 3.61 times the back-and-forth.
+- Baseline, a speaker-change count with no window: 20,486
+  against the rule's 20,344; 99.3
+  percent of labelled alternations fall within five seconds, and the
+  median gap is 0.0 seconds, because the aligner
+  hands each utterance's end to the next one's start.
+- The window check: a fifty-second window gives
+  20,483, a change of under one percent, for the
+  same reason.
+
+What this shows: the rule, the role mapping and the alternation logic
+hold on human-labelled recordings nobody here made, at the rate a
+concentrated session produces. What it does not show: the window,
+because contiguous timing gives it nothing to reject; the device's
+transcription of young children, because these are human transcripts;
+any family's day. Playlogue, the corpus first planned, has segment-level
+timing from a forced aligner too, so it would have shown the same
+thing; it is gated on Hugging Face behind the same rules, and its
+harness is in the repository. The number that answers what the corpus
+cannot is the blind hand count on the operator's own Bee, which is Gate
+2 and still not measured.
 
 ## What nobody has done yet, said on the front page
 

@@ -114,11 +114,19 @@ export const TERMS = {
   },
   corpus: {
     label: "the public corpus",
-    text: "Playlogue: 33 hours of adult-child play recorded by researchers, drawn from CHILDES, with human speaker labels and timing. Used to check the count against recordings nobody here made; never shipped, cited as its licence requires.",
+    text: "The CHILDES Gleason corpus: 24 children aged 2;1 to 5;2 recorded in the 1970s with their mother, with their father and at dinner, transcribed by researchers with speaker labels and time-aligned in 2026 by TalkBank's aligner. Fifty-four sessions, 26.59 hours. Volley ran the rule over it with the corpus's own labels on 2026-09-30 and published every number it produced; the corpus is never shipped and is cited as the TalkBank rules require.",
+  },
+  windowOnCorpus: {
+    label: "why the window barely shows here",
+    text: "The corpus's timing comes from a forced aligner, which hands each utterance's end to the next one's start, so the gap between a question and its answer is usually zero by construction. On such timing the five-second rule and a bare speaker-change count agree on 99.3 percent of alternations, and a fifty-second window changes the count by under one percent. The window's work is in a day with real silences, which the Bee's timing has and this corpus does not.",
+  },
+  wordsVsTurns: {
+    label: "words against turns",
+    text: "Adult word count is what the last consumer device sold and what the studies found stops predicting once income is accounted for. On the corpus the two rank together only moderately (Spearman 0.51 across 54 sessions), and one mother's play session and one family dinner with the same number of adult words, about 2,400, carried 574 and 159 turns. Same words; three and a half times the back-and-forth.",
   },
   validated: {
     label: "validated",
-    text: "The word is used here only for the published instrument and its studies. Volley's own count is checked against a hand count and against a public corpus, and the results are on this page. It has not been validated on children other than the corpus's, and the page says so.",
+    text: "The word is used here only for the published instrument and its studies. Volley's own count is checked against a public corpus, done, and against a hand count on the operator's own Bee, not yet, and the results are on this page as they come. It has not been validated on children other than the corpus's, and the page says so.",
   },
   paidFor: {
     label: "already paid for",
