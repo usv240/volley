@@ -35,3 +35,12 @@ Entries are dated. Two are about the Bee; one is about us.
 - Suggestion: a `--with-times` flag on `bee sync`, or `spoken_at` in the markdown front matter per utterance.
 
 <!-- Add new entries above this line as they happen. -->
+
+## Entry 4: the phone app offers no way to name a speaker, so "Unknown" cannot be corrected by the user (2026-09-30)
+
+- Steps: with every utterance labelled "Unknown" for two days (entry 1), open conversations in the Bee app on the phone, open a transcript, look for any way to name a speaker or mark a line as the wearer; look under Settings for voice training, voice ID or speaker recognition.
+- Expected: something like "This is me" on a transcript line, or a voice enrolment step, since the CLI readme promises transcripts "with speaker identification" and stream events carry `speaker: speaker_1`.
+- Actual: nothing to tap. Transcript lines are read-only; Settings has no voice item. The label is decided server-side and the user has no lever. A 270-utterance conversation on 2026-09-30 was still entirely "Unknown".
+- Cost: every feature that needs to know who spoke (Volley's whole count; Bellwether's "the wearer's own speech") cannot run on real data; the developer can only wait.
+- Workaround: none in the product. Volley's fallback is a labelled two-adult conversation if labels ever split, or a demonstration that says on camera the device gave one label.
+- Suggestion: a "This is me" action on any transcript line that enrols the wearer's voice, and a documented statement of when speaker labels are produced at all.
