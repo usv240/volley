@@ -19,8 +19,8 @@ import re
 
 DEFAULT_LADDER = [
     "us.anthropic.claude-sonnet-4-6",
+    "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
     "us.anthropic.claude-haiku-4-5-20251001-v1:0",
-    "us.anthropic.claude-3-5-haiku-20241022-v1:0",
 ]
 
 
