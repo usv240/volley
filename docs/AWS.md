@@ -12,6 +12,10 @@ happens on the parent's machine, and only counts cross into the stack.
 | Amazon S3 and Amazon CloudFront | The static site, uploaded by `BucketDeployment` behind a distribution; the distribution's domain is passed to the function as the one allowed browser origin | Nothing but the site |
 | AWS CDK | Describes all of the above in TypeScript; the Lambda asset is built without Docker by fetching manylinux wheels for the compiled dependencies | |
 
+## Amazon Bedrock AgentCore Runtime
+
+The Coach is deployed as runtime `volleycoach_coach` (`apps/agentcore`), with its own IAM role and traces, so Alexa+, a scheduled job or another agent can invoke it. It reaches Volley only through the public MCP tools and the same gate.
+
 ## Strands Agents SDK
 
 Two agents in `apps/agent`, documented in [AGENT.md](AGENT.md): the

@@ -3,7 +3,7 @@
 Every requirement in the hackathon rules and every judging criterion,
 with the file, command or link that proves it. Written to be checked,
 not believed. Numbers are generated from committed result files, and
-114 tests guard the claims.
+120 tests guard the claims.
 
 **In one line:** a step counter for conversations with your child. The
 Bee on a parent's wrist hears the day; Volley counts the back-and-forth
@@ -29,7 +29,7 @@ https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws/v1/docs
 | Product feedback on every tool used | [PRODUCT_FEEDBACK.md](../PRODUCT_FEEDBACK.md) and the Devpost feedback answers | Read |
 | Tracks and mini challenges | Bee (primary), Alexa+; AWS Builder; Open Source | [SUBMISSION.md](SUBMISSION.md) |
 | Open Source fields | Contribution: `packages/serve-return` (MIT); repository, username usv240, description in SUBMISSION.md | Read |
-| AWS Builder: documented integrations | [AWS.md](AWS.md): Bedrock, Strands Agents, DynamoDB, Lambda, S3, CloudFront, CDK, Polly | Read |
+| AWS Builder: documented integrations | [AWS.md](AWS.md): Bedrock, Bedrock AgentCore Runtime, Strands Agents, DynamoDB, Lambda, S3, CloudFront, CDK, Polly | Read |
 | Pre-existing project | None; started in the window; reuse from sibling entries stated | [SUBMISSION.md](SUBMISSION.md) |
 | Feature requests, rated | [FEATURE_REQUESTS.md](FEATURE_REQUESTS.md), four, each critical, important or nice-to-have | Read |
 | Friction log (up to 10 percent bonus) | [FRICTION_LOG.md](../FRICTION_LOG.md), five entries in the required form | Read |
@@ -60,7 +60,8 @@ https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws/v1/docs
   server; a gate rejects any sentence with a number no tool returned
   ([AGENT.md](AGENT.md)). The note is phrased on Bedrock from rules-chosen
   facts behind the same gate, with a template as the floor.
-- **114 tests.** `pytest packages apps harness`.
+- **The Coach on Amazon Bedrock AgentCore Runtime**, as an endpoint anything can invoke, verified live ([apps/agentcore](../apps/agentcore/README.md)).
+- **120 tests.** `pytest packages apps harness`.
 
 ### Design
 

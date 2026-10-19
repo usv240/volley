@@ -1,0 +1,17 @@
+{
+  "targets": {
+    "default": {
+      "resources": {
+        "runtimes": {
+          "coach": {
+            "runtimeId": "volleycoach_coach-EAcMzB4tEB",
+            "runtimeArn": "arn:aws:bedrock-agentcore:us-east-1:957325809861:runtime/volleycoach_coach-EAcMzB4tEB",
+            "roleArn": "arn:aws:iam::957325809861:role/AgentCore-volleycoach-def-ApplicationAgentCoachRunt-SVZX0sZqyF45"
+          }
+        },
+        "stackName": "AgentCore-volleycoach-default",
+        "deployHash": "114f4c3ff9716e0f"
+      }
+    }
+  }
+}
