@@ -167,3 +167,7 @@ cd apps/web && npm install && npm test && npm run dev
 ```
 
 No AWS account is needed for any of that.
+
+## Built with
+
+Bee CLI; Bee's own MCP server; MCP server, spec 2025-11-25, Streamable HTTP; Agent Skill; Amazon Bedrock (Claude); Strands Agents SDK; Amazon Bedrock AgentCore Runtime; Amazon Polly; Amazon DynamoDB, AWS Lambda, Amazon S3, Amazon CloudFront, AWS CDK; CHILDES (TalkBank). Each, with the file that uses it, is in the README's Built with table.

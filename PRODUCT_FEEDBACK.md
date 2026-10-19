@@ -124,3 +124,41 @@ lines and pinned to the Python package by a shared set of examples.
 
 Amazon Transcribe, Rekognition and any service that would see a child
 were deliberately not used, and the AWS document says why.
+
+## Amazon Bedrock AgentCore Runtime
+
+**Used for:** hosting our Strands agent as an invocable endpoint with its own IAM role and traces (`apps/agentcore`), so Alexa+, a scheduled job or another agent can call it. It reaches the product only through our MCP server.
+
+**What worked well:** `npx @aws/agentcore deploy` turned an existing Strands agent into a hosted endpoint in about four minutes, first time, and `invoke` returned the agent's own JSON.
+
+**What needs work:** the scaffold's default model profile was not one this account could invoke, so the model is pinned by hand.
+
+**Onboarding:** no global install; deploy and invoke both worked on Windows on the first run.
+
+**Would we build with it again:** yes. It is the shortest path from a local agent to something Alexa+ or a schedule can call.
+
+## Agent Skills
+
+**Used for:** `skills/volley/SKILL.md`, which tells an agent what the product is, which MCP tools to call in what order, and what it must never say. A test checks it names every tool on the server.
+
+**What worked well:** plain markdown an agent reads directly, so the product's rules travel with its tools.
+
+**What needs work:** we found no public way to load a skill into Alexa+ ourselves and watch it run, so ours is checked against the MCP server by a test rather than end to end in Alexa+.
+
+**Would we build with it again:** yes.
+
+## Amazon Polly
+
+**Used for:** voicing a real CHILDES parent-child conversation, adult and child voices, at its original timing, so the count could be tested on the Bee with no person in the room (`harness/beeloop`).
+
+**What worked well:** neural adult and child voices from one call each, as raw PCM a WAV header turns into sound with no audio library.
+
+**Would we build with it again:** yes.
+
+## Bee's own MCP server (`bee mcp`)
+
+**Used for:** the Tuesday agent holds it beside Volley's server on the parent's machine, behind a five-tool allow-list, so a quiet day can be read against the parent's calendar without either server seeing the other's data.
+
+**What worked well:** it authenticates with the existing Bee login, so there is no second token to manage.
+
+**Would we build with it again:** yes.

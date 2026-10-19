@@ -55,3 +55,21 @@ docs: Earshot (Fire TV, hearing in noise), Bellwether (Bee, speech as a
 vital sign), EveryWord (Fire TV), Nightlight (Ring). Volley reuses
 Bellwether's Bee client, server, stack and video pipeline; it shares no
 claim with it.
+
+## Built with
+
+Every tool this project uses, and the file that uses it.
+
+| Tool | What it does here | Where |
+|---|---|---|
+| Bee CLI | conversations, changes, the live stream, and tomorrow's reminder written back into the Bee | [`apps/ingest/volley_ingest/bee.py`](apps/ingest/volley_ingest/bee.py) |
+| Bee's own MCP server | the Tuesday agent holds it beside Volley's, behind a five-tool allow-list | [`apps/agent/volley_agent/tuesday.py`](apps/agent/volley_agent/tuesday.py) |
+| MCP server, spec 2025-11-25, Streamable HTTP | the Alexa+ surface: seven tools, signed sessions, conformance-probed live | [`apps/server/volley_server/mcp.py`](apps/server/volley_server/mcp.py) |
+| Agent Skill | tells an agent how to use the seven tools; a test pins it to the server | [`skills/volley/SKILL.md`](skills/volley/SKILL.md) |
+| Amazon Bedrock (Claude) | phrases tomorrow's one thing behind a gate that refuses any number the rules did not choose | [`apps/server/volley_server/bedrock.py`](apps/server/volley_server/bedrock.py) |
+| Strands Agents SDK | the Coach and the Tuesday agent, both behind the same number gate | [`apps/agent/volley_agent`](apps/agent/volley_agent) |
+| Amazon Bedrock AgentCore Runtime | hosts the Coach as an invocable endpoint | [`apps/agentcore`](apps/agentcore) |
+| Amazon Polly | voices a real CHILDES conversation, adult and child, for the on-device test | [`harness/beeloop/make.py`](harness/beeloop/make.py) |
+| Amazon DynamoDB, AWS Lambda, Amazon S3, Amazon CloudFront, AWS CDK | households and counts, the service, the site, one deploy | [`infra/bin/app.ts`](infra/bin/app.ts) |
+| CHILDES (TalkBank) | the corpus the count and the role model are measured on | [`harness/childes/run.py`](harness/childes/run.py) |
+

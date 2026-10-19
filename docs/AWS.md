@@ -60,3 +60,7 @@ with a floor that costs nothing.
 Amazon Transcribe: the Bee already transcribes, and Volley must never
 handle audio. Amazon Rekognition or anything that would see a child.
 API Gateway: the endpoint speaks one protocol and needs no stages.
+
+## Amazon Polly
+
+Voices a real CHILDES parent-child conversation, adult and child, at its original timing, for the on-device test in `harness/beeloop`. Nothing it produces is published.
