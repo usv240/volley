@@ -158,7 +158,7 @@ the same words rather than hiding it.
 | 6 | Depth on one surface | Every Bee route: list, get, now, changed, stream, sync, Bee's MCP server held by our agent, the Skill | `volley evidence` records each call; `volley live` ticks on camera | 10-08 |
 | 7 | Tagline as verbs | The four-verb tagline on the site, the repo and the submission | The same sentence in all three, checked by a test | 10-10 |
 | 8 | The demo cannot break | Counting from a `bee sync` export offline; the browser drop zone; committed corpus numbers; recorded fallbacks that say they are recorded | Each path exercised in a test; the video uses live calls | 10-10 |
-| 9 | A practitioner's sentence | One quoted sentence from one speech-language pathologist, paediatrician or preschool teacher, named with permission | On the site, or the site says nobody has yet | 10-10 |
+| 9 | A practitioner's sentence (DROPPED 2026-10-19: no real people in any entry) | One quoted sentence from one speech-language pathologist, paediatrician or preschool teacher, named with permission | On the site, or the site says nobody has yet | 10-10 |
 | 10 | A shipped surface | `pip install volley-bee` and `pip install serve-return` on PyPI; API keys; a tagged GitHub release | A clean machine installs and runs `volley today` against a sync export | 10-10 |
 | 11 | Limits as measured properties | The youngest-session undercount, the label disagreement, the corpus agreement, each a number; the rest named as the next study with its design | No public sentence says "unmeasured" without naming the study | 10-10 |
 | 12 | Inspect and rerun | `volley verify`; a hash-chained evidence record; the test total counted on the page | `volley verify` prints no diff on the shipped commit; a broken window fails it | 10-10 |
@@ -169,7 +169,7 @@ the same words rather than hiding it.
   conversation with another person; say so.
 - 2026-10-08: hand-count five conversations from the Bee app's
   transcript view, blind to the counter, on a printed sheet.
-- By 2026-10-10: one sentence from one practitioner. A speech-language
+- Dropped 2026-10-19, no real people: one sentence from one practitioner. A speech-language
   pathologist, a paediatrician or a preschool teacher reads the page and
   says what they would do with the number. Their name and role, with
   their permission, on the site. This is the cheapest point on the

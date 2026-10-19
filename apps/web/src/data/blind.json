@@ -1,0 +1,15 @@
+{
+ "sessions": 54,
+ "utterances": 42004,
+ "role_accuracy_pct": 73.7,
+ "turns_true": 20344,
+ "turns_blind": 17955,
+ "turns_naive": 2574,
+ "total_error_pct": -11.7,
+ "naive_total_error_pct": -87.3,
+ "median_abs_session_error_pct": 12.2,
+ "naive_median_abs_session_error_pct": 92.2,
+ "sessions_within_20pct": 38,
+ "correlation_per_hour": 0.868,
+ "written_by": "harness/blind/run.py"
+}

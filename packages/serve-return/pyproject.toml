@@ -28,6 +28,9 @@ Homepage = "https://github.com/usv240/volley"
 
 [tool.setuptools.packages.find]
 where = ["."]
+
+[tool.setuptools.package-data]
+serve_return = ["models/*.json"]
 include = ["serve_return*"]
 
 [tool.pytest.ini_options]

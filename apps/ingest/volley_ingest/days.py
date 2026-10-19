@@ -20,6 +20,8 @@ from .household import Household
 
 
 def roles_for(h: Household) -> Roles:
+    if h.blind:
+        return Roles.of(adult=["adult"], child=["child"])
     return Roles.of(adult=h.parent_labels, child=h.child_labels)
 
 
@@ -42,6 +44,13 @@ def count_days(utterances: list[Utterance], h: Household) -> list[DayCounts]:
         if r is None:
             continue
         by_day.setdefault(local_date(r.start, h.tz_offset_hours), []).append(r)
+    if h.blind:
+        # No labels from the device: read the roles from the words and the
+        # pauses, one day at a time, then count as usual. Measured on
+        # held-out CHILDES families in harness/blind.
+        from serve_return.blind import relabel
+
+        by_day = {d: relabel(us) for d, us in by_day.items()}
     return [count_day(by_day[d], roles, date=d, tz_offset_hours=h.tz_offset_hours) for d in sorted(by_day)]
 
 

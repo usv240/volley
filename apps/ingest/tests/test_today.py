@@ -132,3 +132,41 @@ def test_without_a_household_it_says_what_to_run(tmp_path, monkeypatch, capsys):
     monkeypatch.setenv("VOLLEY_HOME", str(tmp_path))
     assert main(["today"], cli=BeeCli(runner=runner_for([]))) == 2
     assert "volley setup" in capsys.readouterr().out
+
+
+def test_a_blind_household_counts_an_all_unknown_day(tmp_path, monkeypatch, capsys):
+    """The Bee labels everyone Unknown; a blind household reads the roles
+    from the transcript and still counts the turns, and still keeps no word."""
+    monkeypatch.setenv("VOLLEY_HOME", str(tmp_path))
+    Household(blind=True, child_name="Asha", tz_offset_hours=5.5).save()
+
+    # A two-year-old's side of the exchange, as the model's own tests use;
+    # this test is about the wiring, harness/blind measures the accuracy.
+    lines = [f"What did you and {NAMES[0]} build at school today?", "a tower",
+             "Wow, how tall was it?", "big",
+             f"Did it fall down before {NAMES[2]} came?", "yeah",
+             "That sounds like a lot of fun, can you show me?", "me do it"]
+
+    def all_unknown():
+        c = conversation()
+        c["transcriptions"][0]["utterances"] = [utterance(i, "Unknown", t) for i, t in enumerate(lines)]
+        return c
+
+    def runner(argv):
+        joined = " ".join(argv)
+        if "changed" in joined:
+            return (0, json.dumps({"meta": {"next_cursor": "c-2"}, "conversations": [all_unknown()]}), "")
+        return (1, "", f"unexpected {argv}")
+
+    assert main(["today"], cli=BeeCli(runner=runner)) == 0
+    day = json.loads((tmp_path / "counts" / "2026-09-30.json").read_text(encoding="utf8"))
+    assert day["turns"] >= 5
+    out = capsys.readouterr().out
+    for name in NAMES:
+        assert name not in out
+
+
+def test_setup_blind_needs_no_labels(tmp_path, monkeypatch, capsys):
+    monkeypatch.setenv("VOLLEY_HOME", str(tmp_path))
+    assert main(["setup", "--blind"], cli=BeeCli(runner=lambda argv: (1, "", "no device"))) == 0
+    assert Household.load().blind is True

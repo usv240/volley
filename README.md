@@ -18,6 +18,16 @@ human speaker labels, zero in any stretch where one person spoke alone.
 What is not yet measured says so on the site in the same type size as
 the numbers.
 
+**No speaker labels, no problem, measured.** The Bee labels every speaker
+"Unknown" (1,004 of 1,004 utterances on this account). `volley setup
+--blind` reads who is the child and who the adult from the words and
+the pauses instead, with `serve_return.blind`, trained on CHILDES. On
+families it never saw: the day's turn count within 12.2 percent of the
+true count in the median session, turns per hour correlated with the
+truth at 0.868, against a naive count that misses 87.3 percent. Every
+session is in `harness/blind/results.json`; `python harness/blind/run.py`
+reproduces it. 110 tests.
+
 | Document | What it answers |
 |---|---|
 | [docs/PLAN.md](docs/PLAN.md) | What gets built, in what order, with what gates and dates |

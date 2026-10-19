@@ -133,7 +133,10 @@ def cmd_setup(cli: BeeCli, args) -> int:
         h.api_key = args.api_key
     if args.reminders is not None:
         h.write_reminders_to_bee = args.reminders
-    if not (args.parent and args.child):
+    if getattr(args, "blind", False):
+        h.blind = True
+        print("blind: roles are read from the transcript, because the Bee labels every speaker Unknown")
+    if not (args.parent and args.child) and not h.blind:
         try:
             rows = cli.conversations_list(limit=10)
             rows = rows.get("conversations", rows) if isinstance(rows, dict) else rows
@@ -153,8 +156,8 @@ def cmd_setup(cli: BeeCli, args) -> int:
 
 def cmd_today(cli: BeeCli, args) -> int:
     h = Household.load()
-    if h is None or not h.parent_labels or not h.child_labels:
-        print("run volley setup first: it needs to know which label is you and which is your child")
+    if h is None or not h.ready:
+        print("run volley setup first: --parent and --child labels, or --blind to read the roles from the transcript")
         return 2
     cursors = CursorStore(str(home() / ".bee-cursor"))
     if args.now:
@@ -229,6 +232,8 @@ def main(argv: list[str] | None = None, cli: BeeCli | None = None) -> int:
     sub = p.add_subparsers(dest="command", required=True)
     sub.add_parser("status", help="is the Bee installed and signed in, and is a household set up")
     s = sub.add_parser("setup", help="which label is you, which is your child, and where the counts go")
+    s.add_argument("--blind", action="store_true",
+                   help="read who is the child and who the adult from the transcript, for a Bee that labels everyone Unknown")
     s.add_argument("--parent")
     s.add_argument("--child")
     s.add_argument("--child-name", dest="child_name")

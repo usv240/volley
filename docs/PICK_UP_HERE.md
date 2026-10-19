@@ -62,6 +62,6 @@ honest and weaker; it is the last resort, not the plan.
 
 - A PyPI token from the operator publishes `serve-return` and
   `volley-bee`; the site's install step names them now.
-- One practitioner's sentence by 2026-10-10 (SLP, paediatrician,
+- Dropped by design on 2026-10-19: no practitioner quotes, testers or outreach; real people are not involved in any entry. (Was: one practitioner's sentence by 2026-10-10 (SLP, paediatrician,
   preschool teacher); it goes on the evidence section's third card.
 - Flip the repository public at submission; set topics; tag v0.1.0.

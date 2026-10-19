@@ -1,4 +1,5 @@
 import corpus from "../data/corpus.json";
+import blind from "../data/blind.json";
 import demo from "../data/demo.json";
 import { DayView, clock, type Day } from "../components/DayView";
 import { DropZone } from "../components/DropZone";
@@ -54,8 +55,8 @@ const STEPS = [
   { title: "Install Bee's command line tool", body: "npm install -g @beeai/cli", live: true },
   { title: "Turn on Developer Mode in the Bee app", body: "Settings, then tap the version number five times.", live: true, term: "developerMode" as const },
   { title: "Sign in the tool to your Bee", body: "bee login, then approve it in the app.", live: true },
-  { title: "Install Volley", body: "pip install volley-bee", live: true },
-  { title: "Say who is who, then count the day", body: "volley setup --parent <label> --child <label> --child-name Asha --tz 5.5\nvolley today", live: true },
+  { title: "Install Volley, from GitHub", body: 'pip install "git+https://github.com/usv240/volley#subdirectory=packages/serve-return" "git+https://github.com/usv240/volley#subdirectory=apps/ingest"', live: true },
+  { title: "Count the day", body: "volley setup --blind --child-name Asha --tz 5.5\nvolley today", live: true },
   { title: "See your days in a browser, if you want to", body: "volley connect\nvolley today", live: true, term: "mine" as const },
 ];
 
@@ -448,10 +449,27 @@ export default function Home() {
               <p className="eyebrow text-[var(--warn)]">Nobody has done yet</p>
               <p className="mt-3 leading-relaxed text-muted">
                 A child under three on this device; a family other than the operator&apos;s; the Bee against a LENA recorder on the
-                same afternoon, which is the study to run first with a grant. And one practitioner&apos;s sentence: nobody has said
-                one yet.
+                same afternoon, which is the study to run first with a grant.
               </p>
             </div>
+          </div>
+          {/*
+            The Bee labels every speaker Unknown. This is the answer, measured
+            on families the model never saw, with the naive alternative beside it.
+          */}
+          <div id="blind" className="card mt-6 p-6 sm:p-8">
+            <p className="eyebrow">No speaker labels, measured on families it never saw</p>
+            <p className="mt-3 max-w-[70ch] leading-relaxed text-muted">
+              The Bee labels every speaker &ldquo;Unknown&rdquo;, so Volley reads who is the child and who the adult from the words and
+              the pauses, with a model trained on CHILDES and scored only on families it was not trained on. Across{" "}
+              {blind.sessions} sessions it counted <strong className="text-ink">{blind.turns_blind.toLocaleString("en-US")} turns</strong>{" "}
+              against {blind.turns_true.toLocaleString("en-US")} true ({blind.total_error_pct} percent); the median session was within{" "}
+              <strong className="text-ink">{blind.median_abs_session_error_pct} percent</strong>, and turns per hour tracked the truth at a
+              correlation of <strong className="text-ink">{blind.correlation_per_hour}</strong>. Treating every pause as a change of speaker
+              missed by {Math.abs(blind.naive_total_error_pct)} percent. Each utterance&apos;s role was right{" "}
+              {blind.role_accuracy_pct} percent of the time, so a single exchange can be misread; a day, a week and a trend are what it is
+              for.
+            </p>
           </div>
           <div className="card mt-6 p-6 sm:p-8">
             <p className="eyebrow">On recordings we did not make, measured 2026-09-30</p>

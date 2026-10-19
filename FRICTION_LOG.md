@@ -44,3 +44,13 @@ Entries are dated. Two are about the Bee; one is about us.
 - Cost: every feature that needs to know who spoke (Volley's whole count; Bellwether's "the wearer's own speech") cannot run on real data; the developer can only wait.
 - Workaround: none in the product. Volley's fallback is a labelled two-adult conversation if labels ever split, or a demonstration that says on camera the device gave one label.
 - Suggestion: a "This is me" action on any transcript line that enrols the wearer's voice, and a documented statement of when speaker labels are produced at all.
+
+## Entry 5: three weeks on, every speaker is still "Unknown", so Volley stopped waiting for labels (2026-10-19)
+
+- Task: count a day of parent-child turns from the Bee, the whole product.
+- Steps: read every utterance in the last 25 sessions on the account (`bee conversations list`, then `get`) and tallied the `speaker` field.
+- Expected: by now, at least two labels in a conversation with two voices, since the readme promises transcripts "with speaker identification".
+- Actual: 1,004 of 1,004 utterances labelled "Unknown", including sessions with two adult voices and a session where a synthetic voice and the wearer alternated. The device also decides utterance boundaries by pause, and on 2026-10-19 it merged three consecutive lines from one voice into one utterance; how often it merges two voices is what harness/beeloop measures on the device.
+- Severity: critical for any count of who-talked-to-whom on this device.
+- Workaround: read the roles from the transcript. `serve_return.blind` is an averaged perceptron over each utterance's words, its neighbours' words and the pauses either side, trained on the CHILDES Gleason corpus. Scored only on families it never saw (six folds by child): 73.7 percent of 42,004 utterances get the right role, the day's turn count lands within 12.2 percent of the true count in the median session, turns per hour track the truth at a correlation of 0.868, and the naive alternative (every pause is a change of speaker) misses 87.3 percent of turns. `volley setup --blind` uses it; harness/blind/results.json has every session.
+- Suggestion: carry the enrolled voice through as `speaker: "wearer"` or an `is_wearer` boolean, and split utterances at a change of voice even when no label is assigned. Either would make this workaround unnecessary. Feature requests 1 and 2.

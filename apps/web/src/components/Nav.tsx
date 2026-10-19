@@ -36,12 +36,12 @@ export function Nav() {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-[color-mix(in_srgb,var(--bg)_82%,transparent)] backdrop-blur">
       <div className="mx-auto flex h-16 max-w-[1120px] items-center justify-between px-5 sm:px-8">
-        <Link href="/#top" className="display-sm text-2xl text-ink">
+        <Link prefetch={false} href="/#top" className="display-sm text-2xl text-ink">
           Volley
         </Link>
         <nav className="hidden items-center gap-5 xl:flex" aria-label="Main">
           {LINKS.map((l) => (
-            <Link
+            <Link prefetch={false}
               key={l.href}
               href={l.href}
               className="whitespace-nowrap text-sm text-muted transition-colors hover:text-ink"
@@ -52,7 +52,7 @@ export function Nav() {
         </nav>
         <div className="hidden items-center gap-3 md:flex">
           <ThemeToggle />
-          <Link
+          <Link prefetch={false}
             href="/#yours"
             className="whitespace-nowrap rounded-[0.85rem] bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-[var(--accent-ink)] transition-transform hover:-translate-y-px"
           >
@@ -73,11 +73,11 @@ export function Nav() {
         <div className="border-t border-line bg-surface px-5 py-4 xl:hidden">
           <nav className="flex flex-col gap-3" aria-label="Mobile">
             {LINKS.map((l) => (
-              <Link key={l.href} href={l.href} onClick={() => setOpen(false)} className="text-sm text-muted">
+              <Link prefetch={false} key={l.href} href={l.href} onClick={() => setOpen(false)} className="text-sm text-muted">
                 {l.label}
               </Link>
             ))}
-            <Link href="/#yours" onClick={() => setOpen(false)} className="text-sm font-semibold text-[var(--accent)]">
+            <Link prefetch={false} href="/#yours" onClick={() => setOpen(false)} className="text-sm font-semibold text-[var(--accent)]">
               Count your own
             </Link>
             <div className="pt-2 md:hidden">

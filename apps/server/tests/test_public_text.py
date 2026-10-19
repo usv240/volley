@@ -98,5 +98,8 @@ def test_the_install_step_names_a_distribution_this_repository_owns():
     name = re.search(r'^name = "([^"]+)"', pyproject, re.M).group(1)
     assert name != "volley"
     page = (REPO / "apps" / "web" / "src" / "app" / "page.tsx").read_text(encoding="utf8")
-    assert f"pip install {name}" in page
-    assert "pip install volley\"" not in page and "pip install volley\n" not in page
+    # Nothing is on PyPI yet, so the step installs this repository's own
+    # two directories from GitHub; it must never name PyPI's `volley`.
+    assert "git+https://github.com/usv240/volley#subdirectory=apps/ingest" in page
+    assert "git+https://github.com/usv240/volley#subdirectory=packages/serve-return" in page
+    assert "pip install volley\"" not in page and "pip install volley\n" not in page and "pip install volley " not in page

@@ -34,6 +34,13 @@ class Household:
     household_id: str | None = None
     mine_url: str | None = None
     write_reminders_to_bee: bool = False
+    # The Bee labels every speaker "Unknown" today. Blind households have
+    # their roles read from the transcript by serve_return.blind instead.
+    blind: bool = False
+
+    @property
+    def ready(self) -> bool:
+        return self.blind or bool(self.parent_labels and self.child_labels)
 
     @property
     def connected(self) -> bool:
