@@ -2,6 +2,8 @@
 
 **A step counter for conversations with your child.**
 
+**Judging this?** [docs/FOR_JUDGES.md](docs/FOR_JUDGES.md) maps every Rules.md requirement and judging criterion to the file, command or link that proves it.
+
 The Bee on a parent's wrist already hears the day. Volley counts the
 back-and-forth exchanges between the parent and the child, keeps the
 counts, throws the words away on the parent's own machine, and says one
