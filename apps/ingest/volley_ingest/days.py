@@ -50,7 +50,10 @@ def count_days(utterances: list[Utterance], h: Household) -> list[DayCounts]:
         # held-out CHILDES families in harness/blind.
         from serve_return.blind import relabel
 
+        from serve_return.blind import calibrate_day
+
         by_day = {d: relabel(us) for d, us in by_day.items()}
+        return [calibrate_day(count_day(by_day[d], roles, date=d, tz_offset_hours=h.tz_offset_hours)) for d in sorted(by_day)]
     return [count_day(by_day[d], roles, date=d, tz_offset_hours=h.tz_offset_hours) for d in sorted(by_day)]
 
 

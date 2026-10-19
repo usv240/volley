@@ -464,10 +464,13 @@ export default function Home() {
               The Bee labels every speaker &ldquo;Unknown&rdquo;, so Volley reads who is the child and who the adult from the words and
               the pauses, with a model trained on CHILDES and scored only on families it was not trained on. Across{" "}
               {blind.sessions} sessions it counted <strong className="text-ink">{blind.turns_blind.toLocaleString("en-US")} turns</strong>{" "}
-              against {blind.turns_true.toLocaleString("en-US")} true ({blind.total_error_pct} percent); the median session was within{" "}
+              against {blind.turns_true.toLocaleString("en-US")} true ({blind.total_error_pct > 0 ? "+" : ""}{blind.total_error_pct} percent); the median session was within{" "}
               <strong className="text-ink">{blind.median_abs_session_error_pct} percent</strong>, and turns per hour tracked the truth at a
               correlation of <strong className="text-ink">{blind.correlation_per_hour}</strong>. Treating every pause as a change of speaker
-              missed by {Math.abs(blind.naive_total_error_pct)} percent. Each utterance&apos;s role was right{" "}
+              missed by {Math.abs(blind.naive_total_error_pct)} percent. Misread roles merge exchanges, so a raw blind count runs low by a
+              steady {Math.round((blind.turn_scale_min - 1) * 100)} to {Math.round((blind.turn_scale_max - 1) * 100)} percent; Volley scales
+              for it with a factor learned only from other families, which took the median session error from{" "}
+              {blind.uncalibrated_median_abs_session_error_pct} to {blind.median_abs_session_error_pct} percent. Each utterance&apos;s role was right{" "}
               {blind.role_accuracy_pct} percent of the time, so a single exchange can be misread; a day, a week and a trend are what it is
               for.
             </p>
@@ -477,7 +480,7 @@ export default function Home() {
               {Math.round(device.played_seconds)} seconds, no person in the room. The Bee wrote {device.utterances_bee} utterances for{" "}
               {device.utterances_played} played and kept <strong className="text-ink">{device.turns_bee_with_true_roles} of{" "}
               {device.turns_true} turns</strong>: its segmentation loses none. Volley, with no labels and a model that never saw this
-              family, counted <strong className="text-ink">{device.turns_blind}</strong> ({device.blind_error_pct} percent), with{" "}
+              family or its scale, counted <strong className="text-ink">{device.turns_blind}</strong> ({device.blind_error_pct} percent), with{" "}
               {device.role_accuracy_pct} percent of lines given the right speaker. One session; the corpus says how much one session
               varies.
             </p>

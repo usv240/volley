@@ -69,12 +69,35 @@ def turns(us: list[Utterance], roles: list[str]) -> int:
     return count_turns([Utterance(u.start, r, u.text, u.end) for u, r in zip(us, roles)], ROLES)
 
 
+def learn_scale(sessions: dict[str, list[Utterance]], names: list[str], inner: int = 4) -> float:
+    """true / blind turns on these families, each counted by a model that
+    did not see its family (cross-fitting by child)."""
+    kids = sorted({n.split("/")[-1] for n in names})
+    fold = {c: i % inner for i, c in enumerate(kids)}
+    g = h = 0
+    for j in range(inner):
+        m = RoleModel().fit([labelled(sessions[n]) for n in names if fold[n.split("/")[-1]] != j])
+        for n in names:
+            if fold[n.split("/")[-1]] != j:
+                continue
+            pairs = labelled(sessions[n])
+            if len(pairs) < 10:
+                continue
+            us = [u for u, _ in pairs]
+            g += turns(us, [r for _, r in pairs])
+            h += turns(us, infer_roles(us, m))
+    return round(g / h, 4) if h else 1.0
+
+
 def evaluate(sessions: dict[str, list[Utterance]]) -> dict:
     children = sorted({name.split("/")[-1] for name in sessions})
     fold_of = {c: i % FOLDS for i, c in enumerate(children)}
-    rows, right, total = [], 0, 0
+    rows, right, total, scales = [], 0, 0, []
     for k in range(FOLDS):
-        model = RoleModel().fit([labelled(us) for n, us in sessions.items() if fold_of[n.split("/")[-1]] != k])
+        train_names = [n for n in sessions if fold_of[n.split("/")[-1]] != k]
+        model = RoleModel().fit([labelled(sessions[n]) for n in train_names])
+        scale = learn_scale(sessions, train_names)
+        scales.append(scale)
         for name, us in sessions.items():
             if fold_of[name.split("/")[-1]] != k:
                 continue
@@ -86,9 +109,10 @@ def evaluate(sessions: dict[str, list[Utterance]]) -> dict:
             blind_roles = infer_roles(kept, model)
             right += sum(1 for a, b in zip(gold_roles, blind_roles) if a == b)
             total += len(kept)
-            gold, blind, naive = turns(kept, gold_roles), turns(kept, blind_roles), turns(kept, naive_roles(kept))
+            gold, raw, naive = turns(kept, gold_roles), turns(kept, blind_roles), turns(kept, naive_roles(kept))
+            blind = round(raw * scale)
             hours = max(1e-9, (max(u.finish for u in kept) - min(u.start for u in kept)) / 3600)
-            rows.append({"session": name, "gold": gold, "blind": blind, "naive": naive,
+            rows.append({"session": name, "gold": gold, "blind": blind, "blind_uncalibrated": raw, "naive": naive,
                          "error_pct": round(100 * (blind - gold) / gold, 1) if gold else None,
                          "naive_error_pct": round(100 * (naive - gold) / gold, 1) if gold else None,
                          "gold_per_hour": round(gold / hours, 1), "blind_per_hour": round(blind / hours, 1)})
@@ -96,6 +120,8 @@ def evaluate(sessions: dict[str, list[Utterance]]) -> dict:
     nerrs = [abs(r["naive_error_pct"]) for r in rows if r["naive_error_pct"] is not None]
     g, b = [r["gold_per_hour"] for r in rows], [r["blind_per_hour"] for r in rows]
     tg, tb, tn = sum(r["gold"] for r in rows), sum(r["blind"] for r in rows), sum(r["naive"] for r in rows)
+    tr = sum(r["blind_uncalibrated"] for r in rows)
+    rerrs = [abs(100 * (r["blind_uncalibrated"] - r["gold"]) / r["gold"]) for r in rows if r["gold"]]
     return {
         "sessions": len(rows),
         "utterances": total,
@@ -104,6 +130,10 @@ def evaluate(sessions: dict[str, list[Utterance]]) -> dict:
         "turns_blind": tb,
         "turns_naive": tn,
         "total_error_pct": round(100 * (tb - tg) / tg, 1),
+        "turn_scale_by_fold": scales,
+        "turns_blind_uncalibrated": tr,
+        "uncalibrated_total_error_pct": round(100 * (tr - tg) / tg, 1),
+        "uncalibrated_median_abs_session_error_pct": round(statistics.median(rerrs), 1),
         "naive_total_error_pct": round(100 * (tn - tg) / tg, 1),
         "median_abs_session_error_pct": round(statistics.median(errs), 1),
         "naive_median_abs_session_error_pct": round(statistics.median(nerrs), 1),
@@ -125,6 +155,7 @@ def main() -> int:
           f"turns {r['turns_blind']} counted blind vs {r['turns_true']} true ({r['total_error_pct']:+}%), "
           f"median session error {r['median_abs_session_error_pct']}%, {r['sessions_within_20pct']}/{r['sessions']} sessions within 20%, "
           f"per-hour correlation {r['correlation_per_hour']}")
+    print(f"before calibration: {r['turns_blind_uncalibrated']} ({r['uncalibrated_total_error_pct']:+}%), median session error {r['uncalibrated_median_abs_session_error_pct']}%; scale by fold {r['turn_scale_by_fold']}")
     print(f"naive baseline (pause = speaker change): {r['turns_naive']} ({r['naive_total_error_pct']:+}%), "
           f"median session error {r['naive_median_abs_session_error_pct']}%")
     out = {"corpus": "CHILDES Gleason, doi 10.21415/T5101R, TalkBank ground rules",
@@ -133,10 +164,12 @@ def main() -> int:
     Path(args.out).write_text(json.dumps(out, indent=1), encoding="utf-8")
     print(f"wrote {args.out}")
     if args.write_model:
-        model = RoleModel().fit([labelled(us) for us in sessions.values()]).pruned()
+        model = RoleModel().fit([labelled(us) for us in sessions.values()])
+        model.turn_scale = learn_scale(sessions, list(sessions))
+        model = model.pruned()
         MODEL_PATH.parent.mkdir(parents=True, exist_ok=True)
         MODEL_PATH.write_text(model.to_json(), encoding="utf-8")
-        print(f"wrote {MODEL_PATH}: {len(model.weights)} weights, {MODEL_PATH.stat().st_size // 1024} KB")
+        print(f"wrote {MODEL_PATH}: {len(model.weights)} weights, turn_scale {model.turn_scale}, {MODEL_PATH.stat().st_size // 1024} KB")
     return 0
 
 

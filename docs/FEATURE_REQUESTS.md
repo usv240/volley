@@ -14,7 +14,7 @@ utterances across 25 sessions came back `speaker: "Unknown"` on
 2026-10-19, after the app had enrolled the wearer's voice. A
 `speaker: "wearer"` or an `is_wearer` boolean would make the count exact
 for the parent's side. Volley now reads the roles from the words and the
-pauses instead (73.7 percent per utterance, the day's count within 12.2
+pauses instead (73.7 percent per utterance, the day's count within 9.6
 percent in the median held-out session), and says plainly that one
 boolean would beat it. Friction log entries 1, 4 and 5.
 

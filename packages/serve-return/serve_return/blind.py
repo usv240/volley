@@ -75,6 +75,11 @@ def _gaps(utterances: Sequence[Utterance]) -> list[float]:
 @dataclass
 class RoleModel:
     weights: dict[str, float] = field(default_factory=dict)
+    # Misread roles merge alternations, so a blind count runs low by a
+    # steady fraction. turn_scale is that fraction's inverse, learned by
+    # cross-fitting on training families only (harness/blind), and applied
+    # to the day's turn totals by calibrate_day.
+    turn_scale: float = 1.0
 
     def score(self, feats: Iterable[str]) -> float:
         w = self.weights
@@ -107,14 +112,16 @@ class RoleModel:
         return self
 
     def pruned(self, floor: float = 0.02, places: int = 3) -> "RoleModel":
-        return RoleModel({x: round(v, places) for x, v in self.weights.items() if abs(v) >= floor})
+        return RoleModel({x: round(v, places) for x, v in self.weights.items() if abs(v) >= floor}, self.turn_scale)
 
     def to_json(self) -> str:
-        return json.dumps({"kind": "averaged-perceptron", "positive": "child", "weights": self.weights}, separators=(",", ":"))
+        return json.dumps({"kind": "averaged-perceptron", "positive": "child", "turn_scale": self.turn_scale,
+                           "weights": self.weights}, separators=(",", ":"))
 
     @staticmethod
     def from_json(s: str) -> "RoleModel":
-        return RoleModel(json.loads(s)["weights"])
+        d = json.loads(s)
+        return RoleModel(d["weights"], float(d.get("turn_scale", 1.0)))
 
 
 def childes_model() -> RoleModel:
@@ -137,3 +144,16 @@ def relabel(utterances: Sequence[Utterance], model: RoleModel | None = None) -> 
     us = sorted(utterances, key=lambda u: u.start)
     roles = infer_roles(us, model)
     return [Utterance(u.start, r, u.text, u.end) for u, r in zip(us, roles)]
+
+
+def calibrate_day(day, model: RoleModel | None = None):
+    """A day counted from relabelled utterances, with its turn totals scaled
+    by the model's learned turn_scale. Hours are scaled too, so they still
+    sum to the day. Everything else on the day is left as counted."""
+    scale = (model or childes_model()).turn_scale
+    if scale == 1.0:
+        return day
+    for h in day.hours:
+        h.turns = round(h.turns * scale)
+    day.turns = sum(h.turns for h in day.hours) if day.hours else round(day.turns * scale)
+    return day

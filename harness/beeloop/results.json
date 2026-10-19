@@ -14,8 +14,9 @@
  ],
  "turns_true": 75,
  "turns_bee_with_true_roles": 75,
- "turns_blind": 58,
+ "turns_blind_uncalibrated": 58,
+ "turn_scale": 1.1426,
+ "turns_blind": 66,
  "role_accuracy_on_bee_utterances_pct": 76.6,
- "blind_model": "trained on every Gleason family except charlie",
- "turns_blind_shipped_model_saw_this_family": 58
+ "blind_model": "trained on every Gleason family except charlie"
 }

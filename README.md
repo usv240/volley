@@ -22,13 +22,17 @@ the numbers.
 "Unknown" (1,004 of 1,004 utterances on this account). `volley setup
 --blind` reads who is the child and who the adult from the words and
 the pauses instead, with `serve_return.blind`, trained on CHILDES. On
-families it never saw: the day's turn count within 12.2 percent of the
-true count in the median session, turns per hour correlated with the
-truth at 0.868, against a naive count that misses 87.3 percent. Every
+families it never saw: the day's turn count within 9.6 percent of the
+true count in the median session (49 of 54 sessions within 20
+percent, +1.6 percent in total), turns per hour correlated with the
+truth at 0.874, against a naive count that misses 87.3 percent. The
+raw blind count runs low by a steady 13 to 18 percent because misread
+roles merge exchanges; a scale learned only from other families corrects
+it. Every
 session is in `harness/blind/results.json`; `python harness/blind/run.py`
 reproduces it.
 
-**On the Bee itself, no person in the room.** A real CHILDES mother-child conversation, voiced by Amazon Polly with an adult and a child voice at its original timing, played to the band for 190 seconds: the Bee wrote 124 utterances for 125 played and kept 75 of 75 turns, so its segmentation loses none. Volley's blind count with a model that never saw this family: 58 (-22.7 percent), 76.6 percent of lines given the right speaker. `harness/beeloop` reproduces it. 111 tests.
+**On the Bee itself, no person in the room.** A real CHILDES mother-child conversation, voiced by Amazon Polly with an adult and a child voice at its original timing, played to the band for 190 seconds: the Bee wrote 124 utterances for 125 played and kept 75 of 75 turns, so its segmentation loses none. Volley's blind count with a model and scale that never saw this family: 66 (-12.0 percent; 58 before the scale), 76.6 percent of lines given the right speaker. `harness/beeloop` reproduces it. 111 tests.
 
 | Document | What it answers |
 |---|---|

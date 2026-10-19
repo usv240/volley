@@ -106,7 +106,9 @@ def main() -> int:
 
     child = m["session"].split("/")[-1]
     corpus, _meta, _skipped = blind_run.childes().load(REPO / "harness" / "childes" / "data" / "Gleason.zip")
-    held_out = RoleModel().fit([blind_run.labelled(us) for name, us in corpus.items() if name.split("/")[-1] != child])
+    others = [name for name in corpus if name.split("/")[-1] != child]
+    held_out = RoleModel().fit([blind_run.labelled(corpus[n]) for n in others])
+    held_out.turn_scale = blind_run.learn_scale(corpus, others)
     fair = relabel(utts, held_out)
     result = {
         "session": m["session"],
@@ -119,11 +121,12 @@ def main() -> int:
         "bee_sessions": sessions,
         "turns_true": m["turns_true"],
         "turns_bee_with_true_roles": count_turns(truth_labelled, ROLES),
-        "turns_blind": count_turns(fair, ROLES),
+        "turns_blind_uncalibrated": count_turns(fair, ROLES),
+        "turn_scale": held_out.turn_scale,
+        "turns_blind": round(count_turns(fair, ROLES) * held_out.turn_scale),
         "role_accuracy_on_bee_utterances_pct": round(100 * sum(
             1 for a, b in zip(fair, sorted(truth_labelled, key=lambda u: u.start)) if a.speaker == b.speaker) / len(utts), 1),
         "blind_model": f"trained on every Gleason family except {child}",
-        "turns_blind_shipped_model_saw_this_family": count_turns(relabel(utts), ROLES),
     }
     (HERE / "results.json").write_text(json.dumps(result, indent=1), encoding="utf-8")
     for k, v in result.items():

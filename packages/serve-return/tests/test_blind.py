@@ -50,3 +50,25 @@ def test_a_model_round_trips_through_json():
     back = RoleModel.from_json(m.to_json())
     assert back.weights == m.weights
     assert json.loads(m.to_json())["positive"] == "child"
+
+
+def test_the_shipped_model_carries_its_learned_turn_scale():
+    m = childes_model()
+    assert 1.05 < m.turn_scale < 1.3
+
+
+def test_calibrate_day_scales_turns_and_keeps_hours_summing():
+    from serve_return import count_day
+    from serve_return.blind import calibrate_day
+
+    day = count_day(relabel(convo()), Roles.of(adult=["adult"], child=["child"]), date="2026-10-19")
+    before = day.turns
+    m = RoleModel(turn_scale=1.5)
+    day = calibrate_day(day, m)
+    assert day.turns == sum(h.turns for h in day.hours)
+    assert day.turns >= before
+
+
+def test_turn_scale_round_trips():
+    m = RoleModel({"bias": 0.1}, turn_scale=1.2)
+    assert RoleModel.from_json(m.to_json()).turn_scale == 1.2

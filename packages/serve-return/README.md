@@ -10,7 +10,7 @@ pip install "git+https://github.com/usv240/volley#subdirectory=packages/serve-re
 No speaker labels? `serve_return.blind` reads who is the child and who the
 adult from the transcript itself, with a model trained on the CHILDES
 Gleason corpus and shipped in the package. On families it never saw, the
-day's turn count came within 12.2 percent of the true count in the median
+day's turn count came within 9.6 percent of the true count in the median
 session (harness/blind in the repository).
 
 ```python
