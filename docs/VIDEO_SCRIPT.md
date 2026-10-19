@@ -89,7 +89,7 @@ recorded by `record_term.py`, which runs the commands for real, keeps
 their output, and renders it in a terminal frame the same 4K recorder
 captures, typed at a human pace; the frame says it is a rendering of a
 real run. Nothing is invented and nothing is sped up. They need the
-device's speaker labels (Gate 1 in PLAN.md); until then the assembler
+device's speaker labels (Gate 1 in planning/PLAN.md); until then the assembler
 cuts the web beats on their own and says which beats it dropped.
 
 ## What not to do

@@ -56,18 +56,19 @@ offsets that give the rule its end-to-start measure). It runs
 --json` for the live counter, and `todos create` for the reminder. The
 argv of every call is pinned.
 
-**On live data.** The device is in hand and signed in; the same
-household's day is what Bellwether, the sibling entry, already proved
-live on 2026-09-29. What Volley needs from the device is speaker
-labels, which the Bee produces only after the wearer's voice is trained
-in the app; on 2026-09-29 every utterance was "Unknown" (friction log
-entry 1), and on 2026-09-30 a 270-utterance conversation was checked
-again and every label was still "Unknown". Gate 1 of the plan is one
-conversation with labels; the video is recorded from the operator's own
-day the moment it passes, and this document will say the date. The
-Tuesday agent has already run against the operator's real Bee through
-its MCP server (AGENT.md); that is live Bee data, but it is the day's
-summary and not the count this entry is about.
+**On live data.** The Bee labels every speaker "Unknown": 1,004 of
+1,004 utterances across 25 sessions on 2026-10-19 (friction log entries
+1, 4 and 5). So Volley reads who is the child and who the adult from the
+transcript itself (`serve_return.blind`, `volley setup --blind`), and
+this was run on the Bee on 2026-10-19 with no person in the room: a real
+CHILDES mother-child conversation, voiced by Amazon Polly with an adult
+and a child voice at its original timing, played to the band for 190
+seconds. The Bee wrote 124 utterances for 125 played and, given the true
+speakers, kept 75 of 75 turns; Volley, with no labels and a model and
+scale that never saw that family, counted 66 (-12.0 percent).
+`harness/beeloop` reproduces it from the Bee's own transcript. The
+Tuesday agent has also run against the operator's real Bee through Bee's
+own MCP server (AGENT.md).
 
 ## Tracks and mini challenges
 
@@ -127,16 +128,18 @@ not, and a test refuses any citation in public text that is not there.
 
 [EVIDENCE.md](EVIDENCE.md): every number, its study, what it showed and
 did not, and the words the site may use. [PRIOR_ART.md](PRIOR_ART.md):
-who has done what. [WINNER_PATTERNS.md](WINNER_PATTERNS.md): the twelve
-patterns and where this stands. The corpus benchmark ran on 2026-09-30
+who has done what. The corpus benchmark ran on 2026-09-30
 on the CHILDES Gleason corpus: 54 sessions, 26.59
 hours, 20,344 turns from the human speaker labels, zero inside
 the 34 single-speaker stretches, both
 baselines beside it, and what it does not show said in the same
-paragraph. The device negative controls and the hand count are
-scheduled in [PLAN.md](PLAN.md) and published whichever way they come
-out; until then the site says "not yet measured" for them in the same
-type size as the numbers.
+paragraph. The label-free count, on families it never saw: +1.6 percent
+in total, a median session error of 9.6 percent, 49 of 54 sessions within
+20 percent (harness/blind). On the Bee itself: 66 of 75 turns
+(harness/beeloop). A hand count by a person and negative controls with
+people in the room were planned and are not done, because no real people
+are involved in this entry; the site says so. Every requirement and
+criterion, with its evidence: [FOR_JUDGES.md](FOR_JUDGES.md).
 
 ## Live
 

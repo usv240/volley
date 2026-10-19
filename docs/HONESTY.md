@@ -68,18 +68,29 @@
   three to six, until measured on a younger child.
 - The wearer. The parent wears the band, so the count is of the
   parent's exchanges, not everything the child heard from everyone.
-- Speaker labels. The count is only as good as the Bee's labels. The
-  harness measures the disagreement with a person and the site shows it.
-- One family. Everything measured here is the operator's own household.
+- Speaker labels. The Bee labels every speaker "Unknown", so Volley
+  reads the roles from the transcript; one utterance in four gets the
+  wrong role, which a day absorbs and a single exchange does not. The
+  measured error is on the site beside every number.
+- No family has used it. Everything measured here is a public corpus and
+  a synthetic replay of it on the Bee; no real people are involved.
 
-## Kill criteria, decided before building
+## Kill criteria, decided before building, and what happened
 
 1. If the Bee never labels the wearer apart from others after two
-   attempts at voice training, the project stops (PLAN.md, Gate 1).
+   attempts at voice training, the project stops (planning/PLAN.md,
+   Gate 1). It never did; instead of stopping, Volley stopped needing
+   labels, and the count without them was measured before anything was
+   claimed (FRICTION_LOG.md entry 5).
 2. If the counter disagrees with a blind human count by more than the
    published automated-versus-manual disagreement and no rule change
    closes it, the number is presented as an estimate with that error,
    and the coaching note is limited to the best and quietest hours,
-   which survive a noisy count.
+   which survive a noisy count. No human count was made (no real people
+   in this entry); the count is presented as an estimate with its
+   measured error against the corpus's own human labels, which is the
+   same spirit.
 3. If a real day cannot be shown on camera by 2026-10-13, this project
-   is not submitted, and the others are untouched.
+   is not submitted. Replaced on 2026-10-19 by the on-device replay of a
+   real recorded conversation, which shows the Bee's own data counted
+   with no person in the room.

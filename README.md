@@ -15,7 +15,7 @@ are live at https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws
 The rule has run on 26.59 hours of public parent-child recordings
 (the CHILDES Gleason corpus, 2026-09-30): 20,344 turns from the
 human speaker labels, zero in any stretch where one person spoke alone.
-What is not yet measured says so on the site in the same type size as
+What is not measured says so on the site in the same type size as
 the numbers.
 
 **No speaker labels, no problem, measured.** The Bee labels every speaker
@@ -32,22 +32,21 @@ it. Every
 session is in `harness/blind/results.json`; `python harness/blind/run.py`
 reproduces it.
 
-**On the Bee itself, no person in the room.** A real CHILDES mother-child conversation, voiced by Amazon Polly with an adult and a child voice at its original timing, played to the band for 190 seconds: the Bee wrote 124 utterances for 125 played and kept 75 of 75 turns, so its segmentation loses none. Volley's blind count with a model and scale that never saw this family: 66 (-12.0 percent; 58 before the scale), 76.6 percent of lines given the right speaker. `harness/beeloop` reproduces it. 111 tests.
+**On the Bee itself, no person in the room.** A real CHILDES mother-child conversation, voiced by Amazon Polly with an adult and a child voice at its original timing, played to the band for 190 seconds: the Bee wrote 124 utterances for 125 played and kept 75 of 75 turns, so its segmentation loses none. Volley's blind count with a model and scale that never saw this family: 66 (-12.0 percent; 58 before the scale), 76.6 percent of lines given the right speaker. `harness/beeloop` reproduces it. 114 tests.
 
 | Document | What it answers |
 |---|---|
-| [docs/PLAN.md](docs/PLAN.md) | What gets built, in what order, with what gates and dates |
+| [docs/FOR_JUDGES.md](docs/FOR_JUDGES.md) | **Start here.** Every Rules.md requirement and judging criterion, with the file or link that proves it |
 | [docs/DESIGN.md](docs/DESIGN.md) | The technical design: packages, the turn rule, privacy by construction, API, MCP, AWS, tests as claims |
 | [docs/SITE.md](docs/SITE.md) | The landing page and product surface: every section, its copy outline, the i-buttons, light and dark, mobile and desktop, the first-time-visitor path |
 | [docs/EVIDENCE.md](docs/EVIDENCE.md) | The science, what each number is and is not, and how the site is allowed to say it |
 | [docs/PRIOR_ART.md](docs/PRIOR_ART.md) | Who has done what, named before a judge has to find it |
 | [docs/HONESTY.md](docs/HONESTY.md) | Privacy, consent, what it never does, the limits, and the kill criteria |
-| [docs/RULES_MAP.md](docs/RULES_MAP.md) | Every line of the rules and every judging criterion, and where it is met |
-| [docs/WINNER_PATTERNS.md](docs/WINNER_PATTERNS.md) | The twelve patterns from top-placed projects, where Volley passes, and what closing each miss costs |
+| [docs/planning/](docs/planning/) | The pre-build plan, gates and audits, kept as a record; superseded by FOR_JUDGES.md |
 | [docs/AGENT.md](docs/AGENT.md) | The two Strands agents over the MCP server, their gate, and two real runs |
 
 Track: Bee (primary), Alexa+ (an Agent Skill backed by an MCP server).
-Mini challenges: AWS Builder, Open Source (`serve-return` on PyPI, MIT).
+Mini challenges: AWS Builder, Open Source (`serve-return`, MIT, installable from this repository).
 
 Sibling projects in this hackathon, each with its own repository and
 docs: Earshot (Fire TV, hearing in noise), Bellwether (Bee, speech as a

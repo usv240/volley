@@ -121,7 +121,7 @@ that is not ours to promise.
 
 Six steps, each badged "works today" or "needs your Bee": install the
 CLI, enable Developer Mode (tap the version five times), `bee login`,
-`pip install volley-bee`, `volley setup` and `volley today`, and, if the
+`pip install` from this repository (packages/serve-return and apps/ingest), `volley setup --blind` and `volley today`, and, if the
 parent wants their days in a browser, `volley connect`. The exact
 commands, copyable, and what the screen shows at each step.
 

@@ -18,7 +18,7 @@ their real output rendered in a terminal frame the same recorder
 captures. `action` starting with `term_` means terminal footage, and the
 script says on screen that it is a rendering of a real run. Those two
 beats need the operator's own day, which needs the device's speaker
-labels (Gate 1 in docs/PLAN.md), so the assembler tolerates their
+labels (Gate 1 in docs/planning/PLAN.md), so the assembler tolerates their
 absence: the web take is cut on its own, and the terminal beats are
 added when the day exists.
 
@@ -240,7 +240,7 @@ def script() -> str:
         "their output, and renders it in a terminal frame the same 4K recorder",
         "captures, typed at a human pace; the frame says it is a rendering of a",
         "real run. Nothing is invented and nothing is sped up. They need the",
-        "device's speaker labels (Gate 1 in PLAN.md); until then the assembler",
+        "device's speaker labels (Gate 1 in planning/PLAN.md); until then the assembler",
         "cuts the web beats on their own and says which beats it dropped.",
         "",
         "## What not to do",
