@@ -1,0 +1,21 @@
+{
+ "session": "Mother/charlie",
+ "corpus": "CHILDES Gleason, doi 10.21415/T5101R",
+ "played_seconds": 190.4,
+ "utterances_played": 125,
+ "utterances_bee": 124,
+ "clock_shift_s": -2.8,
+ "aligned_overlap_pct": 98.7,
+ "bee_sessions": [
+  {
+   "id": 11418600,
+   "state": "COMPLETED"
+  }
+ ],
+ "turns_true": 75,
+ "turns_bee_with_true_roles": 75,
+ "turns_blind": 58,
+ "role_accuracy_on_bee_utterances_pct": 76.6,
+ "blind_model": "trained on every Gleason family except charlie",
+ "turns_blind_shipped_model_saw_this_family": 58
+}

@@ -26,7 +26,9 @@ families it never saw: the day's turn count within 12.2 percent of the
 true count in the median session, turns per hour correlated with the
 truth at 0.868, against a naive count that misses 87.3 percent. Every
 session is in `harness/blind/results.json`; `python harness/blind/run.py`
-reproduces it. 110 tests.
+reproduces it.
+
+**On the Bee itself, no person in the room.** A real CHILDES mother-child conversation, voiced by Amazon Polly with an adult and a child voice at its original timing, played to the band for 190 seconds: the Bee wrote 124 utterances for 125 played and kept 75 of 75 turns, so its segmentation loses none. Volley's blind count with a model that never saw this family: 58 (-22.7 percent), 76.6 percent of lines given the right speaker. `harness/beeloop` reproduces it. 111 tests.
 
 | Document | What it answers |
 |---|---|

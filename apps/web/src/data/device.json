@@ -1,0 +1,12 @@
+{
+ "played_seconds": 190.4,
+ "utterances_played": 125,
+ "utterances_bee": 124,
+ "aligned_overlap_pct": 98.7,
+ "turns_true": 75,
+ "turns_bee_with_true_roles": 75,
+ "turns_blind": 58,
+ "blind_error_pct": -22.7,
+ "role_accuracy_pct": 76.6,
+ "written_by": "harness/beeloop/score.py"
+}

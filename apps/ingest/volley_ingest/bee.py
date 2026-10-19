@@ -161,6 +161,7 @@ def normalize_utterance(
     conversation_id: str | None = None,
     fallback_ts: str | None = None,
     conversation_start_s: float | None = None,
+    prefer_offsets: bool = False,
 ) -> Utterance | None:
     """One utterance record from any of Bee's shapes, or None if it has no
     text or no usable time.
@@ -185,7 +186,7 @@ def normalize_utterance(
     start_s = _epoch_seconds(raw.get("spoken_at"))
     offset_start = raw.get("start") if isinstance(raw.get("start"), (int, float)) and not _looks_absolute(raw.get("start")) else None
     offset_end = raw.get("end") if isinstance(raw.get("end"), (int, float)) and not _looks_absolute(raw.get("end")) else None
-    if start_s is None and conversation_start_s is not None and offset_start is not None:
+    if conversation_start_s is not None and offset_start is not None and (start_s is None or prefer_offsets):
         start_s = conversation_start_s + float(offset_start)
     if start_s is None:
         start_s = _epoch_seconds(ts)
@@ -221,10 +222,26 @@ def normalize_conversation(raw: dict) -> list[Utterance]:
     cid = next((str(raw[k]) for k in CONVERSATION_ID_KEYS if raw.get(k) not in (None, "")), None)
     fallback = next((to_iso(raw[k]) for k in ("start_time", "created_at") if raw.get(k)), None)
     conv_start = _epoch_seconds(raw.get("start_time"))
+    lists = list(_find_utterance_lists(raw))
+    # The session's audio clock. Each utterance has ``spoken_at`` (wall
+    # clock, whole seconds) and ``start``/``end`` offsets (sub-second, from
+    # the start of the session's audio). ``start_time`` is not that start:
+    # on 2026-10-19 it was 33 seconds later, so start (from spoken_at) and
+    # end (from start_time plus the offset) came from different clocks and
+    # every utterance looked half a minute long. Anchor once from the
+    # utterances that carry both, then take start and end from the offsets.
+    anchors = [
+        _epoch_seconds(item.get("spoken_at")) - float(item["start"])
+        for lst in lists for item in lst
+        if isinstance(item, dict) and isinstance(item.get("start"), (int, float)) and not _looks_absolute(item.get("start"))
+        and _epoch_seconds(item.get("spoken_at")) is not None
+    ]
+    audio_start = sorted(anchors)[len(anchors) // 2] if anchors else None
     out: list[Utterance] = []
-    for lst in _find_utterance_lists(raw):
+    for lst in lists:
         for item in lst:
-            u = normalize_utterance(item, cid, fallback, conv_start)
+            u = normalize_utterance(item, cid, fallback, audio_start if audio_start is not None else conv_start,
+                                    prefer_offsets=audio_start is not None)
             if u:
                 out.append(u)
     out.sort(key=lambda u: u.ts)

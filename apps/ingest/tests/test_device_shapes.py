@@ -111,3 +111,25 @@ def test_rows_that_already_carry_words_are_not_fetched_again():
 
     bare = unwrap_conversation(get_response(3))
     assert with_utterances(BeeCli(runner=runner), [bare]) == [bare]
+
+
+def test_start_and_end_come_from_one_clock_even_when_start_time_is_late():
+    """On 2026-10-19 the device's start_time was 33 seconds after the audio
+    began, and spoken_at is whole seconds. Start came from spoken_at and end
+    from start_time plus the offset, so every utterance looked half a minute
+    long and every pause negative. Both now come from the offsets, anchored
+    once on spoken_at."""
+    from volley_ingest.bee import normalize_conversation
+
+    audio = 1792437229.0  # when the audio began
+    rows = [(2.42, 2.72), (3.08, 3.46), (4.02, 4.32), (4.70, 5.14)]
+    utts = [{"text": f"line {i}", "speaker": "Unknown", "start": s, "end": e,
+             "spoken_at": int((audio + s) // 1) * 1000} for i, (s, e) in enumerate(rows)]
+    rec = {"conversation": {"id": 1, "start_time": int((audio + 33.0) * 1000),
+                            "transcriptions": [{"utterances": utts}]}}
+    out = normalize_conversation(rec)
+    for u, (s, e) in zip(out, rows):
+        assert abs((u.end_s - u.start_s) - (e - s)) < 0.01
+    gaps = [b.start_s - a.end_s for a, b in zip(out, out[1:])]
+    assert all(0.0 < g < 1.0 for g in gaps), gaps
+    assert abs(out[0].start_s - (audio + 2.42)) < 1.0

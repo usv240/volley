@@ -20,7 +20,7 @@ boolean would beat it. Friction log entries 1, 4 and 5.
 
 ### 2. Split utterances where the speaker changes, not only where the speech pauses
 
-**Important.** A two-year-old answers a parent in well under a second.
+**Nice-to-have, downgraded after measuring.** On 2026-10-19 a 190-second parent-child conversation played to the band kept 75 of 75 turns in the Bee's own segmentation, so this did not bite on clean, two-voice audio. It is kept for real rooms with overlap. A two-year-old answers a parent in well under a second.
 If the device merges the question and the answer into one utterance,
 the turn is gone before any software can count it, labels or no labels.
 The CHILDES corpus's own segmentation puts the median reply gap well

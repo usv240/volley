@@ -1,5 +1,6 @@
 import corpus from "../data/corpus.json";
 import blind from "../data/blind.json";
+import device from "../data/device.json";
 import demo from "../data/demo.json";
 import { DayView, clock, type Day } from "../components/DayView";
 import { DropZone } from "../components/DropZone";
@@ -469,6 +470,16 @@ export default function Home() {
               missed by {Math.abs(blind.naive_total_error_pct)} percent. Each utterance&apos;s role was right{" "}
               {blind.role_accuracy_pct} percent of the time, so a single exchange can be misread; a day, a week and a trend are what it is
               for.
+            </p>
+            <p className="mt-4 max-w-[70ch] leading-relaxed text-muted">
+              <span className="font-semibold text-ink">On the Bee itself.</span> A real mother-and-child conversation from the same
+              corpus, voiced by Amazon Polly with an adult and a child voice at its original timing, played to the band for{" "}
+              {Math.round(device.played_seconds)} seconds, no person in the room. The Bee wrote {device.utterances_bee} utterances for{" "}
+              {device.utterances_played} played and kept <strong className="text-ink">{device.turns_bee_with_true_roles} of{" "}
+              {device.turns_true} turns</strong>: its segmentation loses none. Volley, with no labels and a model that never saw this
+              family, counted <strong className="text-ink">{device.turns_blind}</strong> ({device.blind_error_pct} percent), with{" "}
+              {device.role_accuracy_pct} percent of lines given the right speaker. One session; the corpus says how much one session
+              varies.
             </p>
           </div>
           <div className="card mt-6 p-6 sm:p-8">

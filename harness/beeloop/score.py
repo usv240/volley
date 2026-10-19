@@ -77,7 +77,13 @@ def main() -> int:
             tot += sum(max(0.0, min(b, pe) - max(a, ps)) for ps, pe, _ in played)
         return tot
 
-    shift = max((x / 4 for x in range(-40, 41)), key=overlap_score)
+    # Coarse then fine, over two minutes either way: the first run searched
+    # ten seconds, found its best at the edge, and scored nothing.
+    coarse = max((x / 2 for x in range(-240, 241)), key=overlap_score)
+    shift = max((coarse + x / 20 for x in range(-20, 21)), key=overlap_score)
+    if abs(shift) >= 119:
+        print(f"alignment hit the edge of the search ({shift} s); the result would be meaningless")
+        return 3
 
     def true_role(u: Utterance) -> str:
         a, b = u.start + shift, u.finish + shift
@@ -87,19 +93,37 @@ def main() -> int:
         return max(by, key=by.get)
 
     truth_labelled = [Utterance(u.start, true_role(u), u.text, u.end) for u in utts]
+
+    # The shipped model was trained on every Gleason family, this one
+    # included. A fair score uses a model that never saw this child: the
+    # same training, with every session of this child left out.
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("blind_run", REPO / "harness" / "blind" / "run.py")
+    blind_run = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(blind_run)
+    from serve_return.blind import RoleModel
+
+    child = m["session"].split("/")[-1]
+    corpus, _meta, _skipped = blind_run.childes().load(REPO / "harness" / "childes" / "data" / "Gleason.zip")
+    held_out = RoleModel().fit([blind_run.labelled(us) for name, us in corpus.items() if name.split("/")[-1] != child])
+    fair = relabel(utts, held_out)
     result = {
         "session": m["session"],
         "corpus": m["corpus"],
         "played_seconds": m["seconds"],
         "utterances_played": m["utterances"],
         "utterances_bee": len(utts),
-        "clock_shift_s": shift,
+        "clock_shift_s": round(shift, 2),
+        "aligned_overlap_pct": round(100 * overlap_score(shift) / max(1e-9, sum(u.finish - u.start for u in utts)), 1),
         "bee_sessions": sessions,
         "turns_true": m["turns_true"],
         "turns_bee_with_true_roles": count_turns(truth_labelled, ROLES),
-        "turns_blind": count_turns(relabel(utts), ROLES),
+        "turns_blind": count_turns(fair, ROLES),
         "role_accuracy_on_bee_utterances_pct": round(100 * sum(
-            1 for a, b in zip(relabel(utts), sorted(truth_labelled, key=lambda u: u.start)) if a.speaker == b.speaker) / len(utts), 1),
+            1 for a, b in zip(fair, sorted(truth_labelled, key=lambda u: u.start)) if a.speaker == b.speaker) / len(utts), 1),
+        "blind_model": f"trained on every Gleason family except {child}",
+        "turns_blind_shipped_model_saw_this_family": count_turns(relabel(utts), ROLES),
     }
     (HERE / "results.json").write_text(json.dumps(result, indent=1), encoding="utf-8")
     for k, v in result.items():
