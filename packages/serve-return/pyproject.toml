@@ -25,13 +25,15 @@ dev = ["pytest>=8", "hypothesis>=6", "pylangacq>=0.20"]
 
 [project.urls]
 Homepage = "https://github.com/usv240/volley"
+Source = "https://github.com/usv240/volley/tree/main/packages/serve-return"
+Evidence = "https://github.com/usv240/volley/blob/main/docs/EVIDENCE.md"
 
 [tool.setuptools.packages.find]
 where = ["."]
+include = ["serve_return*"]
 
 [tool.setuptools.package-data]
 serve_return = ["models/*.json"]
-include = ["serve_return*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
