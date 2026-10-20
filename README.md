@@ -65,8 +65,24 @@ python -m pytest packages apps harness -q          # 123 tests, the same two lin
 cd apps/web && npm ci && npm test && npm run dev   # the site, on localhost:3000
 ```
 
-No AWS account and no Bee are needed for any of that. With a Bee
-signed in: `volley setup --blind`, then `volley today`.
+No AWS account and no Bee are needed for any of that.
+
+### If you own a Bee
+
+No clone. Three lines, checked in a fresh environment:
+
+```
+pip install "serve-return @ git+https://github.com/usv240/volley#subdirectory=packages/serve-return" "volley-bee @ git+https://github.com/usv240/volley#subdirectory=apps/ingest"
+volley setup --blind         # the Bee labels every speaker Unknown; Volley reads the roles itself
+volley today                 # count since the last run, throw the words away, remind tomorrow
+```
+
+`volley connect` gives your counts a page of your own; `volley today
+--conversation <id>` counts one session and reads nothing else.
+
+To let your own assistant answer questions about the counts, add the
+Agent Skill the same way Bee's own skill is added:
+`npx skills add usv240/volley`.
 
 ## Built with
 
