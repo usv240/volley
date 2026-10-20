@@ -154,9 +154,10 @@ export default function Home() {
               The two numbers a judge should read first: on {corpus.hours} hours of public parent-child recordings we did not make, the
               rule counted <strong className="text-ink">{corpus.turns.toLocaleString("en-US")} turns</strong> from the human speaker
               labels, <strong className="text-ink">zero</strong> inside any stretch where one person spoke alone{" "}
-              <Info term="corpus" />; on the operator&apos;s own Bee, the agreement with a blind hand count is{" "}
-              <strong className="text-ink">not yet measured</strong>. The second is scheduled and will be published whichever way it
-              comes out; this sentence changes only when it is <Info term="validated" />.
+              <Info term="corpus" />; on the operator&apos;s own Bee, hearing a real parent-child conversation voiced by Amazon Polly
+              with no person in the room, Volley counted <strong className="text-ink">{device.turns_blind} of {device.turns_true} turns</strong>{" "}
+              with no speaker labels at all. Neither is a hand count by a person, and the page says what that leaves{" "}
+              <Info term="validated" />.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a href="#how" className="primary">
@@ -430,8 +431,7 @@ export default function Home() {
                 On the public corpus, <strong className="text-ink">{corpus.turns_inside_them} turns</strong> inside its{" "}
                 {corpus.single_speaker_stretches} stretches of a minute or more where one person spoke alone{" "}
                 <Info term="corpus" />. On the device: zero on an adult-only conversation, on a podcast playing to an empty room, and
-                on silence. <strong className="text-ink">Not yet measured</strong>; scheduled, and published whichever way it comes
-                out.
+                on silence. <strong className="text-ink">Not yet run</strong>, and this line says so until it is.
               </p>
             </div>
             <div className="card min-w-0 p-6">

@@ -160,7 +160,12 @@ def cmd_today(cli: BeeCli, args) -> int:
         print("run volley setup first: --parent and --child labels, or --blind to read the roles from the transcript")
         return 2
     cursors = CursorStore(str(home() / ".bee-cursor"))
-    if args.now:
+    if getattr(args, "conversation", None):
+        # One session and nothing else: a Bee worn all day also hears work
+        # and strangers, and a count of those is not the family's.
+        rows = [cli.conversation_get(args.conversation)]
+        new_cursor = None
+    elif args.now:
         payload = cli.now()
         rows = payload.get("conversations", []) if isinstance(payload, dict) else payload
         new_cursor = None
@@ -247,6 +252,7 @@ def main(argv: list[str] | None = None, cli: BeeCli | None = None) -> int:
     c.add_argument("--again", action="store_true", help="make a new household even if one is connected")
     t = sub.add_parser("today", help="count the day, show it, post the counts, write tomorrow's reminder")
     t.add_argument("--now", action="store_true", help="the last several hours rather than everything since the last run")
+    t.add_argument("--conversation", help="count one Bee conversation by its id, and read nothing else")
     e = sub.add_parser("evidence", help="a publishable record that live Bee data flowed, with no words in it")
     e.add_argument("--out", default="docs/BEE_LIVE.md")
     l = sub.add_parser("live", help="count turns as they happen")

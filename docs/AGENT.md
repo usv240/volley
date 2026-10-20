@@ -54,8 +54,9 @@ offered.
 ## Two real runs, 2026-09-30
 
 Sonnet on the ladder's first rung, against the deployed MCP server and
-the operator's own signed-in Bee, on the simulated household because
-the operator's own has no labelled day yet (see SUBMISSION.md).
+the operator's own signed-in Bee, on the simulated household, because
+these runs predate label-free counting and the operator's own Bee had no
+labelled day then (see SUBMISSION.md).
 
 ```
 $ volley-agent coach --demo "how was our talking today, and what should I try tomorrow?"

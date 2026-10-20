@@ -28,13 +28,13 @@ families it never saw: the day's turn count within 9.6 percent of the
 true count in the median session (49 of 54 sessions within 20
 percent, +1.6 percent in total), turns per hour correlated with the
 truth at 0.874, against a naive count that misses 87.3 percent. The
-raw blind count runs low by a steady 13 to 18 percent because misread
+raw blind count runs low by a steady 11 to 15 percent because misread
 roles merge exchanges; a scale learned only from other families corrects
 it. Every
 session is in `harness/blind/results.json`; `python harness/blind/run.py`
 reproduces it.
 
-**On the Bee itself, no person in the room.** A real CHILDES mother-child conversation, voiced by Amazon Polly with an adult and a child voice at its original timing, played to the band for 190 seconds: the Bee wrote 124 utterances for 125 played and kept 75 of 75 turns, so its segmentation loses none. Volley's blind count with a model and scale that never saw this family: 66 (-12.0 percent; 58 before the scale), 76.6 percent of lines given the right speaker. `harness/beeloop` reproduces it. 120 tests.
+**On the Bee itself, no person in the room.** A real CHILDES mother-child conversation, voiced by Amazon Polly with an adult and a child voice at its original timing, played to the band for 190 seconds: the Bee wrote 124 utterances for 125 played and kept 75 of 75 turns, so its segmentation loses none. Volley's blind count with a model and scale that never saw this family: 66 (-12.0 percent; 58 before the scale), 76.6 percent of lines given the right speaker. `harness/beeloop` reproduces it. 121 tests.
 
 | Document | What it answers |
 |---|---|
@@ -55,6 +55,18 @@ docs: Earshot (Fire TV, hearing in noise), Bellwether (Bee, speech as a
 vital sign), EveryWord (Fire TV), Nightlight (Ring). Volley reuses
 Bellwether's Bee client, server, stack and video pipeline; it shares no
 claim with it.
+
+## Run it
+
+```
+python -m venv .venv && . .venv/bin/activate      # Windows: .venv\Scripts\activate
+pip install -e "packages/serve-return[dev]" -e "apps/ingest[dev]" -e "apps/server[dev]" -e "apps/agent[dev]"
+python -m pytest packages apps harness -q          # 121 tests, the same two lines CI runs
+cd apps/web && npm ci && npm test && npm run dev   # the site, on localhost:3000
+```
+
+No AWS account and no Bee are needed for any of that. With a Bee
+signed in: `volley setup --blind`, then `volley today`.
 
 ## Built with
 

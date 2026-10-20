@@ -170,3 +170,25 @@ def test_setup_blind_needs_no_labels(tmp_path, monkeypatch, capsys):
     monkeypatch.setenv("VOLLEY_HOME", str(tmp_path))
     assert main(["setup", "--blind"], cli=BeeCli(runner=lambda argv: (1, "", "no device"))) == 0
     assert Household.load().blind is True
+
+
+def test_one_conversation_reads_that_session_and_nothing_else(home, capsys):
+    """A Bee worn all day hears more than the family. `--conversation`
+    is the way to count one session: it asks for that id only, never for
+    `changed` or `now`, and leaves the cursor where it was."""
+    calls: list[list[str]] = []
+
+    def runner(argv: list[str]):
+        calls.append(argv)
+        joined = " ".join(argv)
+        if "conversations get 10824219" in joined:
+            return (0, json.dumps({"conversation": conversation()}), "")
+        if "todos create" in joined:
+            return (0, json.dumps({"id": 1}), "")
+        return (1, "", f"unexpected {argv}")
+
+    assert main(["today", "--conversation", "10824219"], cli=BeeCli(runner=runner)) == 0
+    assert "7 turns with Asha" in capsys.readouterr().out
+    reads = [c for c in calls if "todos" not in c]
+    assert len(reads) == 1 and "get" in reads[0] and "10824219" in reads[0], reads
+    assert not (home / ".bee-cursor").exists()

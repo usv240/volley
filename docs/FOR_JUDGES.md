@@ -3,7 +3,7 @@
 Every requirement in the hackathon rules and every judging criterion,
 with the file, command or link that proves it. Written to be checked,
 not believed. Numbers are generated from committed result files, and
-120 tests guard the claims.
+121 tests guard the claims.
 
 **In one line:** a step counter for conversations with your child. The
 Bee on a parent's wrist hears the day; Volley counts the back-and-forth
@@ -20,7 +20,7 @@ https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws/v1/docs
 | Requirement | Met by | Check it |
 |---|---|---|
 | Text description of what it does and how | Devpost text; [SUBMISSION.md](SUBMISSION.md) | Read |
-| Public repository with all source, assets and run instructions | This repository; [README.md](../README.md), [DESIGN.md](DESIGN.md) | Clone, then `pytest packages apps harness` |
+| Public repository with all source, assets and run instructions | This repository; [README.md](../README.md), [DESIGN.md](DESIGN.md) | Clone, then the two lines under "Run it" in the README |
 | Open-source licence visible at the top | MIT, [LICENSE](../LICENSE) | The About panel |
 | **Bee: the repo calls Bee's CLI, MCP or Skill in code** | `apps/ingest/volley_ingest/bee.py` runs `bee conversations list`, `get`, `now`, `changed`, `stream --json`, `todos create`; every argv pinned in `apps/ingest/tests`. `apps/agent/volley_agent/tuesday.py` holds Bee's own MCP server | `pytest apps/ingest` |
 | **Bee: live Bee data doing something for a user** | A real CHILDES mother-child conversation, voiced by Amazon Polly at its original timing, played to the band with no person in the room (2026-10-19). From the Bee's own transcript: 124 utterances for 125 played; given the true speakers, 75 of 75 turns kept; Volley with no labels counted 66 (-12.0 percent) | `harness/beeloop/results.json`; `python harness/beeloop/score.py` |
@@ -61,7 +61,7 @@ https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws/v1/docs
   ([AGENT.md](AGENT.md)). The note is phrased on Bedrock from rules-chosen
   facts behind the same gate, with a template as the floor.
 - **The Coach on Amazon Bedrock AgentCore Runtime**, as an endpoint anything can invoke, verified live ([apps/agentcore](../apps/agentcore/README.md)).
-- **120 tests.** `pytest packages apps harness`.
+- **121 tests.** `pytest packages apps harness`.
 
 ### Design
 

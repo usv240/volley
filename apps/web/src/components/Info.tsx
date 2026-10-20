@@ -126,7 +126,7 @@ export const TERMS = {
   },
   validated: {
     label: "validated",
-    text: "The word is used here only for the published instrument and its studies. Volley's own count is checked against a public corpus, done, and against a hand count on the operator's own Bee, not yet, and the results are on this page as they come. It has not been validated on children other than the corpus's, and the page says so.",
+    text: "The word is used here only for the published instrument and its studies. Volley's own count is checked against a public corpus, and on the operator's own Bee against a real corpus conversation played to it, both on this page. No person has hand-counted a day, because no real people are part of this entry. It has not been validated on children other than the corpus's, and the page says so.",
   },
   paidFor: {
     label: "already paid for",
