@@ -28,7 +28,7 @@ Bee wristband  ->  Bee cloud (Amazon's transcript, the parent's account)
 ## 1. `packages/serve-return` (Python, MIT)
 
 The open-source deliverable. Dependency-free core so a researcher can
-`pip install "git+https://github.com/usv240/volley#subdirectory=packages/serve-return"` and count turns from any transcript,
+`pip install serve-return` and count turns from any transcript,
 with speaker labels or, through `serve_return.blind`, without them.
 
 ### Input
@@ -212,7 +212,7 @@ than a nickname, and a test asserts the schema.
 
 Every judge and every parent can use the product without us:
 
-1. **Your Bee, on your machine.** `pip install "git+https://github.com/usv240/volley#subdirectory=packages/serve-return" "git+https://github.com/usv240/volley#subdirectory=apps/ingest"`, `volley setup --blind`,
+1. **Your Bee, on your machine.** `pip install serve-return "volley-bee @ git+https://github.com/usv240/volley#subdirectory=apps/ingest"`, `volley setup --blind`,
    `volley today`. The only route that reads a transcript, and it reads
    it where you are.
 2. **A Bee export, in your browser.** The site has a drop zone for the

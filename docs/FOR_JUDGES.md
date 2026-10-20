@@ -28,7 +28,7 @@ https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws/v1/docs
 | Demo video under three minutes | To be recorded last | |
 | Product feedback on every tool used | [PRODUCT_FEEDBACK.md](../PRODUCT_FEEDBACK.md) and the Devpost feedback answers | Read |
 | Tracks and mini challenges | Bee (primary), Alexa+; AWS Builder; Open Source | [SUBMISSION.md](SUBMISSION.md) |
-| Open Source fields | Contribution: `packages/serve-return` (MIT); repository, username usv240, description in SUBMISSION.md | Read |
+| Open Source fields | Contribution: `packages/serve-return` (MIT), on PyPI: `pip install serve-return` (https://pypi.org/project/serve-return/); repository, username usv240, description in SUBMISSION.md | Read |
 | AWS Builder: documented integrations | [AWS.md](AWS.md): Bedrock, Bedrock AgentCore Runtime, Strands Agents, DynamoDB, Lambda, S3, CloudFront, CDK, Polly | Read |
 | Pre-existing project | None; started in the window; reuse from sibling entries stated | [SUBMISSION.md](SUBMISSION.md) |
 | Feature requests, rated | [FEATURE_REQUESTS.md](FEATURE_REQUESTS.md), four, each critical, important or nice-to-have | Read |

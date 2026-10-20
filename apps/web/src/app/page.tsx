@@ -57,7 +57,7 @@ const STEPS = [
   { title: "Install Bee's command line tool", body: "npm install -g @beeai/cli", live: true },
   { title: "Turn on Developer Mode in the Bee app", body: "Settings, then tap the version number five times.", live: true, term: "developerMode" as const },
   { title: "Sign in the tool to your Bee", body: "bee login, then approve it in the app.", live: true },
-  { title: "Install Volley, from GitHub", body: 'pip install "git+https://github.com/usv240/volley#subdirectory=packages/serve-return" "git+https://github.com/usv240/volley#subdirectory=apps/ingest"', live: true },
+  { title: "Install Volley", body: 'pip install serve-return "volley-bee @ git+https://github.com/usv240/volley#subdirectory=apps/ingest"', live: true },
   { title: "Count the day", body: "volley setup --blind --child-name Asha --tz 5.5\nvolley today", live: true },
   { title: "See your days in a browser, if you want to", body: "volley connect\nvolley today", live: true, term: "mine" as const },
 ];

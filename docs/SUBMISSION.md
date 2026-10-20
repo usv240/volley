@@ -86,13 +86,15 @@ own MCP server (AGENT.md).
   which holds Bee's MCP server beside Volley's; see [AWS.md](AWS.md)
   and [AGENT.md](AGENT.md).
 - **Mini challenge: Open Source.** `serve-return`, a dependency-free
-  Python package under MIT.
+  Python package under MIT, published on PyPI: `pip install serve-return`
+  (https://pypi.org/project/serve-return/).
 
 ## Open Source mini challenge
 
 - **Repository:** https://github.com/usv240/volley
 - **GitHub username:** usv240
-- **The contribution:** `packages/serve-return`, the conversational
+- **The contribution:** `packages/serve-return`, on PyPI as
+  `serve-return` (https://pypi.org/project/serve-return/), the conversational
   turn counter with the published five-second rule, per-hour counts,
   and nothing that can hold a word.
 - **Why it matters:** the research instrument is unavailable to parents

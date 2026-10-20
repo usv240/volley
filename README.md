@@ -48,7 +48,7 @@ reproduces it.
 | [docs/AGENT.md](docs/AGENT.md) | The two Strands agents over the MCP server, their gate, and two real runs |
 
 Track: Bee (primary), Alexa+ (an Agent Skill backed by an MCP server).
-Mini challenges: AWS Builder, Open Source (`serve-return`, MIT, installable from this repository).
+Mini challenges: AWS Builder, Open Source (`serve-return`, MIT, on PyPI: `pip install serve-return`, https://pypi.org/project/serve-return/).
 
 Sibling projects in this hackathon, each with its own repository and
 docs: Earshot (Fire TV, hearing in noise), Bellwether (Bee, speech as a
@@ -72,7 +72,7 @@ No AWS account and no Bee are needed for any of that.
 No clone. Three lines, checked in a fresh environment:
 
 ```
-pip install "serve-return @ git+https://github.com/usv240/volley#subdirectory=packages/serve-return" "volley-bee @ git+https://github.com/usv240/volley#subdirectory=apps/ingest"
+pip install serve-return "volley-bee @ git+https://github.com/usv240/volley#subdirectory=apps/ingest"
 volley setup --blind         # the Bee labels every speaker Unknown; Volley reads the roles itself
 volley today                 # count since the last run, throw the words away, remind tomorrow
 ```
