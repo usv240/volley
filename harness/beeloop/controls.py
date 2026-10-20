@@ -176,9 +176,10 @@ def score() -> int:
 
     out = []
     for seg in segs:
-        # The Bee's clock ran within two minutes of this one on the first
-        # run; a minute either side keeps the three windows apart.
-        a, b = seg["played_at"] - 30, seg["played_at"] + seg["seconds"] + 30
+        # The Bee's clock ran 2.8 s from this one on the conversation run.
+        # Thirty seconds either side, the first draft, let each window take
+        # half a minute of its neighbours; five keeps the three apart.
+        a, b = seg["played_at"] - 5, seg["played_at"] + seg["seconds"] + 5
         inside = [u for u in utts if a <= u.start <= b]
         raw = count_turns(relabel(inside, model), ROLES) if inside else 0
         out.append({"name": seg["name"], "seconds": seg["seconds"], "turns_true": 0,

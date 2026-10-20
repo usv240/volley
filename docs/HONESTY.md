@@ -72,6 +72,11 @@
   reads the roles from the transcript; one utterance in four gets the
   wrong role, which a day absorbs and a single exchange does not. The
   measured error is on the site beside every number.
+- Adults alone. With every speaker "Unknown", two adults talking count
+  as turns: 21 in three minutes on the Bee, 43 percent of the real rate
+  on the corpus. Measured in harness/beeloop/controls.py and
+  harness/blind/adults_only.py; a presence check is measured and not
+  shipped (harness/blind/presence.py).
 - No family has used it. Everything measured here is a public corpus and
   a synthetic replay of it on the Bee; no real people are involved.
 

@@ -1,0 +1,41 @@
+{
+ "corpus": "CHILDES Gleason, doi 10.21415/T5101R",
+ "blind_model": "trained on every Gleason family except ['charlie', 'susan']",
+ "turn_scale": 1.1464,
+ "bee_sessions": [
+  {
+   "id": 11436048,
+   "state": "COMPLETED"
+  },
+  {
+   "id": 11435882,
+   "state": "COMPLETED"
+  }
+ ],
+ "controls": [
+  {
+   "name": "adults",
+   "seconds": 182.8,
+   "turns_true": 0,
+   "utterances_bee": 63,
+   "turns_blind_uncalibrated": 18,
+   "turns_blind": 21
+  },
+  {
+   "name": "silence",
+   "seconds": 180,
+   "turns_true": 0,
+   "utterances_bee": 16,
+   "turns_blind_uncalibrated": 1,
+   "turns_blind": 1
+  },
+  {
+   "name": "onevoice",
+   "seconds": 182.1,
+   "turns_true": 0,
+   "utterances_bee": 92,
+   "turns_blind_uncalibrated": 12,
+   "turns_blind": 14
+  }
+ ]
+}

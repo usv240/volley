@@ -119,11 +119,15 @@ through `childespy` (`media_start`, `media_end` from CHAT bullets).
 
 ### The device's own negative controls
 
-Three recordings on the operator's Bee, each twenty minutes: an
-adult-only conversation (expected: zero child turns); a podcast through
-a speaker with nobody present (expected: zero turns, and a measured
-answer to whether the Bee mistakes a broadcast voice for the wearer);
-silence. Their counts are on the site as numbers, whichever they are.
+Run on the operator's Bee on 2026-10-20 (`harness/beeloop/controls.py`),
+three minutes each, no person speaking: two adults from a CHILDES family
+dinner with the child's lines left out, 21 false turns; silence, 1 (the
+room was not silent: the Bee wrote 16 utterances in that window); one
+adult voice back to back, 14. A real parent and child of the same length
+gave 66. The corpus agrees (`harness/blind/adults_only.py`: false turns
+at 43 percent of the real count with the child removed). The counts are
+on the site as numbers, which is what this section promised whichever
+way they came out.
 
 ### The loop back into the parent's Bee
 

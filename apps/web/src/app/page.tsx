@@ -1,6 +1,7 @@
 import corpus from "../data/corpus.json";
 import blind from "../data/blind.json";
 import device from "../data/device.json";
+import controls from "../data/controls.json";
 import demo from "../data/demo.json";
 import { DayView, clock, type Day } from "../components/DayView";
 import { DropZone } from "../components/DropZone";
@@ -430,8 +431,14 @@ export default function Home() {
               <p className="mt-3 leading-relaxed text-muted">
                 On the public corpus, <strong className="text-ink">{corpus.turns_inside_them} turns</strong> inside its{" "}
                 {corpus.single_speaker_stretches} stretches of a minute or more where one person spoke alone{" "}
-                <Info term="corpus" />. On the device: zero on an adult-only conversation, on a podcast playing to an empty room, and
-                on silence. <strong className="text-ink">Not yet run</strong>, and this line says so until it is.
+                <Info term="corpus" />, from the human speaker labels. Without labels it is the weak point: two adults from a real family
+                dinner, no child, played to the Bee for {controls.adults_seconds} seconds, gave{" "}
+                <strong className="text-ink">{controls.adults_false_turns} false turns</strong>, and one adult voice gave{" "}
+                {controls.onevoice_false_turns}, against {controls.real_turns_same_length} for a real parent and child of the same
+                length. On the corpus, removing the child leaves false turns at {controls.corpus_false_as_pct_of_real} percent of the
+                real count. A check for a child&apos;s presence refused {controls.gate_refused_pct} percent of adults-only stretches but
+                lost {controls.gate_turns_lost_pct} percent of true turns, so it is not shipped. The Bee&apos;s own speaker label would
+                end this.
               </p>
             </div>
             <div className="card min-w-0 p-6">

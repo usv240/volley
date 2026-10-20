@@ -1,0 +1,347 @@
+{
+ "corpus": "CHILDES Gleason, doi 10.21415/T5101R",
+ "what": "each session with the child's lines removed; every adult-child turn counted is false",
+ "folds": "6 folds by child",
+ "sessions": 54,
+ "false_as_pct_of_real": 43.1,
+ "by_setting": {
+  "Dinner": {
+   "sessions": 20,
+   "false_as_pct_of_real": 45.0
+  },
+  "Father": {
+   "sessions": 21,
+   "false_as_pct_of_real": 42.0
+  },
+  "Mother": {
+   "sessions": 13,
+   "false_as_pct_of_real": 42.7
+  }
+ },
+ "rows": [
+  {
+   "session": "Dinner/andy",
+   "turns_true": 183,
+   "turns_blind": 178,
+   "false_turns_without_child": 49
+  },
+  {
+   "session": "Dinner/guy",
+   "turns_true": 186,
+   "turns_blind": 195,
+   "false_turns_without_child": 81
+  },
+  {
+   "session": "Dinner/martin",
+   "turns_true": 489,
+   "turns_blind": 560,
+   "false_turns_without_child": 239
+  },
+  {
+   "session": "Dinner/theresa",
+   "turns_true": 258,
+   "turns_blind": 209,
+   "false_turns_without_child": 73
+  },
+  {
+   "session": "Father/andy",
+   "turns_true": 294,
+   "turns_blind": 352,
+   "false_turns_without_child": 149
+  },
+  {
+   "session": "Father/guy",
+   "turns_true": 370,
+   "turns_blind": 351,
+   "false_turns_without_child": 169
+  },
+  {
+   "session": "Father/martin",
+   "turns_true": 221,
+   "turns_blind": 265,
+   "false_turns_without_child": 122
+  },
+  {
+   "session": "Father/theresa",
+   "turns_true": 505,
+   "turns_blind": 408,
+   "false_turns_without_child": 122
+  },
+  {
+   "session": "Mother/andy",
+   "turns_true": 309,
+   "turns_blind": 314,
+   "false_turns_without_child": 140
+  },
+  {
+   "session": "Mother/guy",
+   "turns_true": 382,
+   "turns_blind": 345,
+   "false_turns_without_child": 151
+  },
+  {
+   "session": "Mother/martin",
+   "turns_true": 447,
+   "turns_blind": 490,
+   "false_turns_without_child": 229
+  },
+  {
+   "session": "Dinner/bobby",
+   "turns_true": 358,
+   "turns_blind": 474,
+   "false_turns_without_child": 199
+  },
+  {
+   "session": "Dinner/helen",
+   "turns_true": 359,
+   "turns_blind": 354,
+   "false_turns_without_child": 136
+  },
+  {
+   "session": "Father/bobby",
+   "turns_true": 490,
+   "turns_blind": 517,
+   "false_turns_without_child": 224
+  },
+  {
+   "session": "Father/helen",
+   "turns_true": 565,
+   "turns_blind": 493,
+   "false_turns_without_child": 163
+  },
+  {
+   "session": "Father/nanette",
+   "turns_true": 212,
+   "turns_blind": 203,
+   "false_turns_without_child": 72
+  },
+  {
+   "session": "Father/ursula",
+   "turns_true": 615,
+   "turns_blind": 575,
+   "false_turns_without_child": 142
+  },
+  {
+   "session": "Mother/helen",
+   "turns_true": 613,
+   "turns_blind": 566,
+   "false_turns_without_child": 204
+  },
+  {
+   "session": "Mother/nanette",
+   "turns_true": 290,
+   "turns_blind": 314,
+   "false_turns_without_child": 169
+  },
+  {
+   "session": "Dinner/charlie",
+   "turns_true": 362,
+   "turns_blind": 421,
+   "false_turns_without_child": 187
+  },
+  {
+   "session": "Dinner/isadora",
+   "turns_true": 174,
+   "turns_blind": 176,
+   "false_turns_without_child": 69
+  },
+  {
+   "session": "Dinner/olivia",
+   "turns_true": 144,
+   "turns_blind": 169,
+   "false_turns_without_child": 80
+  },
+  {
+   "session": "Dinner/victor",
+   "turns_true": 440,
+   "turns_blind": 472,
+   "false_turns_without_child": 225
+  },
+  {
+   "session": "Father/charlie",
+   "turns_true": 473,
+   "turns_blind": 439,
+   "false_turns_without_child": 219
+  },
+  {
+   "session": "Father/isadora",
+   "turns_true": 566,
+   "turns_blind": 671,
+   "false_turns_without_child": 359
+  },
+  {
+   "session": "Father/olivia",
+   "turns_true": 462,
+   "turns_blind": 481,
+   "false_turns_without_child": 180
+  },
+  {
+   "session": "Father/victor",
+   "turns_true": 411,
+   "turns_blind": 426,
+   "false_turns_without_child": 184
+  },
+  {
+   "session": "Mother/charlie",
+   "turns_true": 560,
+   "turns_blind": 493,
+   "false_turns_without_child": 193
+  },
+  {
+   "session": "Mother/isadora",
+   "turns_true": 448,
+   "turns_blind": 515,
+   "false_turns_without_child": 236
+  },
+  {
+   "session": "Dinner/david",
+   "turns_true": 285,
+   "turns_blind": 292,
+   "false_turns_without_child": 133
+  },
+  {
+   "session": "Dinner/john",
+   "turns_true": 159,
+   "turns_blind": 222,
+   "false_turns_without_child": 164
+  },
+  {
+   "session": "Dinner/patricia",
+   "turns_true": 280,
+   "turns_blind": 429,
+   "false_turns_without_child": 284
+  },
+  {
+   "session": "Dinner/wanda",
+   "turns_true": 325,
+   "turns_blind": 349,
+   "false_turns_without_child": 185
+  },
+  {
+   "session": "Father/david",
+   "turns_true": 44,
+   "turns_blind": 51,
+   "false_turns_without_child": 25
+  },
+  {
+   "session": "Father/john",
+   "turns_true": 287,
+   "turns_blind": 335,
+   "false_turns_without_child": 200
+  },
+  {
+   "session": "Father/patricia",
+   "turns_true": 407,
+   "turns_blind": 430,
+   "false_turns_without_child": 218
+  },
+  {
+   "session": "Mother/david",
+   "turns_true": 496,
+   "turns_blind": 543,
+   "false_turns_without_child": 246
+  },
+  {
+   "session": "Mother/john",
+   "turns_true": 350,
+   "turns_blind": 372,
+   "false_turns_without_child": 187
+  },
+  {
+   "session": "Mother/patricia",
+   "turns_true": 574,
+   "turns_blind": 570,
+   "false_turns_without_child": 192
+  },
+  {
+   "session": "Mother/wanda",
+   "turns_true": 303,
+   "turns_blind": 288,
+   "false_turns_without_child": 152
+  },
+  {
+   "session": "Dinner/eddie",
+   "turns_true": 349,
+   "turns_blind": 298,
+   "false_turns_without_child": 142
+  },
+  {
+   "session": "Dinner/katie",
+   "turns_true": 299,
+   "turns_blind": 265,
+   "false_turns_without_child": 101
+  },
+  {
+   "session": "Dinner/william",
+   "turns_true": 477,
+   "turns_blind": 400,
+   "false_turns_without_child": 172
+  },
+  {
+   "session": "Father/eddie",
+   "turns_true": 546,
+   "turns_blind": 459,
+   "false_turns_without_child": 197
+  },
+  {
+   "session": "Father/katie",
+   "turns_true": 348,
+   "turns_blind": 284,
+   "false_turns_without_child": 77
+  },
+  {
+   "session": "Father/richard",
+   "turns_true": 553,
+   "turns_blind": 552,
+   "false_turns_without_child": 239
+  },
+  {
+   "session": "Mother/katie",
+   "turns_true": 165,
+   "turns_blind": 148,
+   "false_turns_without_child": 65
+  },
+  {
+   "session": "Dinner/laurel",
+   "turns_true": 289,
+   "turns_blind": 330,
+   "false_turns_without_child": 121
+  },
+  {
+   "session": "Dinner/susan",
+   "turns_true": 346,
+   "turns_blind": 363,
+   "false_turns_without_child": 155
+  },
+  {
+   "session": "Dinner/xavia",
+   "turns_true": 359,
+   "turns_blind": 268,
+   "false_turns_without_child": 97
+  },
+  {
+   "session": "Father/frank",
+   "turns_true": 374,
+   "turns_blind": 360,
+   "false_turns_without_child": 130
+  },
+  {
+   "session": "Father/laurel",
+   "turns_true": 542,
+   "turns_blind": 699,
+   "false_turns_without_child": 375
+  },
+  {
+   "session": "Father/susan",
+   "turns_true": 576,
+   "turns_blind": 542,
+   "false_turns_without_child": 169
+  },
+  {
+   "session": "Mother/frank",
+   "turns_true": 425,
+   "turns_blind": 398,
+   "false_turns_without_child": 121
+  }
+ ]
+}

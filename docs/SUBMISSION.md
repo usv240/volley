@@ -139,9 +139,13 @@ baselines beside it, and what it does not show said in the same
 paragraph. The label-free count, on families it never saw: +1.6 percent
 in total, a median session error of 9.6 percent, 49 of 54 sessions within
 20 percent (harness/blind). On the Bee itself: 66 of 75 turns
-(harness/beeloop). A hand count by a person and negative controls with
-people in the room were planned and are not done, because no real people
-are involved in this entry; the site says so. Every requirement and
+(harness/beeloop). Negative controls on the Bee, with no child present:
+two adults from a CHILDES dinner gave 21 false turns in 183 seconds and
+one adult voice gave 14; on the corpus, removing the child leaves false
+turns at 43 percent of the real count (harness/beeloop/controls.py,
+harness/blind/adults_only.py). A hand count by a person was planned and
+is not done, because no real people are involved in this entry; the
+site says so. Every requirement and
 criterion, with its evidence: [FOR_JUDGES.md](FOR_JUDGES.md).
 
 ## Live
@@ -154,6 +158,10 @@ criterion, with its evidence: [FOR_JUDGES.md](FOR_JUDGES.md).
 
 - Speaker labels are the device's. The count is as good as they are,
   and the harness measures the disagreement.
+- Without labels, adults talking to each other count as turns, at about
+  four in ten of a real day's rate. A presence check that would refuse
+  them costs a sixth of the true turns, so it is measured
+  (harness/blind/presence.py) and not shipped.
 - Talking age, about three to six, until the undercount on younger
   children is measured on the corpus.
 - One family. The pilot to run next: the Bee against a LENA recorder on

@@ -1,0 +1,21 @@
+{
+ "corpus": "CHILDES Gleason, doi 10.21415/T5101R",
+ "window_seconds": 180,
+ "statistic": "mean of the top tenth of utterance child-scores in the window",
+ "folds": "6 by child; each threshold chosen on its training families by 4 inner folds",
+ "thresholds": [
+  10.68,
+  9.49,
+  9.95,
+  9.87,
+  9.84,
+  10.75
+ ],
+ "real_windows": 514,
+ "real_windows_kept_pct": 79.8,
+ "true_turns_lost_pct": 15.7,
+ "adult_only_windows": 510,
+ "adult_only_windows_refused_pct": 70.6,
+ "shipped": false,
+ "why_not": "it trades false turns for lost true ones; one speaker label from the Bee would remove both"
+}

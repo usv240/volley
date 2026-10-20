@@ -1,0 +1,14 @@
+{
+ "adults_seconds": 183,
+ "adults_false_turns": 21,
+ "onevoice_seconds": 182,
+ "onevoice_false_turns": 14,
+ "silence_bee_utterances": 16,
+ "silence_false_turns": 1,
+ "real_turns_same_length": 66,
+ "corpus_false_as_pct_of_real": 43.1,
+ "corpus_sessions": 54,
+ "gate_refused_pct": 70.6,
+ "gate_turns_lost_pct": 15.7,
+ "written_by": "harness/beeloop/controls.py, harness/blind/adults_only.py, harness/blind/presence.py"
+}
