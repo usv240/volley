@@ -4,17 +4,23 @@ Count adult-child conversational turns from any speaker-labelled
 transcript, by the published five-second rule, and keep no words.
 
 ```
-pip install "git+https://github.com/usv240/volley#subdirectory=packages/serve-return"
+pip install serve-return
 ```
+
+Source, tests and the evidence for every number:
+https://github.com/usv240/volley/tree/main/packages/serve-return
 
 No speaker labels? `serve_return.blind` reads who is the child and who the
 adult from the transcript itself, with a model trained on the CHILDES
 Gleason corpus and shipped in the package. On families it never saw, the
 day's turn count came within 9.6 percent of the true count in the median
-session (harness/blind in the repository).
+session (harness/blind in the repository,
+https://github.com/usv240/volley/tree/main/harness/blind).
 
 ```python
+from serve_return import Roles, count_day
 from serve_return.blind import relabel
+
 day = count_day(relabel(unlabelled_utterances), Roles.of(adult=["adult"], child=["child"]))
 ```
 
