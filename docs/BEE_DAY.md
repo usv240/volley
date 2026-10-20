@@ -47,6 +47,13 @@ Tomorrow: Your best hour with your child was around 3 in the afternoon, with 66 
   the sentence names. `[template]` means the rules wrote it without a
   model; the Bedrock phrasing is the layer above, behind the same gate.
 
+- **Showed it to the parent**: after `volley connect --name ours`, the
+  same command posted the counts (HTTP 200) to the household's own page,
+  `/mine`, which reads them back from the API with the household's key
+  and marks them `"simulated": false`. The service phrased that day's
+  note on Bedrock from the fact `best_hour 15, 66`. Run twice, the
+  reminder was written once.
+
 ## What it is not
 
 One session, voiced, not a family's day. It shows the product path runs
