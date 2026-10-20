@@ -252,6 +252,11 @@ def build_app(store: Store | None = None, seed: bool = True, note_deps: dict | N
         fact = pick(day)
         floor = template(fact, h.get("child_name"))
         fact_d = {"kind": fact.kind, "hour": fact.hour, "value": fact.value, "target": fact.target}
+        # Phrased once per fact. The parent's page, the coach's page and
+        # every reload ask for the same note; only new counts change it.
+        kept = store.get_note(hid, row["date"])
+        if kept and kept.get("fact") == fact_d:
+            return {"household_id": hid, "simulated": h.get("simulated", False), **kept, "disclaimer": DISCLAIMER}
         result = phrase_note(fact_d, h.get("child_name"), floor, lambda t: accept(t, fact), note_deps)
         record = {"date": row["date"], "fact": fact_d, **result}
         store.put_note(hid, row["date"], record)

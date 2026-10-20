@@ -1,0 +1,29 @@
+{
+ "per_family_per_month_usd": 0.0442,
+ "cents": 4.4,
+ "families_per_dollar_month": 22,
+ "parts_usd": {
+  "dynamodb": 0.00034,
+  "lambda": 0.00068,
+  "bedrock": 0.04099,
+  "cloudfront": 0.00219
+ },
+ "usage": {
+  "days_posted": 30,
+  "parent_views": 30,
+  "coach_views": 4,
+  "notes_phrased": 30
+ },
+ "measured": {
+  "lambda_memory_gb": 0.5,
+  "lambda_avg_seconds": 0.471,
+  "note_input_tokens": 239,
+  "note_output_tokens": 35,
+  "page_api_requests": 4,
+  "page_cdn_requests": 14,
+  "page_cdn_bytes": 594325,
+  "day_bytes": 4537
+ },
+ "prices": "AWS Price List API, us-east-1, 2026-10-20; free tier ignored",
+ "not_counted": "the Bee (49.99 dollars once, the family's) and the family's own computer, where the counting runs"
+}

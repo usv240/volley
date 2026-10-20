@@ -51,9 +51,15 @@ why the site is built before it and not after.
 
 ## What it costs
 
-Pennies. On-demand DynamoDB, a function that runs for tens of
-milliseconds per request, a static site, and one Bedrock call per note
-with a floor that costs nothing.
+About 4.4 cents a family a month, at AWS list prices with the free tier
+ignored, from usage measured on the live stack: the parent's page every
+day, a coach's every week, a note phrased once per new day (239 tokens
+in, 35 out, from a real call), Lambda's average duration from
+CloudWatch, and the page's real requests and bytes. Bedrock is nine
+tenths of it. A note is phrased once per fact and then served from the
+table, so a reload or a coach's visit costs no model call.
+`python scripts/cost.py` recomputes it into `docs/cost.json`, and a test
+fails if this paragraph and that file disagree.
 
 ## What was deliberately not used
 

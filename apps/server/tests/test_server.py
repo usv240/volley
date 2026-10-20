@@ -297,3 +297,26 @@ def test_deleting_the_household_ends_its_share(client, household):
     token = client.post(f"/v1/households/{hid}/share", headers={"x-api-key": key}).json()["share_token"]
     client.delete(f"/v1/households/{hid}", headers={"x-api-key": key})
     assert client.get(f"/v1/households/{hid}/days", headers={"x-share-token": token}).status_code == 404
+
+
+def test_a_note_is_phrased_once_per_fact_and_again_when_the_counts_change():
+    """Every page view asks for the note; Bedrock is asked once per fact."""
+    calls = []
+
+    def create(system, user, model):
+        calls.append(user)
+        return "Keep going."
+
+    store = MemoryStore()
+    client = TestClient(build_app(store=store, seed=False, note_deps={"create_text": create, "models": ["m1"], "enabled": True}))
+    made = client.post("/v1/households", json={"name": "ours"}).json()
+    hid, k = made["household_id"], {"x-api-key": made["api_key"]}
+    client.post(f"/v1/households/{hid}/days", json={"days": [day()]}, headers=k)
+    first = client.get(f"/v1/households/{hid}/note", headers=k).json()
+    for _ in range(3):
+        assert client.get(f"/v1/households/{hid}/note", headers=k).json()["text"] == first["text"]
+    assert len(calls) == 1
+    client.post(f"/v1/households/{hid}/days", json={"days": [day(turns=12, extra={"best_hour": 8, "hours": [
+        {"hour": 8, "turns": 12, "utterances_adult": 12, "utterances_child": 9, "words_discarded": 550, "questions_adult": 2}]})]}, headers=k)
+    client.get(f"/v1/households/{hid}/note", headers=k)
+    assert len(calls) == 2
