@@ -19,10 +19,19 @@ import { Info } from "./Info";
  * no days yet, and days. Each says what to run next. Two buttons
  * remove things: one forgets the key here, one deletes the household
  * and every count on the service, and that one asks first.
+ *
+ * The same page serves a coach (`/coach/#h=<household>&s=<share>`): the
+ * read-only share a parent made with `volley share` or the button below.
+ * It reads the days, the week and the note and shows no control that
+ * writes, because the service would refuse one anyway.
  */
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8791";
-const KEY = "volley-mine";
+type Mode = "owner" | "coach";
+
+const STORAGE: Record<Mode, string> = { owner: "volley-mine", coach: "volley-coach" };
+const PARAM: Record<Mode, string> = { owner: "k", coach: "s" };
+const HEADER: Record<Mode, string> = { owner: "x-api-key", coach: "x-share-token" };
 
 interface Creds {
   id: string;
@@ -49,12 +58,13 @@ interface Note {
   fact: { kind: string; hour: number | null; value: number | null };
 }
 
-function readCreds(): Creds | null {
+function readCreds(mode: Mode): Creds | null {
+  const KEY = STORAGE[mode];
   const hash = window.location.hash.replace(/^#/, "");
   if (hash) {
     const params = new URLSearchParams(hash);
     const id = params.get("h");
-    const key = params.get("k");
+    const key = params.get(PARAM[mode]);
     if (id && key) {
       const creds = { id, key };
       localStorage.setItem(KEY, JSON.stringify(creds));
@@ -70,8 +80,10 @@ function readCreds(): Creds | null {
   }
 }
 
-export function Mine() {
+export function Mine({ mode = "owner" }: { mode?: Mode }) {
+  const coach = mode === "coach";
   const [creds, setCreds] = useState<Creds | null | undefined>(undefined);
+  const [share, setShare] = useState<string | null>(null);
   const [household, setHousehold] = useState<Household | null>(null);
   const [days, setDays] = useState<Day[]>([]);
   const [week, setWeek] = useState<Week | null>(null);
@@ -80,17 +92,17 @@ export function Mine() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    setCreds(readCreds());
+    setCreds(readCreds(mode));
     // A link pasted into a tab already on this page changes only the
     // fragment, which is not a navigation; read it then too.
-    const onHash = () => setCreds(readCreds());
+    const onHash = () => setCreds(readCreds(mode));
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
-  }, []);
+  }, [mode]);
 
   useEffect(() => {
     if (!creds) return;
-    const headers = { "x-api-key": creds.key };
+    const headers = { [HEADER[mode]]: creds.key };
     const base = `${API_URL}/v1/households/${creds.id}`;
     let cancelled = false;
     (async () => {
@@ -98,7 +110,8 @@ export function Mine() {
       setError(null);
       try {
         const h = await fetch(base, { headers });
-        if (h.status === 401) throw new Error("the key in this browser is not this household's key");
+        if (h.status === 401)
+          throw new Error(coach ? "this share was ended or replaced by the family" : "the key in this browser is not this household's key");
         if (h.status === 404) throw new Error("this household no longer exists on the service");
         if (!h.ok) throw new Error(`the service answered ${h.status}`);
         const d = await fetch(`${base}/days`, { headers });
@@ -121,10 +134,10 @@ export function Mine() {
     return () => {
       cancelled = true;
     };
-  }, [creds]);
+  }, [creds, mode, coach]);
 
   const forget = () => {
-    localStorage.removeItem(KEY);
+    localStorage.removeItem(STORAGE[mode]);
     setCreds(null);
     setHousehold(null);
     setDays([]);
@@ -147,8 +160,44 @@ export function Mine() {
     }
   };
 
+  const makeShare = async (revoke: boolean) => {
+    if (!creds) return;
+    setBusy(true);
+    try {
+      const res = await fetch(`${API_URL}/v1/households/${creds.id}/share`, {
+        method: revoke ? "DELETE" : "POST",
+        headers: { "x-api-key": creds.key },
+      });
+      if (!res.ok) throw new Error(`the service answered ${res.status}`);
+      if (revoke) {
+        setShare(null);
+      } else {
+        const body = (await res.json()) as { share_token: string };
+        setShare(`${window.location.origin}/coach/#h=${creds.id}&s=${body.share_token}`);
+      }
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setBusy(false);
+    }
+  };
+
   if (creds === undefined) {
     return <p className="text-muted">Looking in this browser for a key.</p>;
+  }
+
+  if (creds === null && coach) {
+    return (
+      <section>
+        <p className="eyebrow">Shared with you</p>
+        <h1 className="display mt-4 max-w-[16ch] text-4xl leading-[1.05] text-ink sm:text-5xl">No shared household in this browser.</h1>
+        <p className="mt-6 max-w-[60ch] leading-relaxed text-muted">
+          This page shows one family&apos;s counts, read-only, from a link the family made for you with{" "}
+          <code className="font-mono text-xs">volley share</code>. Open that link here. It shows counts and the note, never a word of
+          speech, and the family can end it at any time.
+        </p>
+      </section>
+    );
   }
 
   if (creds === null) {
@@ -180,13 +229,16 @@ export function Mine() {
     <section>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="eyebrow">Mine</p>
+          <p className="eyebrow">{coach ? "Shared with you, read-only" : "Mine"}</p>
           <h1 className="display mt-4 max-w-[18ch] text-4xl leading-[1.05] text-ink sm:text-5xl">
             {household ? household.name : "Your household"}
             {child ? `, with ${child}` : ""}
           </h1>
           <p className="mt-3 text-sm text-muted">
-            Read from the service with the key in this browser <Info term="mine" />
+            {coach
+              ? "Read from the service with the share the family made; it cannot change anything"
+              : "Read from the service with the key in this browser"}{" "}
+            <Info term="mine" />
             {busy ? ", fetching" : ""}.
           </p>
         </div>
@@ -194,11 +246,32 @@ export function Mine() {
           <button type="button" className="ghost" onClick={forget}>
             Forget this browser
           </button>
-          <button type="button" className="ghost" onClick={() => void remove()} disabled={busy}>
-            Delete everything
-          </button>
+          {!coach && (
+            <button type="button" className="ghost" onClick={() => void makeShare(false)} disabled={busy}>
+              Share with your coach
+            </button>
+          )}
+          {!coach && (
+            <button type="button" className="ghost" onClick={() => void remove()} disabled={busy}>
+              Delete everything
+            </button>
+          )}
         </div>
       </div>
+
+      {!coach && share && (
+        <div className="card mt-6 p-6">
+          <p className="eyebrow">A read-only link for the person coaching your family</p>
+          <p className="mt-3 max-w-[66ch] text-sm leading-relaxed text-muted">
+            It shows the days, the week and the note, and cannot post, share or delete. Gains from home visits fade when the visits
+            end; this lets the coaching keep reading the counts in between. Making a new one ends this one.
+          </p>
+          <p className="mt-3 break-all rounded-lg border border-line bg-[var(--raised)] p-3 font-mono text-xs text-ink">{share}</p>
+          <button type="button" className="ghost mt-3" onClick={() => void makeShare(true)} disabled={busy}>
+            End this share
+          </button>
+        </div>
+      )}
 
       {error && (
         <p className="mt-6 rounded-lg border border-line bg-[var(--raised)] p-4 text-sm text-ink" role="alert">
@@ -220,7 +293,12 @@ export function Mine() {
 
       {latest && (
         <div className="mt-10">
-          <DayView day={latest} child={child} simulated={false} label="Your own day, from your Bee" />
+          <DayView
+            day={latest}
+            child={child}
+            simulated={false}
+            label={coach ? "The family's own day, from their Bee" : "Your own day, from your Bee"}
+          />
         </div>
       )}
 
@@ -268,11 +346,18 @@ export function Mine() {
         </div>
       )}
 
-      <p className="mt-10 max-w-[66ch] text-sm leading-relaxed text-muted">
-        Nothing on this page is stored anywhere but this browser and the household&apos;s own rows on the service, which hold counts
-        and the two names you chose <Info term="household" />. Delete everything removes those rows; the Bee&apos;s own record is
-        Bee&apos;s, deleted in its app.
-      </p>
+      {coach ? (
+        <p className="mt-10 max-w-[66ch] text-sm leading-relaxed text-muted">
+          These are counts and the note, never a word of speech <Info term="household" />. The family made this link and can end
+          it at any time, after which it reads nothing; the service refuses anything from it that would write.
+        </p>
+      ) : (
+        <p className="mt-10 max-w-[66ch] text-sm leading-relaxed text-muted">
+          Nothing on this page is stored anywhere but this browser and the household&apos;s own rows on the service, which hold counts
+          and the two names you chose <Info term="household" />. Delete everything removes those rows; the Bee&apos;s own record is
+          Bee&apos;s, deleted in its app.
+        </p>
+      )}
     </section>
   );
 }

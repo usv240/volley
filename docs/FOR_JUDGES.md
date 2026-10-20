@@ -3,7 +3,7 @@
 Every requirement in the hackathon rules and every judging criterion,
 with the file, command or link that proves it. Written to be checked,
 not believed. Numbers are generated from committed result files, and
-123 tests guard the claims.
+128 tests guard the claims.
 
 **In one line:** a step counter for conversations with your child. The
 Bee on a parent's wrist hears the day; Volley counts the back-and-forth
@@ -61,7 +61,7 @@ https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws/v1/docs
   ([AGENT.md](AGENT.md)). The note is phrased on Bedrock from rules-chosen
   facts behind the same gate, with a template as the floor.
 - **The Coach on Amazon Bedrock AgentCore Runtime**, as an endpoint anything can invoke, verified live ([apps/agentcore](../apps/agentcore/README.md)).
-- **123 tests.** `pytest packages apps harness`.
+- **128 tests.** `pytest packages apps harness`.
 
 ### Design
 
@@ -86,6 +86,13 @@ https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws/v1/docs
   Challenge grand prize to put the research recorder in family homes; the
   recorder has never been sold to a parent. The Bee costs about fifty
   dollars and is already worn.
+- **Who carries it past the hackathon.** Home-visiting and city
+  programmes already pay for this count, and its gains fade when the
+  visits end. `volley share` gives the person coaching a family a
+  read-only link to the counts between visits (`/coach`): it cannot
+  write, is bound to one household, and the family revokes it. Live and
+  tested (`apps/server/tests/test_server.py`, the DynamoDB layout in
+  `test_dynamo_store.py`).
 - **Scale of the need.** About one child in ten starts school with a
   language disorder (Norbury, 2016, PMID 27184709); paediatricians are
   asked to promote talk at every well visit with no instrument a parent

@@ -74,3 +74,28 @@ def test_today_posts_counts_to_the_household_route_and_no_word(home, capsys, mon
         assert word not in body.lower()
     assert "counts posted (200)" in out
     assert "see them: https://example.test/mine/#h=h_test1&k=vk_secret" in out
+
+
+def test_share_prints_a_read_only_link_and_revoke_ends_it(home, capsys):
+    log: list[dict] = []
+
+    def service(url, body, headers, method="POST"):
+        log.append({"url": url, "method": method, "headers": headers})
+        if url.endswith("/v1/households"):
+            return 200, {"household_id": "h_test1", "api_key": "vk_secret", "site_url": "https://example.test/"}
+        if url.endswith("/share") and method == "POST":
+            return 200, {"share_token": "vs_read", "share_url": "https://example.test/coach/#h=h_test1&s=vs_read"}
+        if url.endswith("/share") and method == "DELETE":
+            return 200, {"revoked": True}
+        return 404, {}
+
+    share = type("S", (), {"revoke": False})()
+    assert cli_mod.cmd_share(share, request=service) == 2  # not connected yet
+    cli_mod.cmd_connect(type("A", (), {"name": "ours", "api_url": None, "again": False})(), request=service)
+    capsys.readouterr()
+    assert cli_mod.cmd_share(share, request=service) == 0
+    out = capsys.readouterr().out
+    assert "https://example.test/coach/#h=h_test1&s=vs_read" in out and "vk_secret" not in out
+    assert log[-1]["headers"] == {"x-api-key": "vk_secret"}
+    assert cli_mod.cmd_share(type("S", (), {"revoke": True})(), request=service) == 0
+    assert log[-1]["method"] == "DELETE" and "revoked" in capsys.readouterr().out

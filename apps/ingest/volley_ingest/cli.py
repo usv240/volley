@@ -54,13 +54,13 @@ def render_day(day: DayCounts, child: str | None) -> str:
     return "\n".join(lines)
 
 
-def _request(url: str, body: dict | None, headers: dict[str, str]) -> tuple[int, dict]:
+def _request(url: str, body: dict | None, headers: dict[str, str], method: str = "POST") -> tuple[int, dict]:
     """One HTTP call with the standard library, so the parent's machine
     needs nothing installed beyond this package. Tests replace it."""
     import urllib.request
 
     data = json.dumps(body).encode("utf8") if body is not None else None
-    req = urllib.request.Request(url, data=data, headers={"content-type": "application/json", **headers}, method="POST")
+    req = urllib.request.Request(url, data=data, headers={"content-type": "application/json", **headers}, method=method)
     with urllib.request.urlopen(req, timeout=30) as res:  # noqa: S310
         return res.status, json.loads(res.read().decode("utf8") or "{}")
 
@@ -105,6 +105,30 @@ def cmd_connect(args, request=None) -> int:
     print("only counts will ever be sent there; the key is shown once by the service and kept in household.json")
     if h.mine_url:
         print(f"your days, in your browser: {h.mine_url}")
+    return 0
+
+
+def cmd_share(args, request=None) -> int:
+    """A read-only link for a home visitor or a coach: the days, the week
+    and the note, nothing that writes. Home-visit gains fade when the
+    visits stop; this keeps the person coaching the family reading the
+    counts in between. A new share replaces the last; --revoke ends it."""
+    h = Household.load()
+    if h is None or not h.connected:
+        print("connect first: volley connect")
+        return 2
+    base = f"{h.api_url.rstrip('/')}/v1/households/{h.household_id}/share"
+    if args.revoke:
+        status, _ = (request or _request)(base, None, {"x-api-key": h.api_key}, method="DELETE")
+        print("share revoked; the old link reads nothing now" if status == 200 else f"the service answered {status}")
+        return 0 if status == 200 else 1
+    status, answer = (request or _request)(base, None, {"x-api-key": h.api_key})
+    if status != 200 or "share_token" not in answer:
+        print(f"the service did not make a share ({status})", file=sys.stderr)
+        return 1
+    print("a read-only link for the person coaching your family; it shows counts and the note, and cannot post, share or delete:")
+    print(f"  {answer.get('share_url') or answer['share_token']}")
+    print("a new share replaces this one; end it with: volley share --revoke")
     return 0
 
 
@@ -257,6 +281,8 @@ def main(argv: list[str] | None = None, cli: BeeCli | None = None) -> int:
     e.add_argument("--out", default="docs/BEE_LIVE.md")
     l = sub.add_parser("live", help="count turns as they happen")
     l.add_argument("--seconds", type=int, default=600)
+    sh = sub.add_parser("share", help="a read-only link for a home visitor or a coach")
+    sh.add_argument("--revoke", action="store_true", help="end the current share")
     v = sub.add_parser("verify", help="recompute every published number from committed inputs")
     v.add_argument("--repo", default=".")
     args = p.parse_args(argv)
@@ -269,6 +295,8 @@ def main(argv: list[str] | None = None, cli: BeeCli | None = None) -> int:
             return cmd_setup(cli, args)
         if args.command == "connect":
             return cmd_connect(args)
+        if args.command == "share":
+            return cmd_share(args)
         if args.command == "today":
             return cmd_today(cli, args)
         if args.command == "evidence":

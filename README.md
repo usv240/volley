@@ -34,7 +34,7 @@ it. Every
 session is in `harness/blind/results.json`; `python harness/blind/run.py`
 reproduces it.
 
-**On the Bee itself, no person in the room.** A real CHILDES mother-child conversation, voiced by Amazon Polly with an adult and a child voice at its original timing, played to the band for 190 seconds: the Bee wrote 124 utterances for 125 played and kept 75 of 75 turns, so its segmentation loses none. Volley's blind count with a model and scale that never saw this family: 66 (-12.0 percent; 58 before the scale), 76.6 percent of lines given the right speaker. `harness/beeloop` reproduces it. 123 tests.
+**On the Bee itself, no person in the room.** A real CHILDES mother-child conversation, voiced by Amazon Polly with an adult and a child voice at its original timing, played to the band for 190 seconds: the Bee wrote 124 utterances for 125 played and kept 75 of 75 turns, so its segmentation loses none. Volley's blind count with a model and scale that never saw this family: 66 (-12.0 percent; 58 before the scale), 76.6 percent of lines given the right speaker. `harness/beeloop` reproduces it. 128 tests.
 
 | Document | What it answers |
 |---|---|
@@ -61,7 +61,7 @@ claim with it.
 ```
 python -m venv .venv && . .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -e "packages/serve-return[dev]" -e "apps/ingest[dev]" -e "apps/server[dev]" -e "apps/agent[dev]"
-python -m pytest packages apps harness -q          # 123 tests, the same two lines CI runs
+python -m pytest packages apps harness -q          # 128 tests, the same two lines CI runs
 cd apps/web && npm ci && npm test && npm run dev   # the site, on localhost:3000
 ```
 
@@ -79,6 +79,10 @@ volley today                 # count since the last run, throw the words away, r
 
 `volley connect` gives your counts a page of your own; `volley today
 --conversation <id>` counts one session and reads nothing else.
+`volley share` makes a read-only link for whoever coaches your family,
+a home visitor for instance: it shows the days, the week and the note at
+`/coach`, cannot post, share or delete, and `volley share --revoke` ends
+it. The same button is on your own page.
 
 To let your own assistant answer questions about the counts, add the
 Agent Skill the same way Bee's own skill is added:

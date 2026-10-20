@@ -36,7 +36,7 @@ from serve_return.coach import FORBIDDEN, TARGET_TURNS_PER_HOUR
 from .bedrock import MODEL_LADDER, phrase_note
 from .demo import DEMO_CHILD, DEMO_HOUSEHOLD, DEMO_NAME, simulated_days
 from .mcp import DISCLAIMER, register_mcp
-from .store import MAX_SHORT_TEXT, MemoryStore, Store, key_hash, new_api_key
+from .store import MAX_SHORT_TEXT, MemoryStore, Store, key_hash, new_api_key, new_share_token
 
 HOUR_FIELDS = tuple(f.name for f in dc_fields(HourCounts) if not f.name.startswith("_"))
 DAY_FIELDS = tuple(f.name for f in dc_fields(DayCounts) if f.name not in ("hours",))
@@ -170,9 +170,12 @@ def build_app(store: Store | None = None, seed: bool = True, note_deps: dict | N
             raise HTTPException(401, "this household's API key is required in X-Api-Key")
 
     def may_read(request: Request, hid: str) -> dict:
+        """Owner's key, or the read-only share the owner handed a coach."""
         h = household_or_404(hid)
         if not h.get("simulated"):
-            require_key(request, hid)
+            share = request.headers.get("x-share-token") or ""
+            if not (share and store.household_id_for_share(key_hash(share)) == hid):
+                require_key(request, hid)
         return h
 
     @app.get("/healthz")
@@ -253,6 +256,30 @@ def build_app(store: Store | None = None, seed: bool = True, note_deps: dict | N
         record = {"date": row["date"], "fact": fact_d, **result}
         store.put_note(hid, row["date"], record)
         return {"household_id": hid, "simulated": h.get("simulated", False), **record, "disclaimer": DISCLAIMER}
+
+    @app.post("/v1/households/{hid}/share")
+    def create_share(hid: str, request: Request):
+        """A read-only link for a home visitor or a coach. Home-visit gains
+        fade when the visits end; this lets the coaching go on reading the
+        counts between them. Replaces any earlier share."""
+        household_or_404(hid)
+        require_key(request, hid)
+        token = new_share_token()
+        store.set_share(hid, key_hash(token))
+        site = site_url()
+        return {"household_id": hid, "share_token": token,
+                "share_url": f"{site}/coach/#h={hid}&s={token}" if site else None,
+                "can": ["read the days, the week and the note"],
+                "cannot": ["post counts", "make or revoke a share", "delete anything"],
+                "revoke": f"DELETE /v1/households/{hid}/share with the household's key",
+                "note": "shown once; only its hash is stored"}
+
+    @app.delete("/v1/households/{hid}/share")
+    def revoke_share(hid: str, request: Request):
+        household_or_404(hid)
+        require_key(request, hid)
+        store.set_share(hid, None)
+        return {"revoked": True}
 
     @app.delete("/v1/households/{hid}")
     def delete_household(hid: str, request: Request):

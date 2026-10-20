@@ -28,6 +28,12 @@ def new_api_key() -> str:
     return "vk_" + secrets.token_urlsafe(24)
 
 
+def new_share_token() -> str:
+    """Read-only: what a parent hands a home visitor or a coach. It reads
+    the counts and the note and can do nothing else."""
+    return "vs_" + secrets.token_urlsafe(24)
+
+
 def key_hash(api_key: str) -> str:
     return hashlib.sha256(api_key.encode("utf8")).hexdigest()
 
@@ -57,6 +63,13 @@ class Store:
     def delete_household(self, household_id: str) -> None:
         raise NotImplementedError
 
+    def set_share(self, household_id: str, share_hash: str | None) -> None:
+        """One share per household: a new one replaces the old, None revokes."""
+        raise NotImplementedError
+
+    def household_id_for_share(self, share_hash: str) -> str | None:
+        raise NotImplementedError
+
 
 class MemoryStore(Store):
     def __init__(self) -> None:
@@ -64,6 +77,7 @@ class MemoryStore(Store):
         self.keys: dict[str, str] = {}
         self.days: dict[str, dict[str, dict]] = {}
         self.notes: dict[str, dict[str, dict]] = {}
+        self.shares: dict[str, str] = {}
 
     def create_household(self, household_id, name, child_name, key_hash_, simulated=False):
         self.households[household_id] = {
@@ -97,9 +111,20 @@ class MemoryStore(Store):
         self.households.pop(household_id, None)
         self.days.pop(household_id, None)
         self.notes.pop(household_id, None)
-        for k, v in list(self.keys.items()):
+        for table in (self.keys, self.shares):
+            for k, v in list(table.items()):
+                if v == household_id:
+                    del table[k]
+
+    def set_share(self, household_id, share_hash):
+        for k, v in list(self.shares.items()):
             if v == household_id:
-                del self.keys[k]
+                del self.shares[k]
+        if share_hash:
+            self.shares[share_hash] = household_id
+
+    def household_id_for_share(self, share_hash):
+        return self.shares.get(share_hash)
 
 
 class DynamoStore(Store):
@@ -176,6 +201,23 @@ class DynamoStore(Store):
             if "LastEvaluatedKey" not in res:
                 break
             kwargs["ExclusiveStartKey"] = res["LastEvaluatedKey"]
+        self.set_share(household_id, None)
         with self._table.batch_writer() as batch:
             for r in rows:
                 batch.delete_item(Key={"pk": r["pk"], "sk": r["sk"]})
+
+    def set_share(self, household_id, share_hash):
+        # The household's partition remembers its share's hash so it can be
+        # revoked; the SHARE# item is the lookup a coach's request hits.
+        old = self._table.get_item(Key={"pk": self._pk(household_id), "sk": "SHARE"}).get("Item")
+        if old:
+            self._table.delete_item(Key={"pk": f"SHARE#{old['share_hash']}", "sk": "HOUSEHOLD"})
+            self._table.delete_item(Key={"pk": self._pk(household_id), "sk": "SHARE"})
+        if share_hash:
+            self._table.put_item(Item={"pk": self._pk(household_id), "sk": "SHARE", "share_hash": share_hash})
+            self._table.put_item(Item={"pk": f"SHARE#{share_hash}", "sk": "HOUSEHOLD", "household_id": household_id})
+
+    def household_id_for_share(self, share_hash):
+        res = self._table.get_item(Key={"pk": f"SHARE#{share_hash}", "sk": "HOUSEHOLD"})
+        item = res.get("Item")
+        return item["household_id"] if item else None

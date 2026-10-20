@@ -257,3 +257,43 @@ def test_unknown_tool_and_method(client):
     assert "Unknown tool" in call(client, s, "nothing")["message"]
     r = mcp(client, {"jsonrpc": "2.0", "id": 5, "method": "resources/list"}, s)
     assert r.json()["error"]["code"] == -32601
+
+
+def test_a_share_reads_the_counts_and_can_do_nothing_else(client, household):
+    """What a parent hands a home visitor: the days, the week and the note,
+    read-only, revocable, and useless for any other household."""
+    hid, key = household
+    client.post(f"/v1/households/{hid}/days", json={"days": [day()]}, headers={"x-api-key": key})
+    assert client.post(f"/v1/households/{hid}/share").status_code == 401
+    made = client.post(f"/v1/households/{hid}/share", headers={"x-api-key": key}).json()
+    token = made["share_token"]
+    assert token.startswith("vs_") and "delete anything" in made["cannot"]
+    s = {"x-share-token": token}
+
+    assert client.get(f"/v1/households/{hid}/days", headers=s).json()["days"][0]["turns"] == 41
+    assert client.get(f"/v1/households/{hid}/week", headers=s).status_code == 200
+    assert client.get(f"/v1/households/{hid}/note", headers=s).status_code == 200
+
+    # Read-only: the token is not a key anywhere that writes.
+    assert client.post(f"/v1/households/{hid}/days", json={"days": [day("2026-09-30")]}, headers=s).status_code == 401
+    assert client.post(f"/v1/households/{hid}/share", headers=s).status_code == 401
+    assert client.delete(f"/v1/households/{hid}/share", headers=s).status_code == 401
+    assert client.delete(f"/v1/households/{hid}", headers=s).status_code == 401
+
+    # Bound to its own household.
+    other = client.post("/v1/households", json={"name": "next door"}).json()["household_id"]
+    assert client.get(f"/v1/households/{other}/days", headers=s).status_code == 401
+
+    # A new share replaces the old; revoking ends the last.
+    newer = client.post(f"/v1/households/{hid}/share", headers={"x-api-key": key}).json()["share_token"]
+    assert client.get(f"/v1/households/{hid}/days", headers=s).status_code == 401
+    assert client.get(f"/v1/households/{hid}/days", headers={"x-share-token": newer}).status_code == 200
+    assert client.delete(f"/v1/households/{hid}/share", headers={"x-api-key": key}).json()["revoked"] is True
+    assert client.get(f"/v1/households/{hid}/days", headers={"x-share-token": newer}).status_code == 401
+
+
+def test_deleting_the_household_ends_its_share(client, household):
+    hid, key = household
+    token = client.post(f"/v1/households/{hid}/share", headers={"x-api-key": key}).json()["share_token"]
+    client.delete(f"/v1/households/{hid}", headers={"x-api-key": key})
+    assert client.get(f"/v1/households/{hid}/days", headers={"x-share-token": token}).status_code == 404
