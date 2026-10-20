@@ -66,7 +66,10 @@ and a child voice at its original timing, played to the band for 190
 seconds. The Bee wrote 124 utterances for 125 played and, given the true
 speakers, kept 75 of 75 turns; Volley, with no labels and a model and
 scale that never saw that family, counted 66 (-12.0 percent).
-`harness/beeloop` reproduces it from the Bee's own transcript. The
+`harness/beeloop` reproduces it from the Bee's own transcript, and
+`volley today --conversation 11418600` ran the product on that session:
+the same 66 turns, 517 words read and none kept, and tomorrow's sentence
+placed in the Bee as a reminder ([BEE_DAY.md](BEE_DAY.md)). The
 Tuesday agent has also run against the operator's real Bee through Bee's
 own MCP server (AGENT.md).
 
