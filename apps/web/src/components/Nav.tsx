@@ -24,9 +24,12 @@ const LINKS = [
   { href: "/#how", label: "How it counts" },
   { href: "/#day", label: "Your day" },
   { href: "/#privacy", label: "Privacy" },
-  { href: "/#yours", label: "Your Bee" },
   { href: "/#alexa", label: "Alexa+" },
-  { href: "/#evidence", label: "Evidence" },
+  // The measured results stay on the home page; the agents, the impact
+  // case and the tests have their own page. "Your Bee" went to make room:
+  // Count your own, beside the links on every width, goes to the same place.
+  { href: "/#evidence", label: "Results" },
+  { href: "/evidence/", label: "Evidence" },
   { href: "/mine/", label: "Mine" },
 ];
 

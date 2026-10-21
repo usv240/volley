@@ -58,8 +58,12 @@ export function dateInWords(iso: string | null): string | null {
   return month && day >= 1 && day <= 31 ? `${month} ${day}` : null;
 }
 
+/** The words for the simulated household's day: never a date, never "today". */
+export const SIMULATED_DAY = "the simulated family's latest counted day";
+
 /** "the last 7 days", or "the simulated family's last 7 days". */
 function span(simulated: boolean, days: number | null): string {
+  if (simulated && days === 1) return SIMULATED_DAY;
   const whose = simulated ? "the simulated family's" : "the";
   if (days === 1) return `${whose} latest day`;
   return days !== null ? `${whose} last ${days} days` : `${whose} latest days`;
@@ -68,9 +72,11 @@ function span(simulated: boolean, days: number | null): string {
 /**
  * The sentence read aloud and shown, written only from the tool's own
  * fields. The simulated household is always named as the simulated
- * family, and its day is given in words ("September 28"), never as
- * "today": the counts are fixed, so "today" would be a different day
- * from the one the listener is having.
+ * family, and its day is never said: not as "today", because the counts
+ * are fixed and "today" would be a different day from the one the
+ * listener is having, and not as a date, because a fixed date from weeks
+ * ago sounds like a stale answer. It is "the simulated family's latest
+ * counted day". A real household's day is said in words ("September 28").
  */
 export function spokenAnswer(tool: Tool, data: J | null): string | null {
   if (!data) return null;
@@ -81,13 +87,13 @@ export function spokenAnswer(tool: Tool, data: J | null): string | null {
     if (turns === null || !date) return null;
     const best = num(data.best_hour);
     const tail = `${turns} turns${best !== null ? `, and the best hour was ${clock(best)}` : ""}.`;
-    return simulated ? `On the simulated family's latest day, ${date}, there were ${tail}` : `On ${date}, this household had ${tail}`;
+    return simulated ? `On ${SIMULATED_DAY}, there were ${tail}` : `On ${date}, this household had ${tail}`;
   }
   if (tool === "one_thing_for_tomorrow") {
     const text = str(data.text);
     if (!text) return null;
+    if (simulated) return `On ${SIMULATED_DAY}, the one thing for tomorrow was: ${text}`;
     const date = dateInWords(str(data.date));
-    if (simulated) return date ? `From the simulated family's latest day, ${date}: ${text}` : `For the simulated family: ${text}`;
     return date ? `From ${date}: ${text}` : text;
   }
   if (tool === "best_hour_this_week") {
@@ -99,8 +105,9 @@ export function spokenAnswer(tool: Tool, data: J | null): string | null {
   if (tool === "week_trend") {
     const direction = str(data.direction);
     if (!direction) return null;
-    const best = dateInWords(str(data.best_day));
-    const quiet = dateInWords(str(data.quietest_day));
+    // The simulated family's days are not said as dates, here either.
+    const best = simulated ? null : dateInWords(str(data.best_day));
+    const quiet = simulated ? null : dateInWords(str(data.quietest_day));
     const days = Array.isArray(data.days) ? data.days.length : null;
     const dir = direction === "level" ? "holding level" : `going ${direction}`;
     return `Over ${span(simulated, days)}, turns are ${dir}${best ? `; the best day was ${best}` : ""}${quiet ? ` and the quietest ${quiet}` : ""}.`;

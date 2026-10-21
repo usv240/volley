@@ -5,6 +5,7 @@ import Link from "next/link";
 import { DayView, clock, type Day } from "./DayView";
 import { Info } from "./Info";
 import { noteForCoach } from "./coachList";
+import { PlanCard } from "./PlanCard";
 import demo from "../data/demo.json";
 
 /**
@@ -421,6 +422,17 @@ export function Mine({
             )}
           </div>
         </div>
+      )}
+
+      {latest && week && creds && (
+        <PlanCard
+          id={creds.id}
+          header={HEADER[mode]}
+          secret={creds.key}
+          coach={coach}
+          simulated={!!household?.simulated}
+          className="mt-6"
+        />
       )}
 
       {coach && household?.simulated ? (

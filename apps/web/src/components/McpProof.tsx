@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { clock } from "./DayView";
 import { MCP_URL, PROTOCOL, rpc, toolJson } from "./mcpClient";
-import { dateInWords } from "./voiceRules";
+import { SIMULATED_DAY, dateInWords } from "./voiceRules";
 
 /**
  * The agent, held to a real session from the visitor's own browser.
@@ -194,7 +194,7 @@ export function McpProof() {
               <figcaption className="font-mono text-[12px] text-muted">how_was_our_talking_today</figcaption>
               <p className="mt-2 text-sm leading-relaxed text-ink">
                 {today.simulated
-                  ? `On the simulated family's latest day, ${dateInWords(today.date) ?? today.date}, there were ${today.turns} turns`
+                  ? `On ${SIMULATED_DAY}, there were ${today.turns} turns`
                   : `On ${dateInWords(today.date) ?? today.date}, this household had ${today.turns} turns`}
                 {today.best_hour !== null ? `; the best hour was ${clock(today.best_hour)}` : ""}
                 {today.longest_volley ? `, the longest exchange ${today.longest_volley} turns` : ""}

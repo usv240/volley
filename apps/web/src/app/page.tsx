@@ -1,15 +1,17 @@
+import Link from "next/link";
 import corpus from "../data/corpus.json";
 import blind from "../data/blind.json";
 import device from "../data/device.json";
 import controls from "../data/controls.json";
 import demo from "../data/demo.json";
-import tuesdaySim from "../data/tuesday-sim.json";
 import { DayView, bestHourNote, clock, type Day } from "../components/DayView";
 import { DropZone } from "../components/DropZone";
 import { EvidenceSummary } from "../components/EvidenceSummary";
+import { Footer } from "../components/Footer";
 import { Info } from "../components/Info";
 import { McpProof } from "../components/McpProof";
 import { Nav } from "../components/Nav";
+import { PlanCard } from "../components/PlanCard";
 import { PrivacyProof } from "../components/PrivacyProof";
 import { StepsHandoff } from "../components/StepsHandoff";
 import { VoiceAsk } from "../components/VoiceAsk";
@@ -27,7 +29,6 @@ import { WorkedExample } from "../components/WorkedExample";
  */
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8791";
-const REPO = "https://github.com/usv240/volley";
 
 const STATS = [
   {
@@ -69,76 +70,8 @@ const STEPS = [
 const SETUP_OPTIONS =
   "Two setup options: volley setup --daily 20:30 counts every evening without typing, and --only-with-child yes sets aside stretches where no voice sounds like a child (the evidence on the page says what that costs).";
 
-// The simulated household's latest day, which every "today" in the runs below means.
+// The simulated household's latest day: the week the nudge drawing averages ends on it.
 const LATEST = demo.days[demo.days.length - 1].date;
-const RUN_DATE = "2026-09-30";
-
-// The Coach is quoted from docs/AGENT.md, "Two real runs, 2026-09-30", word for word.
-// Tuesday is read from its run record, apps/agent/runs/tuesday-sim.json, copied to src/data.
-const AGENTS = [
-  {
-    name: "The Coach",
-    body: "Answers a parent the way Alexa+ would, over Volley's seven MCP tools; the model never sees the household's key. It is also deployed on Amazon Bedrock AgentCore Runtime, so Alexa+, a scheduled job or another agent can invoke it.",
-    command: 'volley-agent coach --demo "how was our talking today, and what should I try tomorrow?"',
-    answer:
-      "You and your little one had 157 turns today, your liveliest stretch was at six in the evening, and the quietest time when your child was around was at four in the afternoon. Tomorrow, try leaning into that six o'clock window, that's when the two of you are most in tune, with 38 turns in that hour alone. See if you can bring a little of that same energy to four o'clock too!",
-    tools: "model; tools: how_was_our_talking_today, one_thing_for_tomorrow",
-    asked: `Asked on ${RUN_DATE} about the simulated day dated ${LATEST}; "today" in the answer means ${LATEST}, not the day you read it.`,
-    caption: `A real run, Sonnet on the first rung, against the deployed server, on the simulated household.`,
-  },
-  {
-    name: "Tuesday",
-    body: "Why was Tuesday quiet is a question the counts cannot answer and the parent's own Bee can. Tuesday holds Bee's own MCP server beside Volley's, behind a four-tool allow-list: the daily summaries, a list of them, the to-do list and creating one to-do. The transcript, search, photo and location tools are never offered, and neither server is told the other exists.",
-    command: tuesdaySim.command,
-    answer: tuesdaySim.answer,
-    tools: `${tuesdaySim.layer}; tools: ${tuesdaySim.tools_called.join(", ")}`,
-    asked: `Simulated Bee, simulated household, ${tuesdaySim.date.slice(0, 10)}: a stand-in Bee server with synthetic days written for the simulated family, asked about the week ending ${LATEST}.`,
-    caption: `Read word for word from the run's record. An earlier real run on ${RUN_DATE} found no Bee summary for that day, and the agent said so rather than inventing one.`,
-  },
-];
-
-const IMPACT = [
-  {
-    title: "Somebody has already paid for it, at city scale",
-    term: "paidFor" as const,
-    body: "Providence won a Bloomberg Philanthropies grand prize to put the research recorder in families' homes with coaching, and community classes built on the same instrument raised turns in an evaluation. The demand is proven. The barrier is that the instrument is a programme, not a purchase.",
-  },
-  {
-    title: "It is coachable, in randomised trials, at this age",
-    term: "coachable" as const,
-    body: "A nine-week family intervention with four-to-six-year-olds raised turns, and the change in turns carried the gains in language. Home-visit gains faded when the visits ended, which is the argument for a count that is there every day rather than a course.",
-  },
-  {
-    title: "The number is about more than words",
-    term: "moreThanWords" as const,
-    body: "Turns at 18 months predicted how children handled feelings a year later, with the direction running from turns outward; and turns, not the amount adults spoke, related to the wiring of the brain's language pathway.",
-  },
-  {
-    title: "It does not rest on the word gap",
-    term: "wordGap" as const,
-    body: "The thirty-million-word figure did not replicate as stated, and the field's reply was that responsive talk is what matters. Volley counts turns because turns kept predicting outcomes after income was accounted for, when words did not.",
-  },
-  {
-    title: "The quietest hour usually has a phone in it",
-    term: "phone" as const,
-    body: "One interrupted phone call was enough to stop a two-year-old learning a word said just as often. Volley cannot see the phone. It shows the hour, and the note names the quietest one with your child present, which is the only nudge it makes.",
-  },
-  {
-    title: "The research instrument's own turn count is imperfect",
-    term: "imperfectInstrument" as const,
-    body: "A thorough evaluation found its turn count more problematic than its word count, and a comparison with hand counts earned a word of caution. There is no gold standard, which is why this page will print its own agreement rather than assume it.",
-  },
-  {
-    title: "The scale, and who is asked to act on it",
-    term: "scale" as const,
-    body: "About one child in ten arrives at school with a language disorder, most with no known cause, and nearly nine in ten of them fall behind. Paediatricians are asked to promote talk at every well visit and have no instrument a parent can bring. Volley is not a screen; it is the count a parent could bring.",
-  },
-  {
-    title: "What changes at fifty dollars on the wrist",
-    term: "fiftyDollars" as const,
-    body: "The Bee costs about fifty dollars and is already worn for other reasons. The difference is not a better count; it is the first one a parent can own, on their own computer, with the words never leaving it.",
-  },
-];
 
 const FAQ = [
   ["Is a low day bad?", "No. It is a count of one day. The note names your best hour so you keep what already works, and one thing to try tomorrow. That is all it does."],
@@ -196,9 +129,12 @@ export default function Home() {
               Your child&apos;s language grows with the <span className="whitespace-nowrap">back-and-forth.</span> Volley counts it.
             </h1>
             <p className="mt-5 max-w-[58ch] text-[17px] leading-relaxed text-ink sm:mt-6 sm:text-lg">
-              A step counter for conversations with your child. Volley counts the back-and-forth from the Bee on your wrist, throws the
-              words away on your own computer <Info term="onYourComputer" />, and puts one thing to try tomorrow into your Bee as a
-              reminder.
+              Volley hears the back-and-forth with your child on the Bee you already wear, counts it, throws the words away on your own
+              computer <Info term="onYourComputer" />, and taps you on the wrist when your best hour goes quiet. The count researchers
+              take with a recorder parents cannot buy, for a few cents a month.
+            </p>
+            <p className="mt-3 max-w-[58ch] text-pretty text-sm leading-relaxed text-muted">
+              Built for children of talking age, about two to five; the studies behind the number run from infancy to six.
             </p>
             <p className="mt-4 max-w-[58ch] leading-relaxed text-muted">
               A turn <Info term="turn" /> is you saying something and your child answering within five seconds, or the other way round.
@@ -239,6 +175,15 @@ export default function Home() {
               with no person in the room, Volley counted <strong className="text-ink">{device.turns_blind} of {device.turns_true} turns</strong>{" "}
               with no speaker labels at all. Neither is a hand count by a person, and the page says what that leaves{" "}
               <Info term="validated" />.
+            </p>
+            <p className="mt-3 max-w-[86ch] leading-relaxed text-muted">
+              The weak point is two adults talking: without labels they gave{" "}
+              <strong className="text-ink">{controls.adults_false_turns} false turns</strong> in about three minutes, and the opt-in{" "}
+              <code className="whitespace-nowrap font-mono text-[15px] text-ink">--only-with-child</code> takes that to{" "}
+              <strong className="text-ink">{controls.with_child_adults}</strong> and kept {controls.with_child_real} of{" "}
+              {controls.with_child_real_every} real turns, at the cost of about a sixth of true turns on the corpus (
+              {controls.gate_turns_lost_pct} percent); silence gave {controls.silence_false_turns} false turn
+              {controls.silence_false_turns === 1 ? "" : "s"}, which the check does not remove.
             </p>
         </section>
 
@@ -332,6 +277,7 @@ export default function Home() {
                 <Info term="bedrock" />. With your consent the sentence goes into your Bee as a reminder at that hour.
               </p>
             </div>
+            <PlanCard id={demo.household_id} simulated className="lg:col-span-2" />
           </div>
         </section>
 
@@ -581,70 +527,12 @@ export default function Home() {
           </div>
         </section>
 
-        <div className="rule my-12 sm:my-20" />
-
-        {/* 10a. The agents: two clients of the same MCP server, held to the numbers a tool returned. */}
-        <section id="agents" className="scroll-mt-24">
-          <h2 className="display-sm max-w-[24ch] text-3xl text-ink sm:text-4xl">Two agents that may only say what a tool returned.</h2>
-          <p className="mt-4 max-w-[66ch] leading-relaxed text-muted">
-            Both are built on the Strands Agents SDK, phrase with Claude on Amazon Bedrock, and reach Volley only through the MCP server
-            Alexa+ would use. Every number in an answer must have come back from a tool, and the words the coach never uses (delay,
-            behind, risk, deficit, disorder, diagnosis, percentile, IQ) may not appear. A refused answer goes back once with the
-            violation named; a second refusal is replaced by the tool results read out plainly.
-          </p>
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
-            {AGENTS.map((a) => (
-              <figure key={a.name} className="card flex min-w-0 flex-col p-6">
-                <p className="font-semibold text-ink">{a.name}</p>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{a.body}</p>
-                <AgentRun a={a} />
-              </figure>
-            ))}
-          </div>
-        </section>
-
-        <div className="rule my-12 sm:my-20" />
-
-        {/* 10b. Impact: who has paid for this count already, and what changes at fifty dollars. */}
-        <section id="impact" className="scroll-mt-24">
-          <h2 className="display-sm max-w-[24ch] text-3xl text-ink sm:text-4xl">Cities have paid for this count. Parents have never been able to buy it.</h2>
-          <p className="mt-4 max-w-[66ch] leading-relaxed text-muted">
-            The case for who this serves, in the order a sceptic would ask it, with the study behind every sentence on its i. What
-            it does not claim is at the end, in the same type.
-          </p>
-          <div className="mt-10 hidden gap-6 md:grid md:grid-cols-2">
-            {IMPACT.map((c) => (
-              <div key={c.title} className="card min-w-0 p-6">
-                <p className="font-semibold text-ink">
-                  {c.title} <Info term={c.term} />
-                </p>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{c.body}</p>
-              </div>
-            ))}
-          </div>
-          {/* A phone reads the eight claims as a list and opens the one it doubts. */}
-          <div className="fold-list mt-8 border-y border-line md:hidden">
-            {IMPACT.map((c) => (
-              <details key={c.title} className="fold">
-                <summary>
-                  {c.title}
-                  <svg className="fold-mark" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-                      <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                </summary>
-                <p className="pb-5 text-sm leading-relaxed text-muted">
-                  {c.body} <Info term={c.term} />
-                </p>
-              </details>
-            ))}
-          </div>
-          <p className="mt-6 max-w-[66ch] text-sm leading-relaxed text-muted">
-            Not claimed: that Volley has changed any child&apos;s outcome; that its count equals the research recorder&apos;s; that
-            a parent should aim for any number. Every study above is resolved on PubMed or Crossref in the
-            repository&apos;s citations file, with what it showed and what it did not, and a test refuses any citation in this page
-            that is not there.
-          </p>
-        </section>
+        {/* The agents and the impact case moved to /evidence/, intact. */}
+        <p className="mt-12 max-w-[66ch] leading-relaxed text-muted sm:mt-16">
+          <Link prefetch={false} href="/evidence/" className="text-[var(--accent)] underline underline-offset-4">
+            The agents, the programmes that pay for this count, and every test: the evidence page.
+          </Link>
+        </p>
 
         <div className="rule my-12 sm:my-20" />
 
@@ -822,94 +710,15 @@ export default function Home() {
           </div>
         </section>
 
-        <div className="rule my-12 sm:my-20" />
+        {/* The developers' section moved to /evidence/#developers, intact. */}
+        <p className="mt-12 max-w-[66ch] leading-relaxed text-muted sm:mt-16">
+          <Link prefetch={false} href="/evidence/#developers" className="text-[var(--accent)] underline underline-offset-4">
+            Every test, and the commands that run it: the evidence page.
+          </Link>
+        </p>
 
-        {/* 12. Developers. */}
-        <section id="developers" className="scroll-mt-24">
-          <h2 className="display-sm max-w-[22ch] text-3xl text-ink sm:text-4xl">Everything here is a test you can run.</h2>
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
-            <div className="card min-w-0 p-6">
-              <p className="font-semibold text-ink">Run it</p>
-              <pre tabIndex={0} className="mt-3 overflow-x-auto rounded-lg border border-line bg-[var(--raised)] p-3 font-mono text-[12px] leading-relaxed text-ink">
-                {"python -m venv .venv\n.venv/Scripts/pip install -e packages/serve-return[dev] -e apps/ingest[dev] -e apps/server[dev]\n.venv/Scripts/python -m pytest packages apps    # every test\ncd apps/web && npm install && npm test && npm run dev"}
-              </pre>
-            </div>
-            <div className="card min-w-0 p-6">
-              <p className="font-semibold text-ink">Use the counter</p>
-              <pre tabIndex={0} className="mt-3 overflow-x-auto rounded-lg border border-line bg-[var(--raised)] p-3 font-mono text-[12px] leading-relaxed text-ink">
-                {'from serve_return import Utterance, Roles, count_day\n\nroles = Roles.of(adult=["MOT"], child=["CHI"])\nday = count_day(utterances, roles)\nday.turns, day.best_hour, day.words_discarded'}
-              </pre>
-              <p className="mt-3 text-sm leading-relaxed text-muted">
-                <code className="font-mono text-xs">serve-return</code> is the open-source deliverable: the published rule as a
-                dependency-free package, for anyone who cannot afford the research recorder.
-              </p>
-            </div>
-          </div>
-          <p className="mt-6 text-sm leading-relaxed text-muted">
-            <a className="text-[var(--accent)] underline underline-offset-4" href={REPO}>
-              Repository
-            </a>
-            {" · "}
-            <a className="text-[var(--accent)] underline underline-offset-4" href={`${REPO}/blob/main/docs/EVIDENCE.md`}>
-              The evidence, with sources
-            </a>
-            {" · "}
-            <a className="text-[var(--accent)] underline underline-offset-4" href={`${REPO}/blob/main/docs/PRIOR_ART.md`}>
-              Prior art
-            </a>
-            {" · "}
-            <a className="text-[var(--accent)] underline underline-offset-4" href={`${REPO}/blob/main/FRICTION_LOG.md`}>
-              Friction log
-            </a>
-            {" · "}
-            <a className="text-[var(--accent)] underline underline-offset-4" href={`${REPO}/blob/main/skills/volley/SKILL.md`}>
-              Agent Skill
-            </a>
-          </p>
-        </section>
-
-
-        <footer className="mt-24 border-t border-line pt-8 text-sm text-muted">
-          <p>
-            Open source, MIT.{" "}
-            <a className="text-[var(--accent)] underline underline-offset-4" href={REPO}>
-              The repository
-            </a>{" "}
-            carries the evidence, the prior art, and every number on this page as a test. LENA is a registered mark of the LENA
-            Foundation; Volley implements the published definition and is not affiliated.
-          </p>
-          <p className="mt-3">Not a diagnosis, not a test, a count. Built for the Build, Ship, Shape: Amazon Developer Hackathon.</p>
-        </footer>
+        <Footer />
       </main>
-    </>
-  );
-}
-
-/** One agent's run, word for word. A desk shows it open; a phone folds it under one line. */
-function AgentRun({ a }: { a: (typeof AGENTS)[number] }) {
-  const run = (
-    <>
-      <div className="rounded-lg border border-line bg-[var(--raised)] p-4">
-        <p className="text-[13px] leading-snug text-ink">{a.asked}</p>
-        <p className="mt-3 font-mono text-[12px] leading-relaxed break-words text-muted">$ {a.command}</p>
-        <blockquote className="mt-3 text-[15px] leading-relaxed text-ink">{a.answer}</blockquote>
-        <p className="mt-3 font-mono text-[12px] leading-relaxed break-words text-muted">[{a.tools}]</p>
-      </div>
-      <p className="mt-3 text-xs leading-relaxed text-muted">{a.caption}</p>
-    </>
-  );
-  return (
-    <>
-      <div className="mt-5 hidden md:block">{run}</div>
-      <details className="fold mt-4 border-t border-line md:hidden">
-        <summary>
-          The run, word for word
-          <svg className="fold-mark" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-            <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </summary>
-        <div className="pb-2">{run}</div>
-      </details>
     </>
   );
 }

@@ -958,3 +958,8 @@ ul > .ev-row:first-child { border-top: 0; }
 /* The phone gets the same facts as the desk, folded: one line each, opened on tap. */
 .fold-list > details + details { border-top: 1px solid var(--line); }
 .fold-list .fold > summary { font-size: 1rem; line-height: 1.35; }
+
+/* The week's plan: three lines side by side on a desk, a hairline between them. */
+@media (min-width: 1024px) {
+  .plan-lines > li + li { border-left: 1px solid var(--line); padding-left: 2rem; }
+}

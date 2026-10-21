@@ -24,6 +24,8 @@ PUBLIC = [
     REPO / "packages" / "serve-return" / "README.md",
     *sorted((REPO / "docs").glob("*.md")),
     REPO / "apps" / "web" / "src" / "app" / "page.tsx",
+    # The agents, the impact case and the developers' section moved here from the home page.
+    REPO / "apps" / "web" / "src" / "app" / "evidence" / "page.tsx",
     REPO / "apps" / "web" / "src" / "components" / "Info.tsx",
 ]
 

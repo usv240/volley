@@ -21,13 +21,13 @@ describe("a spoken question, mapped to the MCP tool that answers it", () => {
 describe("the sentence read back", () => {
   it("uses only the tool's own fields", () => {
     expect(spokenAnswer("how_was_our_talking_today", { date: "2026-09-28", turns: 157, best_hour: 18, simulated: true })).toBe(
-      "On the simulated family's latest day, September 28, there were 157 turns, and the best hour was 6pm.",
+      "On the simulated family's latest counted day, there were 157 turns, and the best hour was 6pm.",
     );
     expect(spokenAnswer("best_hour_this_week", { hour: 19, turns_this_week: 309, days: 7, simulated: true })).toBe(
       "Across the simulated family's last 7 days, 7pm was the busiest hour: 309 turns in that hour altogether.",
     );
     expect(spokenAnswer("one_thing_for_tomorrow", { date: "2026-09-28", text: "Ask Asha about one thing.", simulated: true })).toBe(
-      "From the simulated family's latest day, September 28: Ask Asha about one thing.",
+      "On the simulated family's latest counted day, the one thing for tomorrow was: Ask Asha about one thing.",
     );
     expect(
       spokenAnswer("week_trend", {
@@ -37,7 +37,19 @@ describe("the sentence read back", () => {
         quietest_day: "2026-09-24",
         simulated: true,
       }),
-    ).toBe("Over the simulated family's last 7 days, turns are holding level; the best day was September 26 and the quietest September 24.");
+    ).toBe("Over the simulated family's last 7 days, turns are holding level.");
+  });
+
+  it("says a real household's day as a date in words", () => {
+    expect(spokenAnswer("how_was_our_talking_today", { date: "2026-09-28", turns: 157, best_hour: 18, simulated: false })).toBe(
+      "On September 28, this household had 157 turns, and the best hour was 6pm.",
+    );
+    expect(spokenAnswer("one_thing_for_tomorrow", { date: "2026-09-28", text: "Ask one question.", simulated: false })).toBe(
+      "From September 28: Ask one question.",
+    );
+    expect(
+      spokenAnswer("week_trend", { direction: "up", days: [{}, {}], best_day: "2026-09-26", quietest_day: "2026-09-27", simulated: false }),
+    ).toBe("Over the last 2 days, turns are going up; the best day was September 26 and the quietest September 27.");
   });
 
   it("says a week's busiest hour as that hour's total across the week, not as one day's", () => {
@@ -46,10 +58,11 @@ describe("the sentence read back", () => {
     );
   });
 
-  it("never reads the simulated family's day as an ISO date or as today", () => {
+  it("never says the simulated family's day as a date or as today", () => {
     const answers = [
       spokenAnswer("how_was_our_talking_today", { date: "2026-09-28", turns: 157, best_hour: 18, simulated: true }),
       spokenAnswer("one_thing_for_tomorrow", { date: "2026-09-28", text: "Ask one question.", simulated: true }),
+      spokenAnswer("one_thing_for_tomorrow", { text: "Ask one question.", simulated: true }),
       spokenAnswer("best_hour_this_week", { hour: 19, turns_this_week: 309, days: 7, simulated: true }),
       spokenAnswer("week_trend", { direction: "up", days: [{}, {}], best_day: "2026-09-26", quietest_day: "2026-09-27", simulated: true }),
     ];
@@ -57,6 +70,7 @@ describe("the sentence read back", () => {
       expect(a).toContain("the simulated family");
       expect(a).not.toMatch(/\d{4}-\d{2}-\d{2}/);
       expect(a).not.toMatch(/\btoday\b/i);
+      expect(a).not.toMatch(/January|February|March|April|May|June|July|August|September|October|November|December/);
     }
   });
 
