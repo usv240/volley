@@ -137,28 +137,16 @@ export default function Home() {
         {/* 1. Hero: the claim, the tagline, the two numbers, today's day. */}
         <section className="grid gap-10 pt-16 lg:grid-cols-[1.05fr_1fr] lg:items-start">
           <div>
-            <p className="eyebrow">A step counter for conversations with your child</p>
-            <h1 className="display mt-4 max-w-[16ch] text-5xl leading-[1.02] text-ink sm:text-6xl">
+            <h1 className="display max-w-[16ch] text-5xl leading-[1.02] text-ink sm:text-6xl">
               Your child&apos;s brain is built in the back-and-forth. Volley counts it.
             </h1>
             <p className="mt-6 max-w-[58ch] text-lg leading-relaxed text-ink">
-              Counts the back-and-forth between you and your child from the Bee on your wrist, keeps the counts and throws the words
-              away, and puts one thing to try tomorrow into your Bee as a reminder.
+              A step counter for conversations with your child. Volley counts the back-and-forth from the Bee on your wrist, throws the
+              words away on your own computer <Info term="onYourComputer" />, and puts one thing to try tomorrow into your Bee as a
+              reminder.
             </p>
-            <p className="mt-4 max-w-[62ch] leading-relaxed text-muted">
-              A turn <Info term="turn" /> is one exchange <Info term="exchange" />: you say something, your child answers within five
-              seconds, or the other way round. The studies that found this number used a research recorder families cannot buy. The Bee
-              is the first wearable a parent already owns that can do it, and the words never leave your computer{" "}
-              <Info term="onYourComputer" />.
-            </p>
-            <p className="mt-4 max-w-[62ch] text-sm leading-relaxed text-muted">
-              The two numbers a judge should read first: on {corpus.hours} hours of public parent-child recordings we did not make, the
-              rule counted <strong className="text-ink">{corpus.turns.toLocaleString("en-US")} turns</strong> from the human speaker
-              labels, <strong className="text-ink">zero</strong> inside any stretch where one person spoke alone{" "}
-              <Info term="corpus" />; on the operator&apos;s own Bee, hearing a real parent-child conversation voiced by Amazon Polly
-              with no person in the room, Volley counted <strong className="text-ink">{device.turns_blind} of {device.turns_true} turns</strong>{" "}
-              with no speaker labels at all. Neither is a hand count by a person, and the page says what that leaves{" "}
-              <Info term="validated" />.
+            <p className="mt-4 max-w-[58ch] leading-relaxed text-muted">
+              A turn <Info term="turn" /> is you saying something and your child answering within five seconds, or the other way round.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a href="#how" className="primary">
@@ -172,10 +160,23 @@ export default function Home() {
           <DayView day={today} child={demo.child_name} simulated />
         </section>
 
+        {/* 1b. The two measured numbers, said once, under the claim they test. */}
+        <section aria-label="Measured" className="mt-14 border-y border-line py-6">
+            <p className="max-w-[86ch] leading-relaxed text-muted">
+              Measured, not claimed: on {corpus.hours} hours of public parent-child recordings we did not make, the
+              rule counted <strong className="text-ink">{corpus.turns.toLocaleString("en-US")} turns</strong> from the human speaker
+              labels, <strong className="text-ink">zero</strong> inside any stretch where one person spoke alone{" "}
+              <Info term="corpus" />; on the operator&apos;s own Bee, hearing a real parent-child conversation voiced by Amazon Polly
+              with no person in the room, Volley counted <strong className="text-ink">{device.turns_blind} of {device.turns_true} turns</strong>{" "}
+              with no speaker labels at all. Neither is a hand count by a person, and the page says what that leaves{" "}
+              <Info term="validated" />.
+            </p>
+        </section>
+
         {/* 2. Three figures, each with its study on the i. */}
         <dl className="mt-16 grid gap-6 sm:grid-cols-3">
           {STATS.map((s) => (
-            <div key={s.figure} className="border-l-2 border-[var(--accent)] pl-4">
+            <div key={s.figure} className="border-t border-line pt-4">
               <dt className="display-sm text-3xl text-ink">
                 {s.figure} <Info term={s.term} />
               </dt>
@@ -188,8 +189,7 @@ export default function Home() {
 
         {/* 3. What, why, how. */}
         <section id="what" className="scroll-mt-24">
-          <p className="eyebrow">In one screen</p>
-          <h2 className="display-sm mt-3 max-w-[22ch] text-3xl text-ink sm:text-4xl">What it is, why it exists, how it runs.</h2>
+          <h2 className="display-sm max-w-[22ch] text-3xl text-ink sm:text-4xl">What it is, why it exists, how it runs.</h2>
           <div className="mt-10 grid gap-6 md:grid-cols-3">
             <div className="card p-6">
               <p className="font-semibold text-ink">What</p>
@@ -217,8 +217,7 @@ export default function Home() {
 
         {/* 4. How it counts, watched. */}
         <section id="how" className="scroll-mt-24">
-          <p className="eyebrow">Watch the rule</p>
-          <h2 className="display-sm mt-3 max-w-[22ch] text-3xl text-ink sm:text-4xl">How it counts, in twenty seconds.</h2>
+          <h2 className="display-sm max-w-[22ch] text-3xl text-ink sm:text-4xl">How it counts, in twenty seconds.</h2>
           <p className="mt-4 max-w-[66ch] leading-relaxed text-muted">
             Press play. Each bar is something somebody said; the band after it is the five-second window. The number in the corner is
             the same rule that runs on your computer, counting these bars as they arrive.
@@ -232,8 +231,7 @@ export default function Home() {
 
         {/* 5. The day and the week, like steps. */}
         <section id="day" className="scroll-mt-24">
-          <p className="eyebrow">Like steps</p>
-          <h2 className="display-sm mt-3 max-w-[22ch] text-3xl text-ink sm:text-4xl">A day, an hour at a time, and one thing for tomorrow.</h2>
+          <h2 className="display-sm max-w-[22ch] text-3xl text-ink sm:text-4xl">A day, an hour at a time, and one thing for tomorrow.</h2>
           <div className="mt-10 grid gap-6 lg:grid-cols-[1.2fr_1fr]">
             <div className="card p-6 sm:p-8">
               <p className="eyebrow">This week, simulated</p>
@@ -256,7 +254,7 @@ export default function Home() {
             </div>
             <div className="card p-6 sm:p-8">
               <p className="eyebrow">Tomorrow, written from today&apos;s counts</p>
-              <blockquote className="mt-4 border-l-2 border-[var(--accent)] pl-4">
+              <blockquote className="mt-4 border-l border-line-strong pl-4">
                 <p className="leading-relaxed text-ink">
                   {today.best_hour !== null
                     ? `Your best hour with ${demo.child_name} was around ${clock(today.best_hour)}, with ${Math.max(...today.hours.map((h) => h.turns))} turns. Keep that one exactly as it is.`
@@ -276,8 +274,7 @@ export default function Home() {
 
         {/* 6. What it will never say. */}
         <section id="never" className="scroll-mt-24">
-          <p className="eyebrow">Said in the same size as the numbers</p>
-          <h2 className="display-sm mt-3 max-w-[22ch] text-3xl text-ink sm:text-4xl">What it will never say.</h2>
+          <h2 className="display-sm max-w-[22ch] text-3xl text-ink sm:text-4xl">What it will never say.</h2>
           <div className="mt-10 grid gap-x-10 gap-y-8 md:grid-cols-2">
             {NEVER.map((n) => (
               <div key={n.head} className="border-t border-line pt-5">
@@ -290,10 +287,24 @@ export default function Home() {
 
         <div className="rule my-20" />
 
+        {/* 6b. Questions a parent asks. */}
+        <section id="questions" className="scroll-mt-24">
+          <h2 className="display-sm max-w-[22ch] text-3xl text-ink sm:text-4xl">Questions a parent asks.</h2>
+          <div className="mt-8 grid gap-x-10 gap-y-6 md:grid-cols-2">
+            {FAQ.map(([q, a]) => (
+              <div key={q} className="border-t border-line pt-4">
+                <p className="font-semibold text-ink">{q}</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{a}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <div className="rule my-20" />
+
         {/* 7. Privacy, demonstrated. */}
         <section id="privacy" className="scroll-mt-24">
-          <p className="eyebrow">Privacy</p>
-          <h2 className="display-sm mt-3 max-w-[22ch] text-3xl text-ink sm:text-4xl">A transcript, refused by the server, while you watch.</h2>
+          <h2 className="display-sm max-w-[22ch] text-3xl text-ink sm:text-4xl">A transcript, refused by the server, while you watch.</h2>
           <p className="mt-4 max-w-[66ch] leading-relaxed text-muted">
             The API accepts counts and drops every field it does not know at the door. That is a claim until it is pressed. What the
             Bee itself keeps is Amazon&apos;s promise, in its own privacy notice, and not ours to restate.
@@ -307,18 +318,17 @@ export default function Home() {
 
         {/* 8. Your Bee, in ten minutes. */}
         <section id="yours" className="scroll-mt-24">
-          <p className="eyebrow">Your Bee</p>
-          <h2 className="display-sm mt-3 max-w-[22ch] text-3xl text-ink sm:text-4xl">Your own day, in ten minutes.</h2>
-          <ol className="mt-10 grid gap-4 md:grid-cols-2">
+          <h2 className="display-sm max-w-[22ch] text-3xl text-ink sm:text-4xl">Your own day, in ten minutes.</h2>
+          <ol className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2">
             {STEPS.map((s, i) => (
-              <li key={s.title} className="card p-5">
+              <li key={s.title} className="card min-w-0 p-5">
                 <div className="flex items-baseline gap-3">
                   <span className="display-sm text-2xl text-[var(--accent)]">{i + 1}</span>
                   <div className="min-w-0 flex-1">
                     <p className="font-semibold text-ink">
                       {s.title} {s.term && <Info term={s.term} />}
                     </p>
-                    <pre className="mt-2 overflow-x-auto rounded-lg border border-line bg-[var(--raised)] p-3 font-mono text-[12px] leading-relaxed text-ink">
+                    <pre tabIndex={0} className="mt-2 overflow-x-auto rounded-lg border border-line bg-[var(--raised)] p-3 font-mono text-[12px] leading-relaxed text-ink">
                       {s.body}
                     </pre>
                   </div>
@@ -336,22 +346,21 @@ export default function Home() {
 
         {/* 9. Bring your own data. */}
         <section id="byo" className="scroll-mt-24">
-          <p className="eyebrow">Bring your own data</p>
-          <h2 className="display-sm mt-3 max-w-[22ch] text-3xl text-ink sm:text-4xl">Three doors, each for someone.</h2>
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
-            <div className="card p-6">
+          <h2 className="display-sm max-w-[22ch] text-3xl text-ink sm:text-4xl">Three doors, each for someone.</h2>
+          <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
+            <div className="card min-w-0 p-6">
               <p className="font-semibold text-ink">Parents: your Bee, on your computer</p>
               <p className="mt-2 text-sm leading-relaxed text-muted">The steps above. The only door that reads a transcript, and it reads it where you are; the counts, and nothing else, can go to a page that is yours.</p>
             </div>
-            <div className="card p-6">
+            <div className="card min-w-0 p-6">
               <p className="font-semibold text-ink">Anyone curious: a Bee export, in this tab</p>
               <p className="mt-2 text-sm leading-relaxed text-muted">Drop a file below. It is counted in your browser and uploaded nowhere.</p>
             </div>
-            <div className="card p-6">
+            <div className="card min-w-0 p-6">
               <p className="font-semibold text-ink">
                 Developers: an API key <Info term="apiKey" />
               </p>
-              <pre className="mt-2 overflow-x-auto rounded-lg border border-line bg-[var(--raised)] p-3 font-mono text-[12px] leading-relaxed text-ink">
+              <pre tabIndex={0} className="mt-2 overflow-x-auto rounded-lg border border-line bg-[var(--raised)] p-3 font-mono text-[12px] leading-relaxed text-ink">
                 {`curl -X POST ${API_URL}/v1/households \\\n  -H 'content-type: application/json' \\\n  -d '{"name":"ours","child_name":"Asha"}'`}
               </pre>
               <p className="mt-2 text-sm leading-relaxed text-muted">
@@ -374,8 +383,7 @@ export default function Home() {
 
         {/* 10. Alexa+. */}
         <section id="alexa" className="scroll-mt-24">
-          <p className="eyebrow">Alexa+</p>
-          <h2 className="display-sm mt-3 max-w-[22ch] text-3xl text-ink sm:text-4xl">Ask it out loud, and it cannot repeat a word.</h2>
+          <h2 className="display-sm max-w-[22ch] text-3xl text-ink sm:text-4xl">Ask it out loud, and it cannot repeat a word.</h2>
           <p className="mt-4 max-w-[66ch] leading-relaxed text-muted">
             An MCP server <Info term="mcp" />, spec 2025-11-25 over Streamable HTTP, with seven tools and an Agent Skill{" "}
             <Info term="skill" />. It can say how the talking went today, what to try tomorrow, the week&apos;s direction and the best
@@ -391,8 +399,7 @@ export default function Home() {
 
         {/* 10b. Impact: who has paid for this count already, and what changes at fifty dollars. */}
         <section id="impact" className="scroll-mt-24">
-          <p className="eyebrow">Beyond this hackathon</p>
-          <h2 className="display-sm mt-3 max-w-[24ch] text-3xl text-ink sm:text-4xl">Cities have paid for this count. Parents have never been able to buy it.</h2>
+          <h2 className="display-sm max-w-[24ch] text-3xl text-ink sm:text-4xl">Cities have paid for this count. Parents have never been able to buy it.</h2>
           <p className="mt-4 max-w-[66ch] leading-relaxed text-muted">
             The case for who this serves, in the order a sceptic would ask it, with the study behind every sentence on its i. What
             it does not claim is at the end, in the same type.
@@ -419,8 +426,7 @@ export default function Home() {
 
         {/* 11. Evidence: refused first, then baselines, then agreement. */}
         <section id="evidence" className="scroll-mt-24">
-          <p className="eyebrow">Evidence</p>
-          <h2 className="display-sm mt-3 max-w-[24ch] text-3xl text-ink sm:text-4xl">What it refused to count, what it beat, and how close it is to a person.</h2>
+          <h2 className="display-sm max-w-[24ch] text-3xl text-ink sm:text-4xl">What it refused to count, what it beat, and how close it is to a person.</h2>
           <p className="mt-4 max-w-[66ch] leading-relaxed text-muted">
             Written for somebody who came here to find the weak point. Measured here, read from the literature, and not done yet are
             kept apart on purpose.
@@ -514,8 +520,11 @@ export default function Home() {
               every figure in this paragraph from the committed results, and from the corpus itself where it is present.
             </p>
           </div>
-          <div className="card mt-6 p-6 sm:p-8">
-            <p className="eyebrow">Read from the literature</p>
+          <details className="card group mt-6 p-6 sm:p-8">
+            <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 font-semibold text-ink">
+              Read from the literature: every study on this page
+              <span aria-hidden="true" className="text-muted transition-transform group-open:rotate-45">+</span>
+            </summary>
             <ul className="mt-3 space-y-2 text-sm leading-relaxed text-muted">
               <li>Gilkerson J et al. Language Experience in the Second Year of Life and Language Outcomes in Late Childhood. Pediatrics 2018. PMID 30201624. Three authors work for the LENA Foundation.</li>
               <li>Romeo RR et al. Beyond the 30-Million-Word Gap. Psychological Science 2018. PMID 29442613.</li>
@@ -547,25 +556,24 @@ export default function Home() {
                 on Hugging Face; the harness for it is in the repository and runs the day access opens.
               </li>
             </ul>
-          </div>
+          </details>
         </section>
 
         <div className="rule my-20" />
 
         {/* 12. Developers. */}
         <section id="developers" className="scroll-mt-24">
-          <p className="eyebrow">Developers</p>
-          <h2 className="display-sm mt-3 max-w-[22ch] text-3xl text-ink sm:text-4xl">Everything here is a test you can run.</h2>
+          <h2 className="display-sm max-w-[22ch] text-3xl text-ink sm:text-4xl">Everything here is a test you can run.</h2>
           <div className="mt-10 grid gap-6 md:grid-cols-2">
             <div className="card min-w-0 p-6">
               <p className="font-semibold text-ink">Run it</p>
-              <pre className="mt-3 overflow-x-auto rounded-lg border border-line bg-[var(--raised)] p-3 font-mono text-[12px] leading-relaxed text-ink">
+              <pre tabIndex={0} className="mt-3 overflow-x-auto rounded-lg border border-line bg-[var(--raised)] p-3 font-mono text-[12px] leading-relaxed text-ink">
                 {"python -m venv .venv\n.venv/Scripts/pip install -e packages/serve-return[dev] -e apps/ingest[dev] -e apps/server[dev]\n.venv/Scripts/python -m pytest packages apps    # every test\ncd apps/web && npm install && npm test && npm run dev"}
               </pre>
             </div>
             <div className="card min-w-0 p-6">
               <p className="font-semibold text-ink">Use the counter</p>
-              <pre className="mt-3 overflow-x-auto rounded-lg border border-line bg-[var(--raised)] p-3 font-mono text-[12px] leading-relaxed text-ink">
+              <pre tabIndex={0} className="mt-3 overflow-x-auto rounded-lg border border-line bg-[var(--raised)] p-3 font-mono text-[12px] leading-relaxed text-ink">
                 {'from serve_return import Utterance, Roles, count_day\n\nroles = Roles.of(adult=["MOT"], child=["CHI"])\nday = count_day(utterances, roles)\nday.turns, day.best_hour, day.words_discarded'}
               </pre>
               <p className="mt-3 text-sm leading-relaxed text-muted">
@@ -597,20 +605,6 @@ export default function Home() {
           </p>
         </section>
 
-        <div className="rule my-20" />
-
-        {/* 13. Questions a parent asks. */}
-        <section id="questions" className="scroll-mt-24">
-          <p className="eyebrow">Questions a parent asks</p>
-          <div className="mt-8 grid gap-x-10 gap-y-6 md:grid-cols-2">
-            {FAQ.map(([q, a]) => (
-              <div key={q} className="border-t border-line pt-4">
-                <p className="font-semibold text-ink">{q}</p>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{a}</p>
-              </div>
-            ))}
-          </div>
-        </section>
 
         <footer className="mt-24 border-t border-line pt-8 text-sm text-muted">
           <p>

@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { DayView, clock, type Day } from "./DayView";
 import { Info } from "./Info";
+import demo from "../data/demo.json";
 
 /**
  * A parent's own days, read with their key from this browser.
@@ -25,6 +27,9 @@ import { Info } from "./Info";
  * It reads the days, the week and the note and shows no control that
  * writes, because the service would refuse one anyway.
  */
+
+// A no-key visitor still sees what the page is for, labelled as simulated.
+const SAMPLE = (demo.days as Day[])[demo.days.length - 1];
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8791";
 type Mode = "owner" | "coach";
@@ -189,13 +194,20 @@ export function Mine({ mode = "owner" }: { mode?: Mode }) {
   if (creds === null && coach) {
     return (
       <section>
-        <p className="eyebrow">Shared with you</p>
-        <h1 className="display mt-4 max-w-[16ch] text-4xl leading-[1.05] text-ink sm:text-5xl">No shared household in this browser.</h1>
+        <h1 className="display max-w-[16ch] text-4xl leading-[1.05] text-ink sm:text-5xl">No shared household in this browser.</h1>
         <p className="mt-6 max-w-[60ch] leading-relaxed text-muted">
           This page shows one family&apos;s counts, read-only, from a link the family made for you with{" "}
           <code className="font-mono text-xs">volley share</code>. Open that link here. It shows counts and the note, never a word of
           speech, and the family can end it at any time.
         </p>
+        <div className="mt-12">
+          <p className="text-sm text-muted">
+            What this page shows once a day is counted, here with the simulated family from the front page:
+          </p>
+          <div className="mt-4">
+            <DayView day={SAMPLE} child={demo.child_name} simulated />
+          </div>
+        </div>
       </section>
     );
   }
@@ -203,11 +215,14 @@ export function Mine({ mode = "owner" }: { mode?: Mode }) {
   if (creds === null) {
     return (
       <section>
-        <p className="eyebrow">Mine</p>
-        <h1 className="display mt-4 max-w-[16ch] text-4xl leading-[1.05] text-ink sm:text-5xl">No household in this browser yet.</h1>
+        <h1 className="display max-w-[16ch] text-4xl leading-[1.05] text-ink sm:text-5xl">No household in this browser yet.</h1>
         <p className="mt-6 max-w-[60ch] leading-relaxed text-muted">
           This page shows one household&apos;s counts, read with its key <Info term="mine" />. On the computer where your Bee is signed
-          in, after the steps on the front page:
+          in, after{" "}
+          <Link prefetch={false} href="/#yours" className="text-ink underline underline-offset-4">
+            the three install steps
+          </Link>
+          :
         </p>
         <pre className="mt-6 max-w-[60ch] overflow-x-auto rounded-lg border border-line bg-[var(--raised)] p-4 font-mono text-[13px] leading-relaxed text-ink">
           {"volley connect\nvolley today"}
@@ -217,6 +232,14 @@ export function Mine({ mode = "owner" }: { mode?: Mode }) {
           browser. The words of the transcript never make the trip; only counts do, and the privacy section on the front page lets you
           watch the service refuse anything else.
         </p>
+        <div className="mt-12">
+          <p className="text-sm text-muted">
+            What this page shows once a day is counted, here with the simulated family from the front page:
+          </p>
+          <div className="mt-4">
+            <DayView day={SAMPLE} child={demo.child_name} simulated />
+          </div>
+        </div>
       </section>
     );
   }
@@ -229,8 +252,7 @@ export function Mine({ mode = "owner" }: { mode?: Mode }) {
     <section>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="eyebrow">{coach ? "Shared with you, read-only" : "Mine"}</p>
-          <h1 className="display mt-4 max-w-[18ch] text-4xl leading-[1.05] text-ink sm:text-5xl">
+          <h1 className="display max-w-[18ch] text-4xl leading-[1.05] text-ink sm:text-5xl">
             {household ? household.name : "Your household"}
             {child ? `, with ${child}` : ""}
           </h1>

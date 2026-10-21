@@ -28,7 +28,7 @@
   --raised: #efe9df;
   --ink: #1c1a17;
   --muted: #5f5a52;
-  --faint: #8a847a;
+  --faint: #6b655c;
   --line: #e2dbcf;
   --line-strong: #cfc6b6;
   --accent: #1f4fd8;
@@ -50,7 +50,7 @@
     --raised: #222732;
     --ink: #f3f1ec;
     --muted: #aeb3bd;
-    --faint: #7c828d;
+    --faint: #8f95a0;
     --line: #2a303b;
     --line-strong: #3a414e;
     --accent: #5b86e5;
@@ -72,7 +72,7 @@
   --raised: #222732;
   --ink: #f3f1ec;
   --muted: #aeb3bd;
-  --faint: #7c828d;
+  --faint: #8f95a0;
   --line: #2a303b;
   --line-strong: #3a414e;
   --accent: #5b86e5;
@@ -137,13 +137,16 @@ body {
   line-height: 1.15;
 }
 
-/* Section eyebrow: small caps in the accent, so a section can be found at a glance. */
+/*
+  A panel's own title. Sections are found by their headings; this names a
+  panel inside one (which day, which family, simulated or not) in plain
+  sentence case, so it reads as a label and not as a kicker.
+*/
 .eyebrow {
-  font-size: 0.72rem;
+  font-size: 0.875rem;
   font-weight: 600;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--accent);
+  letter-spacing: 0;
+  color: var(--muted);
 }
 
 /* Cards share one surface treatment so the page reads as one system. */
@@ -151,7 +154,6 @@ body {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 1.25rem;
-  box-shadow: var(--shadow);
 }
 
 .card-lift {
@@ -369,7 +371,18 @@ a:focus-visible,
   line-height: 1;
   vertical-align: 0.1em;
   cursor: help;
+  position: relative;
   transition: border-color 120ms ease, background-color 120ms ease;
+}
+
+/* The mark stays small in the sentence; the finger gets 28px. */
+.info-btn::before {
+  content: "";
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 28px;
+  height: 28px;
+  transform: translate(-50%, -50%);
 }
 
 .info-btn:hover,

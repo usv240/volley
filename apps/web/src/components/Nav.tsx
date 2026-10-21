@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
 
 /**
@@ -25,14 +26,14 @@ const LINKS = [
   { href: "/#privacy", label: "Privacy" },
   { href: "/#yours", label: "Your Bee" },
   { href: "/#alexa", label: "Alexa+" },
-  { href: "/#impact", label: "Impact" },
   { href: "/#evidence", label: "Evidence" },
-  { href: "/#developers", label: "Developers" },
   { href: "/mine/", label: "Mine" },
 ];
 
 export function Nav() {
   const [open, setOpen] = useState(false);
+  const path = usePathname();
+  const current = (href: string) => (href.startsWith("/#") ? undefined : path?.startsWith(href.replace(/\/$/, "")) ? "page" : undefined);
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-[color-mix(in_srgb,var(--bg)_82%,transparent)] backdrop-blur">
       <div className="mx-auto flex h-16 max-w-[1120px] items-center justify-between px-5 sm:px-8">
@@ -44,7 +45,8 @@ export function Nav() {
             <Link prefetch={false}
               key={l.href}
               href={l.href}
-              className="whitespace-nowrap text-sm text-muted transition-colors hover:text-ink"
+              aria-current={current(l.href)}
+              className="inline-flex min-h-11 items-center whitespace-nowrap text-sm text-muted transition-colors hover:text-ink aria-[current=page]:font-semibold aria-[current=page]:text-ink"
             >
               {l.label}
             </Link>
@@ -54,7 +56,7 @@ export function Nav() {
           <ThemeToggle />
           <Link prefetch={false}
             href="/#yours"
-            className="whitespace-nowrap rounded-[0.85rem] bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-[var(--accent-ink)] transition-transform hover:-translate-y-px"
+            className="inline-flex min-h-11 items-center whitespace-nowrap rounded-[0.85rem] bg-[var(--accent)] px-4 text-sm font-semibold text-[var(--accent-ink)] transition-transform hover:-translate-y-px"
           >
             Count your own
           </Link>
@@ -71,13 +73,13 @@ export function Nav() {
       </div>
       {open && (
         <div className="border-t border-line bg-surface px-5 py-4 xl:hidden">
-          <nav className="flex flex-col gap-3" aria-label="Mobile">
+          <nav className="flex flex-col" aria-label="Mobile">
             {LINKS.map((l) => (
-              <Link prefetch={false} key={l.href} href={l.href} onClick={() => setOpen(false)} className="text-sm text-muted">
+              <Link prefetch={false} key={l.href} href={l.href} aria-current={current(l.href)} onClick={() => setOpen(false)} className="flex min-h-11 items-center text-base text-muted aria-[current=page]:font-semibold aria-[current=page]:text-ink">
                 {l.label}
               </Link>
             ))}
-            <Link prefetch={false} href="/#yours" onClick={() => setOpen(false)} className="text-sm font-semibold text-[var(--accent)]">
+            <Link prefetch={false} href="/#yours" onClick={() => setOpen(false)} className="flex min-h-11 items-center text-base font-semibold text-[var(--accent)]">
               Count your own
             </Link>
             <div className="pt-2 md:hidden">
