@@ -1,0 +1,89 @@
+"""Coaching in the moment: the rule, the usual hour, and the live loop.
+
+The loop is driven with a fake clock, an injected stream, and a Bee that
+records what it was asked to create, so nothing here reaches a device,
+a speaker or AWS.
+"""
+
+from __future__ import annotations
+
+import json
+import time
+from datetime import datetime
+
+from volley_ingest import nudge as nd
+from volley_ingest.bee import BeeCli
+from volley_ingest.household import Household
+from volley_ingest.live import run
+
+
+def write_day(d, date, hours):
+    (d / f"{date}.json").write_text(json.dumps({"date": date, "hours": [
+        {"hour": hr, "turns": t, "utterances_child": c} for hr, t, c in hours]}), encoding="utf8")
+
+
+def test_the_usual_best_hour_averages_days_and_ignores_hours_without_the_child(tmp_path):
+    write_day(tmp_path, "2026-10-01", [(18, 30, 9), (8, 10, 4), (12, 0, 0)])
+    write_day(tmp_path, "2026-10-02", [(18, 20, 7), (8, 30, 5)])
+    u = nd.usual_best_hour(tmp_path)
+    assert (u.hour, u.turns, u.days) == (18, 25.0, 2)
+    assert nd.usual_best_hour(tmp_path / "none") is None
+
+
+def test_the_rule_fires_only_late_enough_in_the_usual_hour_and_only_when_quiet():
+    u = nd.Usual(hour=18, turns=24.0, days=5)
+    at = lambda h, m: datetime(2026, 10, 21, h, m)
+    assert nd.should_nudge(at(18, 25), u, 6, already_today=False)
+    assert not nd.should_nudge(at(18, 25), u, 7, already_today=False)   # more than a quarter: leave them be
+    assert not nd.should_nudge(at(18, 10), u, 0, already_today=False)   # too early in the hour to tell
+    assert not nd.should_nudge(at(19, 30), u, 0, already_today=False)   # not the usual hour
+    assert not nd.should_nudge(at(18, 25), u, 0, already_today=True)    # once a day
+    assert not nd.should_nudge(at(18, 25), nd.Usual(18, 3.0, 5), 0, already_today=False)  # no habit to keep
+
+
+def test_the_sentence_names_the_child_and_carries_no_number():
+    text = nd.message("Asha")
+    assert "Asha" in text and not any(ch.isdigit() for ch in text)
+
+
+def test_a_quiet_usual_hour_puts_one_nudge_into_the_bee_and_says_it_once(tmp_path, monkeypatch, capsys):
+    monkeypatch.setenv("VOLLEY_HOME", str(tmp_path))
+    counts = tmp_path / "counts"
+    counts.mkdir()
+    write_day(counts, "2026-10-20", [(18, 24, 8)])
+    h = Household(blind=True, child_name="Asha", write_reminders_to_bee=True)
+    created, spoken = [], []
+
+    def runner(argv):
+        created.append(argv)
+        return 0, json.dumps({"id": 1}), ""
+
+    # A quiet stream: open, but nothing arrives, so only the timer can notice.
+    def quiet():
+        time.sleep(5)
+        yield from ()
+
+    import itertools
+
+    ticks = itertools.chain((datetime(2026, 10, 21, 18, m) for m in (5, 15, 22, 30, 40)), itertools.repeat(datetime(2026, 10, 21, 18, 50)))
+    rc = run(BeeCli(runner=runner), h, seconds=1, lines=quiet(), nudge=True, speak=True,
+             clock=lambda: next(ticks), poll_seconds=0.01, say=spoken.append)
+    assert rc == 0
+    creates = [a for a in created if "todos" in a and "create" in a]
+    assert len(creates) == 1 and creates[0][creates[0].index("--text") + 1] == nd.message("Asha")
+    assert spoken == [nd.message("Asha")]
+    assert (tmp_path / "nudges" / "2026-10-21.sent").exists()
+    assert "watching 18:00" in capsys.readouterr().out
+
+
+def test_without_reminder_consent_a_nudge_is_only_printed(tmp_path, monkeypatch, capsys):
+    monkeypatch.setenv("VOLLEY_HOME", str(tmp_path))
+    counts = tmp_path / "counts"
+    counts.mkdir()
+    write_day(counts, "2026-10-20", [(18, 24, 8)])
+    created = []
+    run(BeeCli(runner=lambda a: (created.append(a), (0, "{}", ""))[1]), Household(blind=True), seconds=1, lines=iter([]),
+        nudge=True, clock=lambda: datetime(2026, 10, 21, 18, 30), poll_seconds=0.01)
+    assert not [a for a in created if "todos" in a]
+    out = capsys.readouterr().out
+    assert "reminders are off" in out and "nudge at 18:30" in out

@@ -11,8 +11,9 @@ thing to try tomorrow. The number it counts is the most validated one in
 early childhood; the only instrument that measures it has never been
 sold to a parent.
 
-Status: built on 2026-09-29 against the plan in `docs/`, which was
-written first so the build is judged against it. The API and MCP server
+Status: built during the hackathon window against the plan in `docs/`,
+which was written first so the build is judged against it; first
+running end to end on 2026-09-29, and extended since (see the commits). The API and MCP server
 are live at https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws (interactive docs at `/v1/docs`) and the site at https://da78ygi6ol1oi.cloudfront.net.
 The rule has run on 26.59 hours of public parent-child recordings
 (the CHILDES Gleason corpus, 2026-09-30): 20,344 turns from the
@@ -34,7 +35,7 @@ it. Every
 session is in `harness/blind/results.json`; `python harness/blind/run.py`
 reproduces it.
 
-**On the Bee itself, no person in the room.** A real CHILDES mother-child conversation, voiced by Amazon Polly with an adult and a child voice at its original timing, played to the band for 190 seconds: the Bee wrote 124 utterances for 125 played and kept 75 of 75 turns, so its segmentation loses none. Volley's blind count with a model and scale that never saw this family: 66 (-12.0 percent; 58 before the scale), 76.6 percent of lines given the right speaker. `harness/beeloop` reproduces it. 140 tests.
+**On the Bee itself, no person in the room.** A real CHILDES mother-child conversation, voiced by Amazon Polly with an adult and a child voice at its original timing, played to the band for 190 seconds: the Bee wrote 124 utterances for 125 played and kept 75 of 75 turns, so its segmentation loses none. Volley's blind count with a model and scale that never saw this family: 66 (-12.0 percent; 58 before the scale), 76.6 percent of lines given the right speaker. `harness/beeloop` reproduces it. 151 tests.
 
 | Document | What it answers |
 |---|---|
@@ -62,7 +63,7 @@ Volley counts the exchanges between a parent and a child, today.
 ```
 python -m venv .venv && . .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -e "packages/serve-return[dev]" -e "apps/ingest[dev]" -e "apps/server[dev]" -e "apps/agent[dev]"
-python -m pytest packages apps harness -q          # 140 tests, the same two lines CI runs
+python -m pytest packages apps harness -q          # 151 tests, the same two lines CI runs
 cd apps/web && npm ci && npm test && npm run dev   # the site, on localhost:3000
 ```
 
@@ -99,7 +100,7 @@ Every tool this project uses, and the file that uses it.
 | Tool | What it does here | Where |
 |---|---|---|
 | Bee CLI | conversations, changes, the live stream, and tomorrow's reminder written back into the Bee | [`apps/ingest/volley_ingest/bee.py`](apps/ingest/volley_ingest/bee.py) |
-| Bee's own MCP server | the Tuesday agent holds it beside Volley's, behind a five-tool allow-list | [`apps/agent/volley_agent/tuesday.py`](apps/agent/volley_agent/tuesday.py) |
+| Bee's own MCP server | the Tuesday agent holds it beside Volley's, behind a four-tool allow-list | [`apps/agent/volley_agent/tuesday.py`](apps/agent/volley_agent/tuesday.py) |
 | MCP server, spec 2025-11-25, Streamable HTTP | the Alexa+ surface: seven tools, signed sessions, conformance-probed live | [`apps/server/volley_server/mcp.py`](apps/server/volley_server/mcp.py) |
 | Agent Skill | tells an agent how to use the seven tools; a test pins it to the server | [`skills/volley/SKILL.md`](skills/volley/SKILL.md) |
 | Amazon Bedrock (Claude) | phrases tomorrow's one thing behind a gate that refuses any number the rules did not choose | [`apps/server/volley_server/bedrock.py`](apps/server/volley_server/bedrock.py) |

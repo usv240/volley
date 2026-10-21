@@ -37,9 +37,11 @@ order and sinks one that keeps failing.
 "Why was Tuesday quiet" is a question the counts cannot answer and the
 parent's own Bee can. `Tuesday` holds Bee's MCP server (`bee mcp
 serve`, over stdio, through the CLI the parent signed in) beside
-Volley's. What it may reach on the Bee side is a five-tool allow-list:
-the daily summaries, today's brief, the to-do list and creating one
-to-do. The transcript, search, photo and location tools are named in a
+Volley's. What it may reach on the Bee side is a four-tool allow-list:
+the daily summaries, the to-do list and creating one to-do. Today's
+brief was on it until 2026-10-21, when its definition turned out to
+return captured conversations; it is now refused with the transcript
+tools, and no recorded run had called it. The transcript, search, photo and location tools are named in a
 second list and never offered; a stand-in server with the real 34 tool
 names, captured on 2026-09-30, is what the test runs against.
 
@@ -79,7 +81,55 @@ that day, that context might help explain the lighter count!
 ```
 
 The Bee has no summary for the 24th because it arrived on the 29th;
-the agent said so rather than inventing one.
+the agent said so rather than inventing one. That is why this Tuesday
+run failed to explain the quiet day: it paired the simulated
+household's counts with a real Bee, and a real Bee holds a real
+person's days, not the simulated family's. Even a Bee that had been
+worn on the 24th would have described someone else's Thursday.
+
+## A run with a SIMULATED Bee, 2026-10-21
+
+To show the Tuesday agent doing its job without a real person's day
+reaching the model, `apps/agent/volley_agent/sim_bee.py` is a
+SIMULATED Bee: an MCP server over stdio that offers the five allowed
+tools under the names and argument shapes `bee mcp serve` uses (read
+from the @beeai/cli 0.7.3 tool definitions), plus
+`bee_get_conversation_transcript` so a test can show the allow-list
+drops it. It holds fourteen short days written for the simulated
+household (Asha, 2026-09-15 to 2026-09-28); the quietest day, the 24th,
+has an ordinary reason, a long drive to the grandparents and a late
+nap. Every response carries `"simulated": true` and a SIMULATED notice,
+and so does every tool description. The real Bee was not started.
+
+Simulated Bee, simulated household, Sonnet
+(`us.anthropic.claude-sonnet-4-6`, the ladder's first rung), against
+the deployed MCP server. The whole run, tool inputs and results
+included, is in `apps/agent/runs/tuesday-sim.json`.
+
+```
+$ python -m volley_agent tuesday --sim-bee --record apps/agent/runs/tuesday-sim.json \
+    "Which day this week was the quietest for talking, and what was I doing that day according to my Bee?"
+Your quietest day was September 24, with 156 turns, the lowest of the week. Your
+Bee shows you spent most of that day on a long drive to the grandparents and back,
+with Asha napping through much of it. That explains the count perfectly, she was
+asleep in the car seat for big stretches of the day!
+  [model; tools: week_trend, bee_list_daily_summaries, bee_get_daily_summary]
+```
+
+The model's first Bee call asked for 2025-07-14 to 2025-07-20, its own
+guess at "this week", made before `week_trend` had answered; the
+simulated Bee returned nothing for those dates, and the model then
+fetched the 24th by date. "Most of that day" stretches the summary,
+which says the drive took the evening.
+
+The first attempt, a minute earlier, is kept in
+`apps/agent/runs/tuesday-sim-first-attempt.json`. It passed the gate
+and called the 24th a Wednesday; it was a Thursday. The gate checks
+numbers, and 24 was a returned number, so a wrong weekday got through,
+the same kind of error as Haiku's misread week below. No tool returns
+a weekday, so the Tuesday prompt now says to give a date as a month and
+day, never with a day of the week, and the run above is the one after
+that change.
 
 ## What the gate caught before these runs
 
@@ -103,7 +153,11 @@ changed the same evening:
 pip install -e "apps/agent"
 volley-agent coach --demo "what is the best hour this week"
 volley-agent tuesday "why was Tuesday quiet"          # your own household, after volley connect
+volley-agent tuesday --sim-bee "why was the 24th quiet" # SIMULATED Bee, simulated household
 ```
+
+`--record PATH` writes the question, the tools offered and called with
+their inputs and results, the answer, its layer and the model to PATH.
 
 AWS credentials with Bedrock access are needed for the model; the
 tests need none, because they drive the agents with a scripted model

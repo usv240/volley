@@ -3,7 +3,7 @@
 `Coach` answers a parent from Volley's seven tools and cannot say a
 number no tool returned. `Tuesday` holds Bee's own MCP server beside
 Volley's, on the parent's machine, so a quiet day can be explained
-from the parent's own calendar without either server seeing the
+from the parent's own Bee daily summary without either server seeing the
 other's data. Both put every answer through the same gate.
 """
 

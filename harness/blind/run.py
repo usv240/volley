@@ -65,6 +65,13 @@ def naive_roles(us: list[Utterance]) -> list[str]:
     return out
 
 
+def alternating_roles(us: list[Utterance]) -> list[str]:
+    """The stronger baseline: every line is a change of speaker. On this
+    corpus, where forced alignment leaves most gaps at zero, it is the
+    honest version of 'a pause is a speaker change'."""
+    return ["adult" if i % 2 == 0 else "child" for i in range(len(us))]
+
+
 def turns(us: list[Utterance], roles: list[str]) -> int:
     return count_turns([Utterance(u.start, r, u.text, u.end) for u, r in zip(us, roles)], ROLES)
 
@@ -98,6 +105,16 @@ def evaluate(sessions: dict[str, list[Utterance]]) -> dict:
         model = RoleModel().fit([labelled(sessions[n]) for n in train_names])
         scale = learn_scale(sessions, train_names)
         scales.append(scale)
+        # The alternation baseline gets the same fairness: a scale learned
+        # on the training families only.
+        ag = aa = 0
+        for n in train_names:
+            pairs = labelled(sessions[n])
+            if len(pairs) >= 10:
+                us = [u for u, _ in pairs]
+                ag += turns(us, [r for _, r in pairs])
+                aa += turns(us, alternating_roles(us))
+        alt_scale = ag / aa if aa else 1.0
         for name, us in sessions.items():
             if fold_of[name.split("/")[-1]] != k:
                 continue
@@ -110,12 +127,17 @@ def evaluate(sessions: dict[str, list[Utterance]]) -> dict:
             right += sum(1 for a, b in zip(gold_roles, blind_roles) if a == b)
             total += len(kept)
             gold, raw, naive = turns(kept, gold_roles), turns(kept, blind_roles), turns(kept, naive_roles(kept))
+            alt = turns(kept, alternating_roles(kept))
+            alt_scaled = round(alt * alt_scale)
             blind = round(raw * scale)
             hours = max(1e-9, (max(u.finish for u in kept) - min(u.start for u in kept)) / 3600)
             rows.append({"session": name, "gold": gold, "blind": blind, "blind_uncalibrated": raw, "naive": naive,
                          "error_pct": round(100 * (blind - gold) / gold, 1) if gold else None,
                          "naive_error_pct": round(100 * (naive - gold) / gold, 1) if gold else None,
-                         "gold_per_hour": round(gold / hours, 1), "blind_per_hour": round(blind / hours, 1)})
+                         "alternating": alt, "alternating_scaled": alt_scaled,
+                         "alternating_scaled_error_pct": round(100 * (alt_scaled - gold) / gold, 1) if gold else None,
+                         "gold_per_hour": round(gold / hours, 1), "blind_per_hour": round(blind / hours, 1),
+                         "naive_per_hour": round(naive / hours, 1), "alternating_scaled_per_hour": round(alt_scaled / hours, 1)})
     errs = [abs(r["error_pct"]) for r in rows if r["error_pct"] is not None]
     nerrs = [abs(r["naive_error_pct"]) for r in rows if r["naive_error_pct"] is not None]
     g, b = [r["gold_per_hour"] for r in rows], [r["blind_per_hour"] for r in rows]
@@ -139,6 +161,14 @@ def evaluate(sessions: dict[str, list[Utterance]]) -> dict:
         "naive_median_abs_session_error_pct": round(statistics.median(nerrs), 1),
         "sessions_within_20pct": sum(1 for e in errs if e <= 20),
         "correlation_per_hour": round(statistics.correlation(g, b), 3),
+        "naive_correlation_per_hour": round(statistics.correlation(g, [r["naive_per_hour"] for r in rows]), 3),
+        "alternating_total_error_pct": round(100 * (sum(r["alternating"] for r in rows) - tg) / tg, 1),
+        "alternating_scaled_total_error_pct": round(100 * (sum(r["alternating_scaled"] for r in rows) - tg) / tg, 1),
+        "alternating_scaled_median_abs_session_error_pct": round(statistics.median(
+            abs(r["alternating_scaled_error_pct"]) for r in rows if r["alternating_scaled_error_pct"] is not None), 1),
+        "alternating_scaled_sessions_within_20pct": sum(1 for r in rows if r["alternating_scaled_error_pct"] is not None and abs(r["alternating_scaled_error_pct"]) <= 20),
+        "alternating_scaled_correlation_per_hour": round(statistics.correlation(g, [r["alternating_scaled_per_hour"] for r in rows]), 3),
+        "pause_note": "Forced alignment leaves most gaps between lines at zero on this corpus, so pause features are exercised only weakly here; the Bee session in harness/beeloop is where real pauses are tested.",
         "per_session": rows,
     }
 
@@ -158,6 +188,9 @@ def main() -> int:
     print(f"before calibration: {r['turns_blind_uncalibrated']} ({r['uncalibrated_total_error_pct']:+}%), median session error {r['uncalibrated_median_abs_session_error_pct']}%; scale by fold {r['turn_scale_by_fold']}")
     print(f"naive baseline (pause = speaker change): {r['turns_naive']} ({r['naive_total_error_pct']:+}%), "
           f"median session error {r['naive_median_abs_session_error_pct']}%")
+    print(f"alternation baseline (every line a new speaker), scaled on training families: {r['alternating_scaled_total_error_pct']:+}% total, "
+          f"median session error {r['alternating_scaled_median_abs_session_error_pct']}%, {r['alternating_scaled_sessions_within_20pct']}/{r['sessions']} within 20%, "
+          f"per-hour correlation {r['alternating_scaled_correlation_per_hour']}")
     out = {"corpus": "CHILDES Gleason, doi 10.21415/T5101R, TalkBank ground rules",
            "folds": f"{FOLDS} folds by child; no family is scored by a model that saw it",
            "model": "averaged perceptron, serve_return.blind", **r}

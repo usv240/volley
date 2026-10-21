@@ -266,7 +266,7 @@ def cmd_live(cli: BeeCli, args) -> int:
     if h is None:
         print("run volley setup first")
         return 2
-    return live_run(cli, h, seconds=args.seconds)
+    return live_run(cli, h, seconds=args.seconds, nudge=args.nudge, speak=args.say)
 
 
 def cmd_verify(args) -> int:
@@ -303,6 +303,8 @@ def main(argv: list[str] | None = None, cli: BeeCli | None = None) -> int:
     e.add_argument("--out", default="docs/BEE_LIVE.md")
     l = sub.add_parser("live", help="count turns as they happen")
     l.add_argument("--seconds", type=int, default=600)
+    l.add_argument("--nudge", action="store_true", help="if your usual best hour goes quiet, put one sentence into your Bee then")
+    l.add_argument("--say", action="store_true", help="with --nudge, also speak it through this computer's speaker")
     sh = sub.add_parser("share", help="a read-only link for a home visitor or a coach")
     sh.add_argument("--revoke", action="store_true", help="end the current share")
     v = sub.add_parser("verify", help="recompute every published number from committed inputs")

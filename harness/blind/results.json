@@ -25,6 +25,13 @@
  "naive_median_abs_session_error_pct": 92.2,
  "sessions_within_20pct": 49,
  "correlation_per_hour": 0.874,
+ "naive_correlation_per_hour": -0.431,
+ "alternating_total_error_pct": 104.3,
+ "alternating_scaled_total_error_pct": 0.3,
+ "alternating_scaled_median_abs_session_error_pct": 13.4,
+ "alternating_scaled_sessions_within_20pct": 40,
+ "alternating_scaled_correlation_per_hour": 0.766,
+ "pause_note": "Forced alignment leaves most gaps between lines at zero on this corpus, so pause features are exercised only weakly here; the Bee session in harness/beeloop is where real pauses are tested.",
  "per_session": [
   {
    "session": "Dinner/andy",
@@ -34,8 +41,13 @@
    "naive": 28,
    "error_pct": -2.7,
    "naive_error_pct": -84.7,
+   "alternating": 368,
+   "alternating_scaled": 179,
+   "alternating_scaled_error_pct": -2.2,
    "gold_per_hour": 543.3,
-   "blind_per_hour": 528.4
+   "blind_per_hour": 528.4,
+   "naive_per_hour": 83.1,
+   "alternating_scaled_per_hour": 531.4
   },
   {
    "session": "Dinner/guy",
@@ -45,8 +57,13 @@
    "naive": 64,
    "error_pct": 4.8,
    "naive_error_pct": -65.6,
+   "alternating": 420,
+   "alternating_scaled": 205,
+   "alternating_scaled_error_pct": 10.2,
    "gold_per_hour": 611.3,
-   "blind_per_hour": 640.9
+   "blind_per_hour": 640.9,
+   "naive_per_hour": 210.3,
+   "alternating_scaled_per_hour": 673.8
   },
   {
    "session": "Dinner/martin",
@@ -56,8 +73,13 @@
    "naive": 35,
    "error_pct": 14.5,
    "naive_error_pct": -92.8,
+   "alternating": 1113,
+   "alternating_scaled": 543,
+   "alternating_scaled_error_pct": 11.0,
    "gold_per_hour": 667.1,
-   "blind_per_hour": 763.9
+   "blind_per_hour": 763.9,
+   "naive_per_hour": 47.7,
+   "alternating_scaled_per_hour": 740.7
   },
   {
    "session": "Dinner/theresa",
@@ -67,8 +89,13 @@
    "naive": 11,
    "error_pct": -19.0,
    "naive_error_pct": -95.7,
+   "alternating": 411,
+   "alternating_scaled": 200,
+   "alternating_scaled_error_pct": -22.5,
    "gold_per_hour": 854.8,
-   "blind_per_hour": 692.4
+   "blind_per_hour": 692.4,
+   "naive_per_hour": 36.4,
+   "alternating_scaled_per_hour": 662.6
   },
   {
    "session": "Father/andy",
@@ -78,8 +105,13 @@
    "naive": 30,
    "error_pct": 19.7,
    "naive_error_pct": -89.8,
+   "alternating": 650,
+   "alternating_scaled": 317,
+   "alternating_scaled_error_pct": 7.8,
    "gold_per_hour": 640.3,
-   "blind_per_hour": 766.6
+   "blind_per_hour": 766.6,
+   "naive_per_hour": 65.3,
+   "alternating_scaled_per_hour": 690.4
   },
   {
    "session": "Father/guy",
@@ -89,8 +121,13 @@
    "naive": 16,
    "error_pct": -5.1,
    "naive_error_pct": -95.7,
+   "alternating": 767,
+   "alternating_scaled": 374,
+   "alternating_scaled_error_pct": 1.1,
    "gold_per_hour": 645.5,
-   "blind_per_hour": 612.4
+   "blind_per_hour": 612.4,
+   "naive_per_hour": 27.9,
+   "alternating_scaled_per_hour": 652.5
   },
   {
    "session": "Father/martin",
@@ -100,8 +137,13 @@
    "naive": 22,
    "error_pct": 19.9,
    "naive_error_pct": -90.0,
+   "alternating": 510,
+   "alternating_scaled": 249,
+   "alternating_scaled_error_pct": 12.7,
    "gold_per_hour": 453.0,
-   "blind_per_hour": 543.2
+   "blind_per_hour": 543.2,
+   "naive_per_hour": 45.1,
+   "alternating_scaled_per_hour": 510.4
   },
   {
    "session": "Father/theresa",
@@ -111,8 +153,13 @@
    "naive": 46,
    "error_pct": -19.2,
    "naive_error_pct": -90.9,
+   "alternating": 831,
+   "alternating_scaled": 405,
+   "alternating_scaled_error_pct": -19.8,
    "gold_per_hour": 990.5,
-   "blind_per_hour": 800.3
+   "blind_per_hour": 800.3,
+   "naive_per_hour": 90.2,
+   "alternating_scaled_per_hour": 794.4
   },
   {
    "session": "Mother/andy",
@@ -122,8 +169,13 @@
    "naive": 19,
    "error_pct": 1.6,
    "naive_error_pct": -93.9,
+   "alternating": 547,
+   "alternating_scaled": 267,
+   "alternating_scaled_error_pct": -13.6,
    "gold_per_hour": 668.2,
-   "blind_per_hour": 679.1
+   "blind_per_hour": 679.1,
+   "naive_per_hour": 41.1,
+   "alternating_scaled_per_hour": 577.4
   },
   {
    "session": "Mother/guy",
@@ -133,8 +185,13 @@
    "naive": 424,
    "error_pct": -9.7,
    "naive_error_pct": 11.0,
+   "alternating": 852,
+   "alternating_scaled": 416,
+   "alternating_scaled_error_pct": 8.9,
    "gold_per_hour": 546.1,
-   "blind_per_hour": 493.2
+   "blind_per_hour": 493.2,
+   "naive_per_hour": 606.2,
+   "alternating_scaled_per_hour": 594.7
   },
   {
    "session": "Mother/martin",
@@ -144,8 +201,13 @@
    "naive": 26,
    "error_pct": 9.6,
    "naive_error_pct": -94.2,
+   "alternating": 842,
+   "alternating_scaled": 411,
+   "alternating_scaled_error_pct": -8.1,
    "gold_per_hour": 928.5,
-   "blind_per_hour": 1017.8
+   "blind_per_hour": 1017.8,
+   "naive_per_hour": 54.0,
+   "alternating_scaled_per_hour": 853.7
   },
   {
    "session": "Dinner/bobby",
@@ -155,8 +217,13 @@
    "naive": 149,
    "error_pct": 32.4,
    "naive_error_pct": -58.4,
+   "alternating": 873,
+   "alternating_scaled": 421,
+   "alternating_scaled_error_pct": 17.6,
    "gold_per_hour": 480.0,
-   "blind_per_hour": 635.5
+   "blind_per_hour": 635.5,
+   "naive_per_hour": 199.8,
+   "alternating_scaled_per_hour": 564.5
   },
   {
    "session": "Dinner/helen",
@@ -166,8 +233,13 @@
    "naive": 135,
    "error_pct": -1.4,
    "naive_error_pct": -62.4,
+   "alternating": 697,
+   "alternating_scaled": 336,
+   "alternating_scaled_error_pct": -6.4,
    "gold_per_hour": 692.7,
-   "blind_per_hour": 683.0
+   "blind_per_hour": 683.0,
+   "naive_per_hour": 260.5,
+   "alternating_scaled_per_hour": 648.3
   },
   {
    "session": "Father/bobby",
@@ -177,8 +249,13 @@
    "naive": 23,
    "error_pct": 5.5,
    "naive_error_pct": -95.3,
+   "alternating": 960,
+   "alternating_scaled": 463,
+   "alternating_scaled_error_pct": -5.5,
    "gold_per_hour": 1036.1,
-   "blind_per_hour": 1093.2
+   "blind_per_hour": 1093.2,
+   "naive_per_hour": 48.6,
+   "alternating_scaled_per_hour": 979.0
   },
   {
    "session": "Father/helen",
@@ -188,8 +265,13 @@
    "naive": 12,
    "error_pct": -12.7,
    "naive_error_pct": -97.9,
+   "alternating": 872,
+   "alternating_scaled": 420,
+   "alternating_scaled_error_pct": -25.7,
    "gold_per_hour": 1156.5,
-   "blind_per_hour": 1009.1
+   "blind_per_hour": 1009.1,
+   "naive_per_hour": 24.6,
+   "alternating_scaled_per_hour": 859.7
   },
   {
    "session": "Father/nanette",
@@ -199,8 +281,13 @@
    "naive": 14,
    "error_pct": -4.2,
    "naive_error_pct": -93.4,
+   "alternating": 458,
+   "alternating_scaled": 221,
+   "alternating_scaled_error_pct": 4.2,
    "gold_per_hour": 533.0,
-   "blind_per_hour": 510.4
+   "blind_per_hour": 510.4,
+   "naive_per_hour": 35.2,
+   "alternating_scaled_per_hour": 555.7
   },
   {
    "session": "Father/ursula",
@@ -210,8 +297,13 @@
    "naive": 24,
    "error_pct": -6.5,
    "naive_error_pct": -96.1,
+   "alternating": 1069,
+   "alternating_scaled": 515,
+   "alternating_scaled_error_pct": -16.3,
    "gold_per_hour": 1238.1,
-   "blind_per_hour": 1157.6
+   "blind_per_hour": 1157.6,
+   "naive_per_hour": 48.3,
+   "alternating_scaled_per_hour": 1036.8
   },
   {
    "session": "Mother/helen",
@@ -221,8 +313,13 @@
    "naive": 11,
    "error_pct": -7.7,
    "naive_error_pct": -98.2,
+   "alternating": 987,
+   "alternating_scaled": 476,
+   "alternating_scaled_error_pct": -22.3,
    "gold_per_hour": 1101.9,
-   "blind_per_hour": 1017.4
+   "blind_per_hour": 1017.4,
+   "naive_per_hour": 19.8,
+   "alternating_scaled_per_hour": 855.7
   },
   {
    "session": "Mother/nanette",
@@ -232,8 +329,13 @@
    "naive": 11,
    "error_pct": 8.3,
    "naive_error_pct": -96.2,
+   "alternating": 707,
+   "alternating_scaled": 341,
+   "alternating_scaled_error_pct": 17.6,
    "gold_per_hour": 588.8,
-   "blind_per_hour": 637.6
+   "blind_per_hour": 637.6,
+   "naive_per_hour": 22.3,
+   "alternating_scaled_per_hour": 692.4
   },
   {
    "session": "Dinner/charlie",
@@ -243,8 +345,13 @@
    "naive": 49,
    "error_pct": 16.3,
    "naive_error_pct": -86.5,
+   "alternating": 885,
+   "alternating_scaled": 436,
+   "alternating_scaled_error_pct": 20.4,
    "gold_per_hour": 723.4,
-   "blind_per_hour": 841.3
+   "blind_per_hour": 841.3,
+   "naive_per_hour": 97.9,
+   "alternating_scaled_per_hour": 871.3
   },
   {
    "session": "Dinner/isadora",
@@ -254,8 +361,13 @@
    "naive": 34,
    "error_pct": 1.1,
    "naive_error_pct": -80.5,
+   "alternating": 332,
+   "alternating_scaled": 164,
+   "alternating_scaled_error_pct": -5.7,
    "gold_per_hour": 787.1,
-   "blind_per_hour": 796.1
+   "blind_per_hour": 796.1,
+   "naive_per_hour": 153.8,
+   "alternating_scaled_per_hour": 741.9
   },
   {
    "session": "Dinner/olivia",
@@ -265,8 +377,13 @@
    "naive": 24,
    "error_pct": 17.4,
    "naive_error_pct": -83.3,
+   "alternating": 345,
+   "alternating_scaled": 170,
+   "alternating_scaled_error_pct": 18.1,
    "gold_per_hour": 623.1,
-   "blind_per_hour": 731.3
+   "blind_per_hour": 731.3,
+   "naive_per_hour": 103.9,
+   "alternating_scaled_per_hour": 735.6
   },
   {
    "session": "Dinner/victor",
@@ -276,8 +393,13 @@
    "naive": 58,
    "error_pct": 7.3,
    "naive_error_pct": -86.8,
+   "alternating": 858,
+   "alternating_scaled": 423,
+   "alternating_scaled_error_pct": -3.9,
    "gold_per_hour": 850.5,
-   "blind_per_hour": 912.3
+   "blind_per_hour": 912.3,
+   "naive_per_hour": 112.1,
+   "alternating_scaled_per_hour": 817.6
   },
   {
    "session": "Father/charlie",
@@ -287,8 +409,13 @@
    "naive": 10,
    "error_pct": -7.2,
    "naive_error_pct": -97.9,
+   "alternating": 900,
+   "alternating_scaled": 444,
+   "alternating_scaled_error_pct": -6.1,
    "gold_per_hour": 1127.9,
-   "blind_per_hour": 1046.8
+   "blind_per_hour": 1046.8,
+   "naive_per_hour": 23.8,
+   "alternating_scaled_per_hour": 1058.8
   },
   {
    "session": "Father/isadora",
@@ -298,8 +425,13 @@
    "naive": 45,
    "error_pct": 18.6,
    "naive_error_pct": -92.0,
+   "alternating": 1399,
+   "alternating_scaled": 690,
+   "alternating_scaled_error_pct": 21.9,
    "gold_per_hour": 936.6,
-   "blind_per_hour": 1110.4
+   "blind_per_hour": 1110.4,
+   "naive_per_hour": 74.5,
+   "alternating_scaled_per_hour": 1141.8
   },
   {
    "session": "Father/olivia",
@@ -309,8 +441,13 @@
    "naive": 22,
    "error_pct": 4.1,
    "naive_error_pct": -95.2,
+   "alternating": 1010,
+   "alternating_scaled": 498,
+   "alternating_scaled_error_pct": 7.8,
    "gold_per_hour": 829.5,
-   "blind_per_hour": 863.7
+   "blind_per_hour": 863.7,
+   "naive_per_hour": 39.5,
+   "alternating_scaled_per_hour": 894.2
   },
   {
    "session": "Father/victor",
@@ -320,8 +457,13 @@
    "naive": 14,
    "error_pct": 3.6,
    "naive_error_pct": -96.6,
+   "alternating": 779,
+   "alternating_scaled": 384,
+   "alternating_scaled_error_pct": -6.6,
    "gold_per_hour": 896.4,
-   "blind_per_hour": 929.1
+   "blind_per_hour": 929.1,
+   "naive_per_hour": 30.5,
+   "alternating_scaled_per_hour": 837.5
   },
   {
    "session": "Mother/charlie",
@@ -331,8 +473,13 @@
    "naive": 9,
    "error_pct": -12.0,
    "naive_error_pct": -98.4,
+   "alternating": 965,
+   "alternating_scaled": 476,
+   "alternating_scaled_error_pct": -15.0,
    "gold_per_hour": 1104.9,
-   "blind_per_hour": 972.7
+   "blind_per_hour": 972.7,
+   "naive_per_hour": 17.8,
+   "alternating_scaled_per_hour": 939.2
   },
   {
    "session": "Mother/isadora",
@@ -342,8 +489,13 @@
    "naive": 23,
    "error_pct": 15.0,
    "naive_error_pct": -94.9,
+   "alternating": 1021,
+   "alternating_scaled": 504,
+   "alternating_scaled_error_pct": 12.5,
    "gold_per_hour": 1003.9,
-   "blind_per_hour": 1154.0
+   "blind_per_hour": 1154.0,
+   "naive_per_hour": 51.5,
+   "alternating_scaled_per_hour": 1129.4
   },
   {
    "session": "Dinner/david",
@@ -353,8 +505,13 @@
    "naive": 40,
    "error_pct": 2.5,
    "naive_error_pct": -86.0,
+   "alternating": 649,
+   "alternating_scaled": 329,
+   "alternating_scaled_error_pct": 15.4,
    "gold_per_hour": 724.5,
-   "blind_per_hour": 742.3
+   "blind_per_hour": 742.3,
+   "naive_per_hour": 101.7,
+   "alternating_scaled_per_hour": 836.4
   },
   {
    "session": "Dinner/john",
@@ -364,8 +521,13 @@
    "naive": 68,
    "error_pct": 39.6,
    "naive_error_pct": -57.2,
+   "alternating": 560,
+   "alternating_scaled": 284,
+   "alternating_scaled_error_pct": 78.6,
    "gold_per_hour": 498.0,
-   "blind_per_hour": 695.3
+   "blind_per_hour": 695.3,
+   "naive_per_hour": 213.0,
+   "alternating_scaled_per_hour": 889.4
   },
   {
    "session": "Dinner/patricia",
@@ -375,8 +537,13 @@
    "naive": 114,
    "error_pct": 53.2,
    "naive_error_pct": -59.3,
+   "alternating": 995,
+   "alternating_scaled": 504,
+   "alternating_scaled_error_pct": 80.0,
    "gold_per_hour": 431.3,
-   "blind_per_hour": 660.8
+   "blind_per_hour": 660.8,
+   "naive_per_hour": 175.6,
+   "alternating_scaled_per_hour": 776.3
   },
   {
    "session": "Dinner/wanda",
@@ -386,8 +553,13 @@
    "naive": 124,
    "error_pct": 7.4,
    "naive_error_pct": -61.8,
+   "alternating": 740,
+   "alternating_scaled": 375,
+   "alternating_scaled_error_pct": 15.4,
    "gold_per_hour": 569.2,
-   "blind_per_hour": 611.2
+   "blind_per_hour": 611.2,
+   "naive_per_hour": 217.2,
+   "alternating_scaled_per_hour": 656.8
   },
   {
    "session": "Father/david",
@@ -397,8 +569,13 @@
    "naive": 4,
    "error_pct": 15.9,
    "naive_error_pct": -90.9,
+   "alternating": 80,
+   "alternating_scaled": 41,
+   "alternating_scaled_error_pct": -6.8,
    "gold_per_hour": 855.9,
-   "blind_per_hour": 992.1
+   "blind_per_hour": 992.1,
+   "naive_per_hour": 77.8,
+   "alternating_scaled_per_hour": 797.5
   },
   {
    "session": "Father/john",
@@ -408,8 +585,13 @@
    "naive": 34,
    "error_pct": 16.7,
    "naive_error_pct": -88.2,
+   "alternating": 760,
+   "alternating_scaled": 385,
+   "alternating_scaled_error_pct": 34.1,
    "gold_per_hour": 610.1,
-   "blind_per_hour": 712.1
+   "blind_per_hour": 712.1,
+   "naive_per_hour": 72.3,
+   "alternating_scaled_per_hour": 818.4
   },
   {
    "session": "Father/patricia",
@@ -419,8 +601,13 @@
    "naive": 23,
    "error_pct": 5.7,
    "naive_error_pct": -94.3,
+   "alternating": 875,
+   "alternating_scaled": 444,
+   "alternating_scaled_error_pct": 9.1,
    "gold_per_hour": 908.3,
-   "blind_per_hour": 959.6
+   "blind_per_hour": 959.6,
+   "naive_per_hour": 51.3,
+   "alternating_scaled_per_hour": 990.8
   },
   {
    "session": "Mother/david",
@@ -430,8 +617,13 @@
    "naive": 20,
    "error_pct": 9.5,
    "naive_error_pct": -96.0,
+   "alternating": 1174,
+   "alternating_scaled": 595,
+   "alternating_scaled_error_pct": 20.0,
    "gold_per_hour": 999.7,
-   "blind_per_hour": 1094.4
+   "blind_per_hour": 1094.4,
+   "naive_per_hour": 40.3,
+   "alternating_scaled_per_hour": 1199.2
   },
   {
    "session": "Mother/john",
@@ -441,8 +633,13 @@
    "naive": 31,
    "error_pct": 6.3,
    "naive_error_pct": -91.1,
+   "alternating": 858,
+   "alternating_scaled": 435,
+   "alternating_scaled_error_pct": 24.3,
    "gold_per_hour": 679.7,
-   "blind_per_hour": 722.4
+   "blind_per_hour": 722.4,
+   "naive_per_hour": 60.2,
+   "alternating_scaled_per_hour": 844.7
   },
   {
    "session": "Mother/patricia",
@@ -452,8 +649,13 @@
    "naive": 16,
    "error_pct": -0.7,
    "naive_error_pct": -97.2,
+   "alternating": 980,
+   "alternating_scaled": 497,
+   "alternating_scaled_error_pct": -13.4,
    "gold_per_hour": 1058.3,
-   "blind_per_hour": 1050.9
+   "blind_per_hour": 1050.9,
+   "naive_per_hour": 29.5,
+   "alternating_scaled_per_hour": 916.3
   },
   {
    "session": "Mother/wanda",
@@ -463,8 +665,13 @@
    "naive": 242,
    "error_pct": -5.0,
    "naive_error_pct": -20.1,
+   "alternating": 679,
+   "alternating_scaled": 344,
+   "alternating_scaled_error_pct": 13.5,
    "gold_per_hour": 171.2,
-   "blind_per_hour": 162.7
+   "blind_per_hour": 162.7,
+   "naive_per_hour": 136.7,
+   "alternating_scaled_per_hour": 194.3
   },
   {
    "session": "Dinner/eddie",
@@ -474,8 +681,13 @@
    "naive": 27,
    "error_pct": -14.6,
    "naive_error_pct": -92.3,
+   "alternating": 633,
+   "alternating_scaled": 304,
+   "alternating_scaled_error_pct": -12.9,
    "gold_per_hour": 1002.6,
-   "blind_per_hour": 856.1
+   "blind_per_hour": 856.1,
+   "naive_per_hour": 77.6,
+   "alternating_scaled_per_hour": 873.3
   },
   {
    "session": "Dinner/katie",
@@ -485,8 +697,13 @@
    "naive": 103,
    "error_pct": -11.4,
    "naive_error_pct": -65.6,
+   "alternating": 624,
+   "alternating_scaled": 300,
+   "alternating_scaled_error_pct": 0.3,
    "gold_per_hour": 744.3,
-   "blind_per_hour": 659.7
+   "blind_per_hour": 659.7,
+   "naive_per_hour": 256.4,
+   "alternating_scaled_per_hour": 746.8
   },
   {
    "session": "Dinner/william",
@@ -496,8 +713,13 @@
    "naive": 51,
    "error_pct": -16.1,
    "naive_error_pct": -89.3,
+   "alternating": 791,
+   "alternating_scaled": 380,
+   "alternating_scaled_error_pct": -20.3,
    "gold_per_hour": 715.7,
-   "blind_per_hour": 600.1
+   "blind_per_hour": 600.1,
+   "naive_per_hour": 76.5,
+   "alternating_scaled_per_hour": 570.1
   },
   {
    "session": "Father/eddie",
@@ -507,8 +729,13 @@
    "naive": 18,
    "error_pct": -15.9,
    "naive_error_pct": -96.7,
+   "alternating": 975,
+   "alternating_scaled": 468,
+   "alternating_scaled_error_pct": -14.3,
    "gold_per_hour": 1085.6,
-   "blind_per_hour": 912.6
+   "blind_per_hour": 912.6,
+   "naive_per_hour": 35.8,
+   "alternating_scaled_per_hour": 930.5
   },
   {
    "session": "Father/katie",
@@ -518,8 +745,13 @@
    "naive": 28,
    "error_pct": -18.4,
    "naive_error_pct": -92.0,
+   "alternating": 549,
+   "alternating_scaled": 264,
+   "alternating_scaled_error_pct": -24.1,
    "gold_per_hour": 1035.0,
-   "blind_per_hour": 844.7
+   "blind_per_hour": 844.7,
+   "naive_per_hour": 83.3,
+   "alternating_scaled_per_hour": 785.2
   },
   {
    "session": "Father/richard",
@@ -529,8 +761,13 @@
    "naive": 30,
    "error_pct": -0.2,
    "naive_error_pct": -94.6,
+   "alternating": 1081,
+   "alternating_scaled": 519,
+   "alternating_scaled_error_pct": -6.1,
    "gold_per_hour": 1104.9,
-   "blind_per_hour": 1102.9
+   "blind_per_hour": 1102.9,
+   "naive_per_hour": 59.9,
+   "alternating_scaled_per_hour": 1036.9
   },
   {
    "session": "Mother/katie",
@@ -540,8 +777,13 @@
    "naive": 1,
    "error_pct": -10.3,
    "naive_error_pct": -99.4,
+   "alternating": 248,
+   "alternating_scaled": 119,
+   "alternating_scaled_error_pct": -27.9,
    "gold_per_hour": 1326.1,
-   "blind_per_hour": 1189.5
+   "blind_per_hour": 1189.5,
+   "naive_per_hour": 8.0,
+   "alternating_scaled_per_hour": 956.4
   },
   {
    "session": "Dinner/laurel",
@@ -551,8 +793,13 @@
    "naive": 28,
    "error_pct": 14.2,
    "naive_error_pct": -90.3,
+   "alternating": 566,
+   "alternating_scaled": 277,
+   "alternating_scaled_error_pct": -4.2,
    "gold_per_hour": 761.0,
-   "blind_per_hour": 868.9
+   "blind_per_hour": 868.9,
+   "naive_per_hour": 73.7,
+   "alternating_scaled_per_hour": 729.4
   },
   {
    "session": "Dinner/susan",
@@ -562,8 +809,13 @@
    "naive": 45,
    "error_pct": 4.9,
    "naive_error_pct": -87.0,
+   "alternating": 882,
+   "alternating_scaled": 431,
+   "alternating_scaled_error_pct": 24.6,
    "gold_per_hour": 573.6,
-   "blind_per_hour": 601.8
+   "blind_per_hour": 601.8,
+   "naive_per_hour": 74.6,
+   "alternating_scaled_per_hour": 714.5
   },
   {
    "session": "Dinner/xavia",
@@ -573,8 +825,13 @@
    "naive": 27,
    "error_pct": -25.3,
    "naive_error_pct": -92.5,
+   "alternating": 578,
+   "alternating_scaled": 282,
+   "alternating_scaled_error_pct": -21.4,
    "gold_per_hour": 994.2,
-   "blind_per_hour": 742.2
+   "blind_per_hour": 742.2,
+   "naive_per_hour": 74.8,
+   "alternating_scaled_per_hour": 780.9
   },
   {
    "session": "Father/frank",
@@ -584,8 +841,13 @@
    "naive": 12,
    "error_pct": -3.7,
    "naive_error_pct": -96.8,
+   "alternating": 668,
+   "alternating_scaled": 326,
+   "alternating_scaled_error_pct": -12.8,
    "gold_per_hour": 728.2,
-   "blind_per_hour": 701.0
+   "blind_per_hour": 701.0,
+   "naive_per_hour": 23.4,
+   "alternating_scaled_per_hour": 634.8
   },
   {
    "session": "Father/laurel",
@@ -595,8 +857,13 @@
    "naive": 35,
    "error_pct": 29.0,
    "naive_error_pct": -93.5,
+   "alternating": 1171,
+   "alternating_scaled": 572,
+   "alternating_scaled_error_pct": 5.5,
    "gold_per_hour": 1095.3,
-   "blind_per_hour": 1412.6
+   "blind_per_hour": 1412.6,
+   "naive_per_hour": 70.7,
+   "alternating_scaled_per_hour": 1156.0
   },
   {
    "session": "Father/susan",
@@ -606,8 +873,13 @@
    "naive": 54,
    "error_pct": -5.9,
    "naive_error_pct": -90.6,
+   "alternating": 1278,
+   "alternating_scaled": 624,
+   "alternating_scaled_error_pct": 8.3,
    "gold_per_hour": 835.1,
-   "blind_per_hour": 785.8
+   "blind_per_hour": 785.8,
+   "naive_per_hour": 78.3,
+   "alternating_scaled_per_hour": 904.6
   },
   {
    "session": "Mother/frank",
@@ -617,8 +889,13 @@
    "naive": 11,
    "error_pct": -6.4,
    "naive_error_pct": -97.4,
+   "alternating": 733,
+   "alternating_scaled": 358,
+   "alternating_scaled_error_pct": -15.8,
    "gold_per_hour": 920.5,
-   "blind_per_hour": 862.0
+   "blind_per_hour": 862.0,
+   "naive_per_hour": 23.8,
+   "alternating_scaled_per_hour": 775.4
   }
  ]
 }
