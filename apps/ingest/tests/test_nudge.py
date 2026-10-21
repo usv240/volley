@@ -17,6 +17,17 @@ from volley_ingest.household import Household
 from volley_ingest.live import run
 
 
+def _from(first, then):
+    """A clock that reads `first` once (when watching starts), then `then`."""
+    seen = []
+
+    def clock():
+        seen.append(1)
+        return first if len(seen) == 1 else then
+
+    return clock
+
+
 def write_day(d, date, hours):
     (d / f"{date}.json").write_text(json.dumps({"date": date, "hours": [
         {"hour": hr, "turns": t, "utterances_child": c} for hr, t, c in hours]}), encoding="utf8")
@@ -83,7 +94,44 @@ def test_without_reminder_consent_a_nudge_is_only_printed(tmp_path, monkeypatch,
     write_day(counts, "2026-10-20", [(18, 24, 8)])
     created = []
     run(BeeCli(runner=lambda a: (created.append(a), (0, "{}", ""))[1]), Household(blind=True), seconds=1, lines=iter([]),
-        nudge=True, clock=lambda: datetime(2026, 10, 21, 18, 30), poll_seconds=0.01)
+        nudge=True, clock=_from(datetime(2026, 10, 21, 18, 0), datetime(2026, 10, 21, 18, 30)), poll_seconds=0.01)
     assert not [a for a in created if "todos" in a]
     out = capsys.readouterr().out
     assert "reminders are off" in out and "nudge at 18:30" in out
+
+
+def test_blind_live_counting_reads_roles_so_a_lively_hour_is_not_nudged(tmp_path, monkeypatch, capsys):
+    """Every speaker arrives Unknown. Before roles were read live, a blind
+    household counted zero turns and every usual hour looked quiet."""
+    monkeypatch.setenv("VOLLEY_HOME", str(tmp_path))
+    counts = tmp_path / "counts"
+    counts.mkdir()
+    write_day(counts, "2026-10-20", [(18, 12, 8)])
+    lines = []
+    t = 1_790_000_000.0
+    talk = [("What did you build there?", 1.8), ("A tower!", 0.8), ("Is it taller than you?", 1.8), ("Yes taller!", 0.8)] * 6
+    for i, (text, _) in enumerate(talk):
+        lines.append(json.dumps({"type": "new-utterance", "utterance": {"text": text, "speaker": "Unknown", "spoken_at": int((t + 3 * i) * 1000)}}))
+    created = []
+    # The clock moves a minute per reading, so the hour fills as it would.
+    from datetime import timedelta
+    from itertools import count
+
+    tick = count()
+    clock = lambda: datetime(2026, 10, 21, 18, 0) + timedelta(minutes=min(next(tick), 59))
+    run(BeeCli(runner=lambda a: (created.append(a), (0, "{}", ""))[1]), Household(blind=True, write_reminders_to_bee=True),
+        seconds=2, lines=iter(lines), nudge=True, clock=clock, poll_seconds=0.01)
+    out = capsys.readouterr().out
+    assert "turns this hour" in out
+    assert not [a for a in created if "todos" in a], "a lively hour must not be nudged"
+
+
+def test_an_hour_not_heard_from_its_start_is_never_called_quiet(tmp_path, monkeypatch):
+    monkeypatch.setenv("VOLLEY_HOME", str(tmp_path))
+    counts = tmp_path / "counts"
+    counts.mkdir()
+    write_day(counts, "2026-10-20", [(18, 24, 8)])
+    created = []
+    run(BeeCli(runner=lambda a: (created.append(a), (0, "{}", ""))[1]), Household(blind=True, write_reminders_to_bee=True),
+        seconds=1, lines=iter([]), nudge=True, clock=lambda: datetime(2026, 10, 21, 18, 30), poll_seconds=0.01)
+    assert not [a for a in created if "todos" in a]

@@ -1,4 +1,4 @@
-"""Could the label-free count tell when no child is there? Measured, not shipped.
+"""Could the label-free count tell when no child is there? Measured, then shipped as an opt-in.
 
     python harness/blind/presence.py
 
@@ -68,7 +68,7 @@ result = {"corpus": "CHILDES Gleason, doi 10.21415/T5101R", "window_seconds": W,
           "thresholds": ths,
           "real_windows": nr, "real_windows_kept_pct": round(100 * kept / nr, 1), "true_turns_lost_pct": round(100 * lost / tot, 1),
           "adult_only_windows": na, "adult_only_windows_refused_pct": round(100 * refused / na, 1),
-          "shipped": False,
+          "shipped": "opt-in since 2026-10-21: volley setup --only-with-child yes",
           "why_not": "it trades false turns for lost true ones; one speaker label from the Bee would remove both"}
 (HERE / "presence.json").write_text(json.dumps(result, indent=1), encoding="utf-8")
 print(json.dumps({k: v for k, v in result.items() if k != "thresholds"}, indent=1))

@@ -128,7 +128,7 @@ def test_the_note_uses_bedrock_when_the_phrasing_obeys_the_fact():
 
             hour = re.search(r"hour: (\d+):00 \(([^)]+)\)", user)
             value = re.search(r"value: (\S+)", user).group(1)
-            return f"Around {hour.group(2)} you and Asha traded {value} turns. Keep going."
+            return f"Around {hour.group(2)} you and Asha traded {value} turns. Tomorrow, ask one question then."
         return "Something without numbers."
 
     app = build_app(store=MemoryStore(), seed=True, note_deps={"create_text": create, "models": ["m1"], "enabled": True})
@@ -320,3 +320,22 @@ def test_a_note_is_phrased_once_per_fact_and_again_when_the_counts_change():
         {"hour": 8, "turns": 12, "utterances_adult": 12, "utterances_child": 9, "words_discarded": 550, "questions_adult": 2}]})]}, headers=k)
     client.get(f"/v1/households/{hid}/note", headers=k)
     assert len(calls) == 2
+
+
+def test_a_kept_note_that_fails_a_newer_rule_is_phrased_again():
+    calls = []
+
+    def create(system, user, model):
+        calls.append(user)
+        return "Tomorrow, ask one question at that hour."
+
+    store = MemoryStore()
+    client = TestClient(build_app(store=store, seed=False, note_deps={"create_text": create, "models": ["m1"], "enabled": True}))
+    made = client.post("/v1/households", json={"name": "ours"}).json()
+    hid, k = made["household_id"], {"x-api-key": made["api_key"]}
+    client.post(f"/v1/households/{hid}/days", json={"days": [day()]}, headers=k)
+    first = client.get(f"/v1/households/{hid}/note", headers=k).json()
+    kept = store.get_note(hid, first["date"])
+    store.put_note(hid, first["date"], {**kept, "text": "A lovely hour. Keep it exactly so."})
+    again = client.get(f"/v1/households/{hid}/note", headers=k).json()
+    assert again["text"] != "A lovely hour. Keep it exactly so." and len(calls) == 2

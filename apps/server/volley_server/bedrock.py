@@ -46,6 +46,7 @@ SYSTEM = "\n".join(
         "3. Never judge the parent, never compare with other families, never mention delay, risk, IQ, percentiles or development. It is a count, like steps.",
         "4. Two sentences. Warm, plain, second person, present tense. No emojis. No dashes of any kind as punctuation.",
         "5. Name the hour the way a person says it, for example 'around six in the evening'.",
+        "6. The second sentence names one small thing to do and starts with 'Tomorrow,'. A note with nothing to do is refused.",
         "Reply with the two sentences only.",
     ]
 )

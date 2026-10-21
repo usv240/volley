@@ -74,10 +74,28 @@ def run(cli: BeeCli, h: Household, seconds: int = 600, lines=None, nudge: bool =
     threading.Thread(target=reader, daemon=True).start()
     last_role, last_end, turns = None, None, 0
     by_hour: dict[tuple[str, int], int] = {}
+    # Blind households: every speaker arrives "Unknown", so roles are read
+    # from the hour's lines together, as `volley today` reads a day, and the
+    # hour's count is recomputed with the shipped scale. The lines live in
+    # memory for the hour only and are counted, never printed or kept.
+    hour_lines: dict[tuple[str, int], list] = {}
+    if h.blind:
+        from serve_return import Roles, Utterance, count_turns
+        from serve_return.blind import childes_model, relabel
+
+        model = childes_model()
+        blind_roles = Roles.of(adult=["adult"], child=["child"])
+
+    started = clock()
 
     def check() -> None:
         now = clock()
         date = now.date().isoformat()
+        # Only an hour heard from its start can be called quiet: started at
+        # half past, the count so far would be zero and every hour would look
+        # quiet. Five minutes of grace for starting just after the hour.
+        if started > now.replace(minute=0, second=0, microsecond=0) + timedelta(minutes=5):
+            return
         if not nd.should_nudge(now, usual, by_hour.get((date, now.hour), 0), nd.nudged_today(date)):
             return
         text = nd.message(h.child_name)
@@ -108,6 +126,21 @@ def run(cli: BeeCli, h: Household, seconds: int = 600, lines=None, nudge: bool =
             if not got:
                 continue
             speaker, text, when = got
+            if h.blind:
+                now = clock()
+                key = (now.date().isoformat(), now.hour)
+                for k in [k for k in hour_lines if k != key]:
+                    del hour_lines[k]
+                lines_now = hour_lines.setdefault(key, [])
+                lines_now.append(Utterance(when, "Unknown", text, when + max(1.0, len(text.split()) / 2.5)))
+                before = by_hour.get(key, 0)
+                by_hour[key] = round(count_turns(relabel(lines_now, model), blind_roles) * model.turn_scale)
+                if by_hour[key] > before:
+                    turns += by_hour[key] - before
+                    print(f"  {by_hour[key]} turns this hour")
+                if nudge:
+                    check()
+                continue
             role = roles.role(speaker or "")
             if role is None:
                 continue

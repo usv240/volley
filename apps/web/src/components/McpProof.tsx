@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { clock } from "./DayView";
 import { MCP_URL, PROTOCOL, rpc, toolJson } from "./mcpClient";
+import { dateInWords } from "./voiceRules";
 
 /**
  * The agent, held to a real session from the visitor's own browser.
@@ -138,29 +139,46 @@ export function McpProof() {
       </div>
 
       {lines.length > 0 && (
-        <table className="mt-6 w-full text-sm">
-          <thead>
-            <tr className="text-left text-muted">
-              <th className="pb-2 font-medium">Request</th>
-              <th className="pb-2 font-medium">Status</th>
-              <th className="pb-2 font-medium">Time</th>
-            </tr>
-          </thead>
-          <tbody>
+        // One row per request. On a phone the request takes the full width and
+        // its status and time sit on a line beneath it, each labelled; from
+        // 640 px up the labels move into a header and the row is three columns.
+        <div className="mt-6">
+          <div
+            className="hidden grid-cols-[minmax(0,1fr)_4.5rem_4.5rem] gap-x-4 pb-2 text-sm font-medium text-muted sm:grid"
+            aria-hidden="true"
+          >
+            <span>Request</span>
+            <span>Status</span>
+            <span className="text-right">Time</span>
+          </div>
+          <ol className="font-mono text-[12px] tabular-nums" aria-label="Requests to the server, in order">
             {lines.map((l) => (
-              <tr key={l.request} className="border-t border-line">
-                <td className="py-2 font-mono text-[12px] text-ink">
+              <li
+                key={l.request}
+                className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1 border-t border-line py-2 sm:grid-cols-[minmax(0,1fr)_4.5rem_4.5rem]"
+              >
+                <span className="col-span-2 min-w-0 break-words text-ink sm:col-span-1">
                   {l.request}
-                  {l.note && <span className="ml-2 text-faint">{l.note}</span>}
-                </td>
-                <td className={`py-2 font-mono text-[12px] ${l.ok ? "text-ink" : "text-[var(--warn)]"}`}>
+                  {l.note && <span className="block text-faint sm:ml-2 sm:inline">{l.note}</span>}
+                </span>
+                <span className={l.ok ? "text-ink" : "text-[var(--warn)]"}>
+                  <span className="font-sans text-faint sm:sr-only">status </span>
                   {l.status}
-                </td>
-                <td className="py-2 font-mono text-[12px] text-muted">{l.ms ? `${l.ms} ms` : ""}</td>
-              </tr>
+                </span>
+                <span className="whitespace-nowrap text-right text-muted">
+                  {l.ms ? (
+                    <>
+                      <span className="sr-only">took </span>
+                      {l.ms} ms
+                    </>
+                  ) : (
+                    ""
+                  )}
+                </span>
+              </li>
             ))}
-          </tbody>
-        </table>
+          </ol>
+        </div>
       )}
 
       {(answer || today) && (
@@ -175,7 +193,9 @@ export function McpProof() {
             <figure className="rounded-lg border border-line bg-[var(--raised)] p-4">
               <figcaption className="font-mono text-[12px] text-muted">how_was_our_talking_today</figcaption>
               <p className="mt-2 text-sm leading-relaxed text-ink">
-                On {today.date}, {today.simulated ? "the simulated family" : "this household"} had {today.turns} turns
+                {today.simulated
+                  ? `On the simulated family's latest day, ${dateInWords(today.date) ?? today.date}, there were ${today.turns} turns`
+                  : `On ${dateInWords(today.date) ?? today.date}, this household had ${today.turns} turns`}
                 {today.best_hour !== null ? `; the best hour was ${clock(today.best_hour)}` : ""}
                 {today.longest_volley ? `, the longest exchange ${today.longest_volley} turns` : ""}
                 {today.words_discarded !== null ? `, and ${today.words_discarded} words were read and thrown away to count it` : ""}.

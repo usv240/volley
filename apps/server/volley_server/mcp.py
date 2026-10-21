@@ -237,7 +237,14 @@ def register_mcp(app: FastAPI, store: Store, demo_household: str, note_deps: dic
             fact = pick(day_from_dict(row))
             floor = template(fact, h.get("child_name"))
             fact_d = {"kind": fact.kind, "hour": fact.hour, "value": fact.value, "target": fact.target}
-            result = phrase_note(fact_d, h.get("child_name"), floor, lambda t: accept(t, fact), note_deps)
+            # The same note the parent's page shows: phrased once per fact and
+            # kept, so asking twice does not get two wordings.
+            kept = store.get_note(h["household_id"], row["date"])
+            if kept and kept.get("fact") == fact_d and accept(kept.get("text", ""), fact):
+                result = kept
+            else:
+                result = phrase_note(fact_d, h.get("child_name"), floor, lambda t: accept(t, fact), note_deps)
+                store.put_note(h["household_id"], row["date"], {"date": row["date"], "fact": fact_d, **result})
             return _text({"household_id": h["household_id"], "simulated": h.get("simulated", False), "date": row["date"], "fact": fact_d,
                           "text": result["text"], "source": result["source"], "model": result["model"], "disclaimer": DISCLAIMER})
 

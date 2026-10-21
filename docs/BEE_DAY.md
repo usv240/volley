@@ -26,7 +26,7 @@ would be wrong twice.
   best hour 15:00; longest exchange 58 turns; 25 questions asked
   517 words read and thrown away
 
-Tomorrow: Your best hour with your child was around 3 in the afternoon, with 66 turns. Keep that one exactly as it is.  [template]
+Tomorrow: Your best hour with your child was around 3 in the afternoon, with 66 turns. Tomorrow, at the same time, ask your child about one thing they did today and wait for the answer.  [template]
   placed in your Bee as a reminder
   517 words read on this machine, 0 kept
 ```
@@ -53,6 +53,21 @@ Tomorrow: Your best hour with your child was around 3 in the afternoon, with 66 
   and marks them `"simulated": false`. The service phrased that day's
   note on Bedrock from the fact `best_hour 15, 66`. Run twice, the
   reminder was written once.
+
+## Run again, 2026-10-21, after two rules changed
+
+Every note now names one thing to do, and the number gate reads numbers
+written as words too. The same command on the same session, with the
+reminder marker for that day removed so it would write again:
+
+- The sentence above, with its action, went into the Bee as a second
+  reminder (todo 29237784), alarm 15:00 the next day.
+- `1 of these turns were in stretches with no child's voice`: the
+  child-present check, off by default, now says how much of a day it
+  would set aside; that count is posted with the day.
+- The first run's reminder (todo 29196370) said "Keep that one exactly as
+  it is", which named nothing to do; a judge reading the record said so,
+  and the rule changed.
 
 ## What it is not
 

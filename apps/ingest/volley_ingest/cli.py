@@ -65,7 +65,7 @@ def _request(url: str, body: dict | None, headers: dict[str, str], method: str =
         return res.status, json.loads(res.read().decode("utf8") or "{}")
 
 
-def _post(h: Household, days: list[DayCounts], request=None) -> str | None:
+def _post(h: Household, days: list[DayCounts], request=None, rows: list[dict] | None = None) -> str | None:
     """Counts only, to the household's own route on the service, if the
     parent connected one. The body is the day's `to_dict()`, which has
     no field that can hold a word."""
@@ -73,7 +73,7 @@ def _post(h: Household, days: list[DayCounts], request=None) -> str | None:
         return None
     status, _ = (request or _request)(
         f"{h.api_url.rstrip('/')}/v1/households/{h.household_id}/days",
-        {"days": [d.to_dict() for d in days]},
+        {"days": rows if rows is not None else [d.to_dict() for d in days]},
         {"x-api-key": h.api_key},
     )
     return f"{status}"
@@ -170,6 +170,10 @@ def cmd_setup(cli: BeeCli, args) -> int:
         h.only_with_child = args.only_with_child
         print("only with your child: stretches with no child's voice are set aside; measured, this drops most adults-only talk "
               "and about one real turn in six" if h.only_with_child else "every stretch is counted")
+    if getattr(args, "role_model", None):
+        h.role_model = args.role_model
+        print("roles from the bundled model trained on CHILDES (CC BY-NC-SA 3.0, non-commercial)" if h.role_model == "childes"
+              else "roles by alternation: no trained model and no corpus licence; measured worse per session (harness/blind)")
     if getattr(args, "daily", None):
         from .schedule import schedule
 
@@ -227,8 +231,16 @@ def cmd_today(cli: BeeCli, args) -> int:
         return 0
     out_dir = home() / "counts"
     out_dir.mkdir(parents=True, exist_ok=True)
+    extra = report.get("no_child_turns_by_date", {})
+
+    def row(d):
+        r = d.to_dict()
+        if d.date in extra:
+            r["turns_in_no_child_stretches"] = min(extra[d.date], r["turns"])
+        return r
+
     for d in days:
-        (out_dir / f"{d.date}.json").write_text(json.dumps(d.to_dict(), indent=1), encoding="utf8")
+        (out_dir / f"{d.date}.json").write_text(json.dumps(row(d), indent=1), encoding="utf8")
         print(render_day(d, h.child_name))
     today = days[-1]
     text, fact, layer = note(today, h.child_name)
@@ -236,7 +248,9 @@ def cmd_today(cli: BeeCli, args) -> int:
     written = write_reminder(cli, text, fact, today.date, h.tz_offset_hours, h.write_reminders_to_bee)
     if written:
         print("  placed in your Bee as a reminder")
-    posted = _post(h, days)
+    if extra and any(extra.values()):
+        print(f"  {sum(extra.values())} of these turns were in stretches with no child's voice (volley setup --only-with-child yes sets them aside)")
+    posted = _post(h, days, rows=[row(d) for d in days])
     if posted:
         print(f"  counts posted ({posted})")
         if h.mine_url:
@@ -292,6 +306,8 @@ def main(argv: list[str] | None = None, cli: BeeCli | None = None) -> int:
     s.add_argument("--only-with-child", dest="only_with_child", type=lambda v: v.lower() in ("1", "true", "yes"),
                    help="blind only: set aside stretches with no child's voice: yes or no")
     s.add_argument("--daily", help="run volley today every evening at this local time, HH:MM, or off")
+    s.add_argument("--role-model", dest="role_model", choices=["childes", "alternation"],
+                   help="blind only: the bundled CHILDES model (non-commercial licence) or alternation (no model, no licence)")
     c = sub.add_parser("connect", help="make a household on the service so your own days show on the site")
     c.add_argument("--name", default="ours", help="a name you choose; it is the only text the service keeps")
     c.add_argument("--api-url", dest="api_url", help="another deployment of the service, if you run your own")

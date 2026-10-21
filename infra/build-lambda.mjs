@@ -34,7 +34,7 @@ fs.mkdirSync(out, { recursive: true });
 run(
   `"${python}" -m pip install --quiet --target "${out}" ` +
     `--only-binary=:all: --platform manylinux2014_x86_64 --python-version 3.12 --implementation cp ` +
-    `"fastapi>=0.115" "mangum>=0.17" "anthropic>=0.40"`,
+    `"fastapi>=0.115" "mangum>=0.17" "anthropic>=1.9,<2"`,
 );
 
 // Our own packages, pure Python, without re-resolving their dependencies.

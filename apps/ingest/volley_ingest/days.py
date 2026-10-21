@@ -53,6 +53,24 @@ def count_days(utterances: list[Utterance], h: Household, report: dict | None = 
 
         from serve_return.blind import calibrate_day
 
+        if report is not None and not h.only_with_child and h.role_model != "alternation":
+            # Not set aside, but said: how many turns came from stretches with
+            # no line that sounds like a child, so a parent can see how much
+            # of a day could be adults talking (presence.py, measured).
+            from serve_return import count_turns as _ct
+            from serve_return.blind import childes_model as _cm, relabel as _rl
+
+            from .presence import stretches as _st, _score_top_tenth, THRESHOLD as _T
+
+            _m = _cm()
+            per_day = {}
+            for d, us in by_day.items():
+                n = 0
+                for w in _st(us):
+                    if _score_top_tenth(w, _m) <= _T:
+                        n += round(_ct(_rl(w, _m), roles) * _m.turn_scale)
+                per_day[d] = n
+            report["no_child_turns_by_date"] = per_day
         if h.only_with_child:
             from .presence import with_child
 
@@ -64,6 +82,12 @@ def count_days(utterances: list[Utterance], h: Household, report: dict | None = 
             by_day = {d: us for d, us in by_day.items() if us}
             if report is not None:
                 report["stretches_set_aside"] = set_aside
+        if h.role_model == "alternation":
+            from .alternation import ALTERNATION_SCALE, alternate, scale_day
+
+            by_day = {d: alternate(us) for d, us in by_day.items()}
+            return [scale_day(count_day(by_day[d], roles, date=d, tz_offset_hours=h.tz_offset_hours), ALTERNATION_SCALE)
+                    for d in sorted(by_day)]
         by_day = {d: relabel(us) for d, us in by_day.items()}
         return [calibrate_day(count_day(by_day[d], roles, date=d, tz_offset_hours=h.tz_offset_hours)) for d in sorted(by_day)]
     return [count_day(by_day[d], roles, date=d, tz_offset_hours=h.tz_offset_hours) for d in sorted(by_day)]

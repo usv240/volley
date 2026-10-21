@@ -48,7 +48,17 @@ def test_a_model_that_invents_a_number_is_overruled():
     fact = Fact("best_hour", 18, 30, None)
     assert not accept("Your best hour was 6 in the evening with 30 turns, above the 27th percentile.", fact)
     assert not accept("Great day: 30 turns, and 45 yesterday.", fact)
-    assert accept("Six in the evening was the hour: 30 turns. Keep it.", fact)
+    assert accept("Six in the evening was the hour: 30 turns. Tomorrow, ask one question then.", fact)
+    # Written out, a number is still a number: thirty is the fact, forty is not.
+    assert accept("Thirty turns around six. Tomorrow, ask one question then.", fact)
+    assert not accept("Forty turns around six. Tomorrow, ask one question then.", fact)
+    assert not accept("Thirty turns and a dozen questions. Tomorrow, ask one.", fact)
+
+
+def test_a_note_without_something_to_do_is_refused():
+    fact = Fact("best_hour", 18, 30, None)
+    assert not accept("Six in the evening was the hour: 30 turns. Keep it.", fact)
+    assert accept("Six in the evening was the hour: 30 turns. Try a question at the same time tomorrow.", fact)
 
 
 def test_forbidden_words_never_reach_a_parent():
@@ -61,7 +71,7 @@ def test_note_falls_back_to_the_template_and_says_so():
     day = count_day(exchange(18, 30), ROLES, date="2026-09-29")
     text, fact, layer = note(day, "Asha", phrase=lambda f, floor: "30 turns, and your child is not behind.")
     assert layer == "template" and "behind" not in text
-    text, fact, layer = note(day, "Asha", phrase=lambda f, floor: "Six in the evening, 30 turns with Asha. Keep it exactly so.")
+    text, fact, layer = note(day, "Asha", phrase=lambda f, floor: "Six in the evening, 30 turns with Asha. Tomorrow, ask her about her day then.")
     assert layer == "model"
     text, fact, layer = note(day, "Asha", phrase=lambda f, floor: (_ for _ in ()).throw(RuntimeError("bedrock down")))
     assert layer == "template"

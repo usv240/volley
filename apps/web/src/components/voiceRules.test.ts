@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { QUESTIONS, matchTool, spokenAnswer } from "./voiceRules";
+import { QUESTIONS, dateInWords, matchTool, spokenAnswer } from "./voiceRules";
 
 describe("a spoken question, mapped to the MCP tool that answers it", () => {
   it("maps the three asked questions, as said and as the chips say them", () => {
@@ -21,21 +21,57 @@ describe("a spoken question, mapped to the MCP tool that answers it", () => {
 describe("the sentence read back", () => {
   it("uses only the tool's own fields", () => {
     expect(spokenAnswer("how_was_our_talking_today", { date: "2026-09-28", turns: 157, best_hour: 18, simulated: true })).toBe(
-      "On 2026-09-28, the simulated family had 157 turns, and the best hour was 6pm.",
+      "On the simulated family's latest day, September 28, there were 157 turns, and the best hour was 6pm.",
     );
     expect(spokenAnswer("best_hour_this_week", { hour: 19, turns_this_week: 309, days: 7, simulated: true })).toBe(
-      "This week, the simulated family's best hour was 7pm, with 309 turns across 7 days.",
+      "Across the simulated family's last 7 days, 7pm was the busiest hour: 309 turns in that hour altogether.",
     );
-    expect(spokenAnswer("one_thing_for_tomorrow", { text: "Keep six o'clock as it is.", simulated: true })).toBe(
-      "Keep six o'clock as it is.",
+    expect(spokenAnswer("one_thing_for_tomorrow", { date: "2026-09-28", text: "Ask Asha about one thing.", simulated: true })).toBe(
+      "From the simulated family's latest day, September 28: Ask Asha about one thing.",
     );
-    expect(spokenAnswer("week_trend", { direction: "level", best_day: "2026-09-26", quietest_day: "2026-09-24", simulated: true })).toBe(
-      "This week, the simulated family's turns are holding level; the best day was 2026-09-26 and the quietest 2026-09-24.",
+    expect(
+      spokenAnswer("week_trend", {
+        direction: "level",
+        days: [{}, {}, {}, {}, {}, {}, {}],
+        best_day: "2026-09-26",
+        quietest_day: "2026-09-24",
+        simulated: true,
+      }),
+    ).toBe("Over the simulated family's last 7 days, turns are holding level; the best day was September 26 and the quietest September 24.");
+  });
+
+  it("says a week's busiest hour as that hour's total across the week, not as one day's", () => {
+    expect(spokenAnswer("best_hour_this_week", { hour: 19, turns_this_week: 309, days: 7, simulated: false })).toBe(
+      "Across the last 7 days, 7pm was the busiest hour: 309 turns in that hour altogether.",
     );
+  });
+
+  it("never reads the simulated family's day as an ISO date or as today", () => {
+    const answers = [
+      spokenAnswer("how_was_our_talking_today", { date: "2026-09-28", turns: 157, best_hour: 18, simulated: true }),
+      spokenAnswer("one_thing_for_tomorrow", { date: "2026-09-28", text: "Ask one question.", simulated: true }),
+      spokenAnswer("best_hour_this_week", { hour: 19, turns_this_week: 309, days: 7, simulated: true }),
+      spokenAnswer("week_trend", { direction: "up", days: [{}, {}], best_day: "2026-09-26", quietest_day: "2026-09-27", simulated: true }),
+    ];
+    for (const a of answers) {
+      expect(a).toContain("the simulated family");
+      expect(a).not.toMatch(/\d{4}-\d{2}-\d{2}/);
+      expect(a).not.toMatch(/\btoday\b/i);
+    }
+  });
+
+  it("writes a date in words from the string alone", () => {
+    expect(dateInWords("2026-09-28")).toBe("September 28");
+    expect(dateInWords("2026-01-01")).toBe("January 1");
+    expect(dateInWords("2026-13-01")).toBeNull();
+    expect(dateInWords("yesterday")).toBeNull();
+    expect(dateInWords(null)).toBeNull();
   });
 
   it("says nothing rather than guess when a field is missing", () => {
     expect(spokenAnswer("how_was_our_talking_today", { simulated: true })).toBeNull();
+    expect(spokenAnswer("how_was_our_talking_today", { date: "not a date", turns: 3, simulated: true })).toBeNull();
+    expect(spokenAnswer("one_thing_for_tomorrow", { date: "2026-09-28", simulated: true })).toBeNull();
     expect(spokenAnswer("best_hour_this_week", null)).toBeNull();
   });
 });

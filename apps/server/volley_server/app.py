@@ -57,7 +57,11 @@ SCHEMA = {
     "words_discarded": "words read on the parent's machine and thrown away",
     "best_hour": "the hour with the most turns",
     "quietest_hour_with_child": "the hour with the fewest turns while the child was present",
+    "turns_in_no_child_stretches": "optional: of the turns, how many fell in three-minute stretches with no line that sounds like a child (label-free counting only)",
 }
+
+# Optional day fields: kept when sent as a non-negative integer, absent otherwise.
+OPTIONAL_DAY_INTS = ("turns_in_no_child_stretches",)
 
 
 def day_from_dict(d: dict) -> DayCounts:
@@ -102,6 +106,12 @@ def validate_day(row) -> dict:
                 hc[k] = v
         hours.append(hc)
     clean["hours"] = hours
+    for k in OPTIONAL_DAY_INTS:
+        v = row.get(k)
+        if v is not None:
+            if isinstance(v, bool) or not isinstance(v, int) or v < 0:
+                raise HTTPException(400, f"{k} must be a non-negative integer")
+            clean[k] = v
     return clean
 
 
@@ -255,7 +265,9 @@ def build_app(store: Store | None = None, seed: bool = True, note_deps: dict | N
         # Phrased once per fact. The parent's page, the coach's page and
         # every reload ask for the same note; only new counts change it.
         kept = store.get_note(hid, row["date"])
-        if kept and kept.get("fact") == fact_d:
+        # A kept note is served only while it still passes today's gate: a
+        # rule added later (every note names an action) re-phrases old ones.
+        if kept and kept.get("fact") == fact_d and accept(kept.get("text", ""), fact):
             return {"household_id": hid, "simulated": h.get("simulated", False), **kept, "disclaimer": DISCLAIMER}
         result = phrase_note(fact_d, h.get("child_name"), floor, lambda t: accept(t, fact), note_deps)
         record = {"date": row["date"], "fact": fact_d, **result}

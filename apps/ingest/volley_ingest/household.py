@@ -40,6 +40,10 @@ class Household:
     # Opt-in, blind only: set aside three-minute stretches with no line that
     # sounds like a child (presence.py), so adults talking do not count.
     only_with_child: bool = False
+    # "childes": the bundled role model (CC BY-NC-SA 3.0, non-commercial).
+    # "alternation": no trained model at all, every line a new speaker, scaled;
+    # free of the corpus licence, measured worse per session (harness/blind).
+    role_model: str = "childes"
     # The local time `volley setup --daily` scheduled, if any; informational.
     daily_at: str | None = None
 

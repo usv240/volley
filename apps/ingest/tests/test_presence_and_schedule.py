@@ -124,3 +124,18 @@ def test_setup_records_the_choice_and_today_says_what_it_set_aside(monkeypatch, 
     capsys.readouterr()
     assert main(["today"], cli=BeeCli(runner=runner)) == 0
     assert "1 three-minute stretch with no child's voice set aside" in capsys.readouterr().out
+
+
+def test_the_licence_free_option_uses_the_measured_scale_and_no_model(monkeypatch, tmp_path):
+    from volley_ingest.alternation import ALTERNATION_SCALE
+    from volley_ingest.bee import Utterance as BeeUtterance
+    from volley_ingest.days import count_days
+    from volley_ingest.household import Household
+
+    r = json.loads((REPO / "harness" / "blind" / "results.json").read_text(encoding="utf-8"))
+    assert ALTERNATION_SCALE == r["alternating_scale_all_families"]
+    us = [BeeUtterance(ts="2026-10-21T18:00:00Z", start_s=1_790_000_000 + 3 * i, end_s=1_790_000_001.5 + 3 * i, speaker="Unknown", text=t)
+          for i, t in enumerate(["What is that?", "A doggy!", "Is it big?", "Big doggy!"] * 5)]
+    h = Household(blind=True, role_model="alternation")
+    days = count_days(us, h)
+    assert days and days[0].turns == round(19 * ALTERNATION_SCALE)

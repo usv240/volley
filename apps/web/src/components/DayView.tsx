@@ -30,6 +30,8 @@ export interface Day {
   longest_volley: number;
   questions_adult: number;
   words_discarded: number;
+  /** Turns counted in stretches where no child's voice was heard; absent on days counted before the service reported it. */
+  turns_in_no_child_stretches?: number;
 }
 
 export function clock(h: number): string {
@@ -41,14 +43,16 @@ export function clock(h: number): string {
 
 /**
  * The note's template layer for a day, the sentence the service falls
- * back to when no model phrases it: the best hour, kept as it is. The
+ * back to when no model phrases it: the best hour, and one thing to do
+ * in it tomorrow, word for word the product's template. The
  * front page and the coach's example row both print it for the
  * simulated family, so the two never disagree.
  */
 export function bestHourNote(day: Day, child: string | null): string {
   if (day.best_hour === null) return "A first day counted. Wear the band tomorrow and the hours that matter will show.";
   const most = Math.max(...day.hours.map((h) => h.turns));
-  return `Your best hour with ${child ?? "your child"} was around ${clock(day.best_hour)}, with ${most} turns. Keep that one exactly as it is.`;
+  const who = child ?? "your child";
+  return `Your best hour with ${who} was around ${clock(day.best_hour)}, with ${most} turns. Tomorrow, at the same time, ask ${who} about one thing they did today and wait for the answer.`;
 }
 
 export function DayView({
@@ -143,6 +147,12 @@ export function DayView({
         Hours with no child speech are shown as away <Info term="away" />, not as zero. {day.words_discarded} words were read and
         thrown away to make this <Info term="whatLeaves" />.
       </p>
+      {!!day.turns_in_no_child_stretches && day.turns_in_no_child_stretches > 0 && (
+        <p className="mt-2 text-sm text-muted">
+          {day.turns_in_no_child_stretches} of these turns were in stretches with no child&apos;s voice;{" "}
+          <code className="font-mono text-xs text-ink">volley setup --only-with-child yes</code> sets those aside.
+        </p>
+      )}
     </div>
   );
 }

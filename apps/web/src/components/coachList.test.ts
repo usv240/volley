@@ -93,8 +93,12 @@ describe("the note, retold for the coach", () => {
     ).toBe(
       "Around six in the evening, the parent and Asha exchanged words back and forth 38 times. That hour holds the most talking between the two of them today.",
     );
-    expect(noteForCoach("Your best hour with Asha was around 6pm, with 38 turns. Keep that one exactly as it is.")).toBe(
-      "The family's best hour with Asha was around 6pm, with 38 turns. Keep that one exactly as it is.",
+    expect(
+      noteForCoach(
+        "Your best hour with Asha was around 6pm, with 38 turns. Tomorrow, at the same time, ask Asha about one thing they did today and wait for the answer.",
+      ),
+    ).toBe(
+      "The family's best hour with Asha was around 6pm, with 38 turns. Tomorrow, at the same time, ask Asha about one thing they did today and wait for the answer.",
     );
   });
 

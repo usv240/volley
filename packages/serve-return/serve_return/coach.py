@@ -69,12 +69,42 @@ def template(fact: Fact, child: str | None = None) -> str:
                 f"Tomorrow, try one more at dinner and let {who} finish.")
     if fact.kind == "best_hour":
         return (f"Your best hour with {who} was around {_clock(fact.hour)}, with {fact.value} turns. "
-                f"Keep that one exactly as it is.")
+                f"Tomorrow, at the same time, ask {who} about one thing they did today and wait for the answer.")
     return f"A first day counted. Wear the band tomorrow and {who} will show you the hours that matter."
 
 
+_UNITS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve",
+          "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"]
+_TENS = {"twenty": 20, "thirty": 30, "forty": 40, "fifty": 50, "sixty": 60, "seventy": 70, "eighty": 80, "ninety": 90}
+_WORD = {w: i for i, w in enumerate(_UNITS)} | _TENS | {"dozen": 12, "hundred": 100}
+# Words that name a number but are ordinary English in a note: "one" (one
+# thing, one question) and "an hour" are not counts. They are read as
+# numbers only when they stand next to another number word ("thirty one").
+_SOFT = {"one"}
+
+
+def _number_words(text: str) -> set[str]:
+    """Numbers written as words, as digits: 'thirty eight' is 38,
+    'forty-two' is 42, 'a dozen' is 12. A model that writes a number out
+    must still match the fact."""
+    words = re.findall(r"[a-z]+", text.lower().replace("-", " "))
+    out: set[str] = set()
+    i = 0
+    while i < len(words):
+        w = words[i]
+        if w in _TENS and i + 1 < len(words) and words[i + 1] in _WORD and _WORD[words[i + 1]] < 10:
+            out.add(str(_TENS[w] + _WORD[words[i + 1]]))
+            i += 2
+            continue
+        if w in _WORD and w not in _SOFT:
+            out.add(str(_WORD[w]))
+        i += 1
+    return out
+
+
 def digits_in(text: str) -> set[str]:
-    return set(re.findall(r"\d+(?:\.\d+)?", text))
+    """Every number in the text, whether written in digits or in words."""
+    return set(re.findall(r"\d+(?:\.\d+)?", text)) | _number_words(text)
 
 
 def allowed_digits(fact: Fact) -> set[str]:
@@ -86,7 +116,18 @@ def allowed_digits(fact: Fact) -> set[str]:
                 out.add(str(int(v)))
     if fact.hour is not None:
         out.add(str(fact.hour % 12 or 12))
+        out.add(str(fact.hour % 24))
     return out
+
+
+# A note names one thing to do. The floor always does; a phrasing that
+# drops the action is refused like one that invents a number.
+ACTION_WORDS = ("tomorrow", "try", "ask", "answer", "wait", "let ")
+
+
+def has_action(text: str) -> bool:
+    lower = text.lower()
+    return any(w in lower for w in ACTION_WORDS)
 
 
 def accept(text: str, fact: Fact) -> bool:
@@ -94,6 +135,8 @@ def accept(text: str, fact: Fact) -> bool:
     fact and no forbidden word is in it. Otherwise the template is used."""
     lower = text.lower()
     if any(w.lower() in lower for w in FORBIDDEN):
+        return False
+    if fact.kind != "first_day" and not has_action(text):
         return False
     return digits_in(text) <= allowed_digits(fact)
 

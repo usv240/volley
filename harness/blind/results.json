@@ -897,5 +897,6 @@
    "naive_per_hour": 23.8,
    "alternating_scaled_per_hour": 775.4
   }
- ]
+ ],
+ "alternating_scale_all_families": 0.4896
 }

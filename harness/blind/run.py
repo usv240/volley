@@ -191,6 +191,15 @@ def main() -> int:
     print(f"alternation baseline (every line a new speaker), scaled on training families: {r['alternating_scaled_total_error_pct']:+}% total, "
           f"median session error {r['alternating_scaled_median_abs_session_error_pct']}%, {r['alternating_scaled_sessions_within_20pct']}/{r['sessions']} within 20%, "
           f"per-hour correlation {r['alternating_scaled_correlation_per_hour']}")
+    # The licence-free option ships this scale: every family, no model.
+    ag = aa = 0
+    for us in sessions.values():
+        pairs = labelled(us)
+        if len(pairs) >= 10:
+            kept = [u for u, _ in pairs]
+            ag += turns(kept, [r for _, r in pairs])
+            aa += turns(kept, alternating_roles(kept))
+    r["alternating_scale_all_families"] = round(ag / aa, 4) if aa else 1.0
     out = {"corpus": "CHILDES Gleason, doi 10.21415/T5101R, TalkBank ground rules",
            "folds": f"{FOLDS} folds by child; no family is scored by a model that saw it",
            "model": "averaged perceptron, serve_return.blind", **r}
