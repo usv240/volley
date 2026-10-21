@@ -281,7 +281,7 @@ SITE.md has every section. Technically:
 | Service | What it does here |
 |---|---|
 | Amazon Bedrock | phrases the one thing for tomorrow from a structured fact, with a deterministic floor |
-| Strands Agents SDK | an agent that consumes Volley's MCP server as an outside client, and a second that holds Bee's MCP server beside ours to answer "why was Tuesday quiet" with the parent's own calendar |
+| Strands Agents SDK | an agent that consumes Volley's MCP server as an outside client, and a second that holds Bee's MCP server beside ours to answer "why was Tuesday quiet" with the Bee's own summary of that day |
 | Amazon DynamoDB | counts, households, keys; nothing textual longer than a nickname |
 | AWS Lambda with a function URL | the API and the MCP server |
 | Amazon S3 and CloudFront | the site |

@@ -22,7 +22,7 @@ Two agents in `apps/agent`, documented in [AGENT.md](AGENT.md): the
 coach, a Strands agent over Volley's MCP server that answers a parent
 the way Alexa+ would and cannot say a number no tool returned; and the
 Tuesday agent, which holds Bee's own MCP server beside Volley's so a
-quiet day can be explained from the parent's own calendar without
+quiet day can be explained from the Bee's own summary of that day without
 either server seeing the other's data. Both run the same Bedrock
 ladder as the note, as a Strands `ModelRouter` with `FallbackStrategy`.
 Fifteen tests drive them with a scripted model and a real server on a
