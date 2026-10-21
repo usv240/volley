@@ -10,3 +10,4 @@ out/
 cdk.out/
 results/*.tmp
 harness/childes/data/
+*.tsbuildinfo

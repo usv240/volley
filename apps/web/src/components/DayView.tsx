@@ -51,7 +51,20 @@ export function bestHourNote(day: Day, child: string | null): string {
   return `Your best hour with ${child ?? "your child"} was around ${clock(day.best_hour)}, with ${most} turns. Keep that one exactly as it is.`;
 }
 
-export function DayView({ day, child, simulated, label }: { day: Day; child: string | null; simulated: boolean; label?: string }) {
+export function DayView({
+  day,
+  child,
+  simulated,
+  label,
+  footnote,
+}: {
+  day: Day;
+  child: string | null;
+  simulated: boolean;
+  label?: string;
+  /** One small line under the day's number: what the number is, and how far to trust a real one. */
+  footnote?: React.ReactNode;
+}) {
   const width = Math.max(1, ...day.hours.map((h) => h.turns));
   const who = child ?? "your child";
   return (
@@ -65,6 +78,7 @@ export function DayView({ day, child, simulated, label }: { day: Day; child: str
               turns with {who} on {day.date} <Info term="turn" />
             </span>
           </p>
+          {footnote && <p className="mt-2 max-w-[44ch] text-xs leading-relaxed text-muted">{footnote}</p>}
         </div>
         <dl className="grid grid-cols-3 gap-4 text-sm">
           <div>

@@ -112,3 +112,42 @@ export function shortDate(iso: string): string {
   if (Number.isNaN(d.getTime())) return iso;
   return d.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
 }
+
+/**
+ * The note is written to the parent ("you and Asha", "your best hour").
+ * A coach reading it is not the "you", so the coach's view retells it in
+ * the third person: the parent, the family, the two of them. Only the
+ * pronouns change; every number and hour stays as the family received it.
+ */
+export function noteForCoach(text: string): string {
+  const rules: [RegExp, string][] = [
+    [/\bbetween you two\b/gi, "between the two of them"],
+    [/\bthe two of you\b/gi, "the two of them"],
+    [/\bboth of you\b/gi, "both of them"],
+    [/\byou two\b/gi, "the two of them"],
+    [/\byou and\b/gi, "the parent and"],
+    [/\byourself\b/gi, "themselves"],
+    [/\byours\b/gi, "the family's"],
+    [/\byour child\b/gi, "the child"],
+    [/\byour\b/gi, "the family's"],
+    [/\byou['’]re\b/gi, "the parent is"],
+    [/\byou['’]ve\b/gi, "the parent has"],
+    [/\byou['’]ll\b/gi, "the parent will"],
+    [/\byou['’]d\b/gi, "the parent would"],
+    [/\byou are\b/gi, "the parent is"],
+    [/\byou were\b/gi, "the parent was"],
+    [/\byou have\b/gi, "the parent has"],
+    [/\byou don['’]t\b/gi, "the parent doesn't"],
+    [/\byou do\b/gi, "the parent does"],
+    [/\byou\b/gi, "the parent"],
+  ];
+  let out = text;
+  for (const [re, to] of rules) {
+    out = out.replace(re, (m, offset: number, whole: string) => {
+      // Keep a capital where the sentence starts.
+      const start = offset === 0 || /[.!?]\s+$/.test(whole.slice(0, offset));
+      return start && /^[A-Z]/.test(m) ? to[0].toUpperCase() + to.slice(1) : to;
+    });
+  }
+  return out;
+}

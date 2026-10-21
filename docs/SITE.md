@@ -38,7 +38,7 @@ researcher read the i-buttons and the sections at the end.
 ### 1. Hero: the claim and today's number
 
 - Eyebrow: "A step counter for conversations with your child"
-- Heading: "Your child's brain is built in the back-and-forth. Volley
+- Heading: "Your child's language grows with the back-and-forth. Volley
   counts it."
 - The tagline, a chain of verbs, under the heading: "Counts the
   back-and-forth between you and your child from the Bee on your wrist,

@@ -6,7 +6,7 @@
 your wrist, keeps the counts and throws the words away, and puts one
 thing to try tomorrow into your Bee as a reminder.**
 
-Your child's brain is built in the back-and-forth. The number that
+Your child's language grows with the back-and-forth. The number that
 measures it, adult-child conversational turns, explained 14 to 27
 percent of the variance in IQ and vocabulary a decade later in a
 longitudinal study, after adjusting for family income; word counts did

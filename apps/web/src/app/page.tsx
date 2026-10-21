@@ -3,6 +3,7 @@ import blind from "../data/blind.json";
 import device from "../data/device.json";
 import controls from "../data/controls.json";
 import demo from "../data/demo.json";
+import tuesdaySim from "../data/tuesday-sim.json";
 import { DayView, bestHourNote, clock, type Day } from "../components/DayView";
 import { DropZone } from "../components/DropZone";
 import { EvidenceSummary } from "../components/EvidenceSummary";
@@ -11,6 +12,7 @@ import { McpProof } from "../components/McpProof";
 import { Nav } from "../components/Nav";
 import { PrivacyProof } from "../components/PrivacyProof";
 import { StepsHandoff } from "../components/StepsHandoff";
+import { VoiceAsk } from "../components/VoiceAsk";
 import { WorkedExample } from "../components/WorkedExample";
 
 /**
@@ -67,7 +69,12 @@ const STEPS = [
 const SETUP_OPTIONS =
   "Two setup options: volley setup --daily 20:30 counts every evening without typing, and --only-with-child yes sets aside stretches where no voice sounds like a child (the evidence on the page says what that costs).";
 
-// Quoted from docs/AGENT.md, "Two real runs, 2026-09-30", word for word.
+// The simulated household's latest day, which every "today" in the runs below means.
+const LATEST = demo.days[demo.days.length - 1].date;
+const RUN_DATE = "2026-09-30";
+
+// The Coach is quoted from docs/AGENT.md, "Two real runs, 2026-09-30", word for word.
+// Tuesday is read from its run record, apps/agent/runs/tuesday-sim.json, copied to src/data.
 const AGENTS = [
   {
     name: "The Coach",
@@ -76,16 +83,17 @@ const AGENTS = [
     answer:
       "You and your little one had 157 turns today, your liveliest stretch was at six in the evening, and the quietest time when your child was around was at four in the afternoon. Tomorrow, try leaning into that six o'clock window, that's when the two of you are most in tune, with 38 turns in that hour alone. See if you can bring a little of that same energy to four o'clock too!",
     tools: "model; tools: how_was_our_talking_today, one_thing_for_tomorrow",
-    caption: "A real run on 2026-09-30, Sonnet on the first rung, against the deployed server, on the simulated household.",
+    asked: `Asked on ${RUN_DATE} about the simulated day dated ${LATEST}; "today" in the answer means ${LATEST}, not the day you read it.`,
+    caption: `A real run, Sonnet on the first rung, against the deployed server, on the simulated household.`,
   },
   {
     name: "Tuesday",
-    body: "Why was Tuesday quiet is a question the counts cannot answer and the parent's own Bee can. Tuesday holds Bee's own MCP server beside Volley's, behind a five-tool allow-list: the daily summaries, today's brief, the to-do list and creating one to-do. The transcript, search, photo and location tools are never offered, and neither server is told the other exists.",
-    command: 'volley-agent tuesday --demo "Which day this week was the quietest for talking, and what was I doing that day according to my Bee?"',
-    answer:
-      "The quietest day this week was September 24, with 156 turns, the lowest of the seven days. Unfortunately, your Bee doesn't have a summary captured for that day, so I can't tell you what was filling your time. If you remember what was going on that day, that context might help explain the lighter count!",
-    tools: "model; tools: week_trend, bee_list_daily_summaries, bee_get_daily_summary",
-    caption: "A real run on 2026-09-30, on the simulated household. The Bee had no summary for that day, and the agent said so rather than inventing one.",
+    body: "Why was Tuesday quiet is a question the counts cannot answer and the parent's own Bee can. Tuesday holds Bee's own MCP server beside Volley's, behind a four-tool allow-list: the daily summaries, a list of them, the to-do list and creating one to-do. The transcript, search, photo and location tools are never offered, and neither server is told the other exists.",
+    command: tuesdaySim.command,
+    answer: tuesdaySim.answer,
+    tools: `${tuesdaySim.layer}; tools: ${tuesdaySim.tools_called.join(", ")}`,
+    asked: `Simulated Bee, simulated household, ${tuesdaySim.date.slice(0, 10)}: a stand-in Bee server with synthetic days written for the simulated family, asked about the week ending ${LATEST}.`,
+    caption: `Read word for word from the run's record. An earlier real run on ${RUN_DATE} found no Bee summary for that day, and the agent said so rather than inventing one.`,
   },
 ];
 
@@ -153,6 +161,26 @@ export default function Home() {
     return Object.entries(by).sort((a, b) => b[1] - a[1])[0];
   })();
 
+  // The nudge drawing, read from the same simulated fortnight: the week's
+  // usual best hour and its average, and the evening that hour was
+  // quietest, drawn up to the moment that hour is under way.
+  const nudge = (() => {
+    if (!bestWeekHour) return null;
+    const hour = Number(bestWeekHour[0]);
+    const usual = Math.round(bestWeekHour[1] / week.length);
+    const at = (d: Day, h: number) => d.hours.find((x) => x.hour === h);
+    const quiet = days
+      .filter((d) => (at(d, hour)?.utterances_child ?? 0) > 0)
+      .reduce((a, b) => ((at(b, hour)?.turns ?? 0) < (at(a, hour)?.turns ?? 0) ? b : a));
+    const cols = [hour - 3, hour - 2, hour - 1, hour, hour + 1].map((h) => ({
+      hour: h,
+      turns: h < hour ? (at(quiet, h)?.turns ?? 0) : h === hour ? (at(quiet, h)?.turns ?? 0) : null,
+    }));
+    const soFar = at(quiet, hour)?.turns ?? 0;
+    const max = Math.max(usual, ...cols.map((c) => c.turns ?? 0));
+    return { hour, usual, date: quiet.date, soFar, cols, max };
+  })();
+
   return (
     <>
       <a href="#top" className="skip-link">
@@ -165,7 +193,7 @@ export default function Home() {
         <section className="grid gap-10 pt-8 sm:pt-12 lg:grid-cols-[1.05fr_1fr] lg:items-start lg:pt-14">
           <div>
             <h1 className="display max-w-[16ch] text-[2.5rem] leading-[1.04] text-ink sm:text-6xl sm:leading-[1.02]">
-              Your child&apos;s brain is built in the back-and-forth. Volley counts it.
+              Your child&apos;s language grows with the <span className="whitespace-nowrap">back-and-forth.</span> Volley counts it.
             </h1>
             <p className="mt-5 max-w-[58ch] text-[17px] leading-relaxed text-ink sm:mt-6 sm:text-lg">
               A step counter for conversations with your child. Volley counts the back-and-forth from the Bee on your wrist, throws the
@@ -184,7 +212,21 @@ export default function Home() {
               </a>
             </div>
           </div>
-          <DayView day={today} child={demo.child_name} simulated />
+          <DayView
+            day={today}
+            child={demo.child_name}
+            simulated
+            footnote={
+              <>
+                Generated counts, not a day a Bee heard. On real recordings with no speaker labels, the median session&apos;s count was{" "}
+                {blind.median_abs_session_error_pct} percent from the true one, across{" "}
+                <a href="#blind" className="underline underline-offset-2">
+                  {blind.sessions} sessions
+                </a>
+                .
+              </>
+            }
+          />
         </section>
 
         {/* 1b. The two measured numbers, said once, under the claim they test. */}
@@ -212,7 +254,7 @@ export default function Home() {
           ))}
         </dl>
 
-        <div className="rule my-20" />
+        <div className="rule my-12 sm:my-20" />
 
         {/* 3. What, why, how. */}
         <section id="what" className="scroll-mt-24">
@@ -240,7 +282,7 @@ export default function Home() {
           </div>
         </section>
 
-        <div className="rule my-20" />
+        <div className="rule my-12 sm:my-20" />
 
         {/* 4. How it counts, watched. */}
         <section id="how" className="scroll-mt-24">
@@ -254,7 +296,7 @@ export default function Home() {
           </div>
         </section>
 
-        <div className="rule my-20" />
+        <div className="rule my-12 sm:my-20" />
 
         {/* 5. The day and the week, like steps. */}
         <section id="day" className="scroll-mt-24">
@@ -293,7 +335,103 @@ export default function Home() {
           </div>
         </section>
 
-        <div className="rule my-20" />
+        <div className="rule my-12 sm:my-20" />
+
+        {/* 5b. In the moment: the nudge inside the hour that usually talks most. */}
+        {nudge && (
+          <>
+            <section id="nudge" className="scroll-mt-24">
+              <h2 className="display-sm max-w-[22ch] text-3xl text-ink sm:text-4xl">Coaching in the moment, not the morning after.</h2>
+              <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_1.2fr] lg:items-start">
+                <div>
+                  <p className="max-w-[60ch] text-[17px] leading-relaxed text-ink">
+                    During the hour the family usually talks most,{" "}
+                    <code className="font-mono text-[15px]">volley live --nudge</code> watches the Bee&apos;s live stream, and if that
+                    hour is going quiet it puts a nudge into the Bee then; with <code className="font-mono text-[15px]">--say</code>, a
+                    speaker in the room says it aloud, a stand-in for an Echo.
+                  </p>
+                  <p className="mt-4 max-w-[60ch] leading-relaxed text-muted">
+                    The note above is written for tomorrow. This one arrives while the hour can still be had.
+                  </p>
+                  <pre
+                    tabIndex={0}
+                    className="mt-6 overflow-x-auto rounded-lg border border-line bg-[var(--raised)] p-3 font-mono text-[12px] leading-relaxed text-ink"
+                  >
+                    {"volley live --nudge\nvolley live --nudge --say"}
+                  </pre>
+                </div>
+
+                <figure className="card min-w-0 p-6 sm:p-8">
+                  <p className="font-semibold text-ink">One evening, simulated</p>
+                  <dl className="mt-4 grid grid-cols-3 gap-4 text-sm">
+                    <div>
+                      <dt className="text-muted">usual hour</dt>
+                      <dd className="font-semibold text-ink">{clock(nudge.hour)}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-muted">usually</dt>
+                      <dd className="font-semibold text-ink tabular-nums">{nudge.usual} turns</dd>
+                    </div>
+                    <div>
+                      <dt className="text-muted">so far</dt>
+                      <dd className="font-semibold text-ink tabular-nums">{nudge.soFar} turns</dd>
+                    </div>
+                  </dl>
+                  <div
+                    className="nudge-cols mt-8"
+                    style={{ ["--cols" as string]: nudge.cols.length }}
+                    role="img"
+                    aria-label={`Simulated evening: ${nudge.cols
+                      .filter((c) => c.turns !== null)
+                      .map((c) => `${clock(c.hour)} ${c.turns} turns`)
+                      .join(", ")}; ${clock(nudge.hour)} usually has ${nudge.usual}, and the nudge goes into the Bee while that hour is under way.`}
+                  >
+                    {nudge.cols.map((c) => {
+                      const now = c.hour === nudge.hour;
+                      return (
+                        <div key={c.hour} className="nudge-col" aria-hidden="true">
+                          <span className="h-4 text-xs leading-4 text-muted tabular-nums">{c.turns === null || now ? "" : c.turns}</span>
+                          <div className="nudge-track">
+                            {now && <span className="nudge-usual" style={{ height: `${(100 * nudge.usual) / nudge.max}%` }} />}
+                            {now && (
+                              <span className="nudge-pin" style={{ bottom: `calc(${(100 * nudge.usual) / nudge.max}% + 0.5rem)` }}>
+                                <span>nudge</span>
+                              </span>
+                            )}
+                            {c.turns === null ? (
+                              <span className="nudge-empty" />
+                            ) : (
+                              <span className="nudge-bar" style={{ height: `${Math.max(2, (100 * c.turns) / nudge.max)}%` }} />
+                            )}
+                          </div>
+                          <span className={`h-4 text-xs leading-4 ${now ? "font-semibold text-ink" : "text-muted"}`}>{clock(c.hour)}</span>
+                          <span className="h-4 whitespace-nowrap text-[11px] leading-4 text-muted">{now ? "now" : c.turns === null ? "not yet" : ""}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted" aria-hidden="true">
+                    <li className="flex items-center gap-2">
+                      <span className="inline-block h-3 w-3 rounded-sm bg-[var(--chart-mark)]" />
+                      turns
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="inline-block h-3 w-3 rounded-sm border-[1.5px] border-dashed border-[var(--muted)]" />
+                      usual for that hour, the week&apos;s average
+                    </li>
+                  </ul>
+                  <figcaption className="mt-4 text-xs leading-relaxed text-muted">
+                    Simulated: the simulated family&apos;s {nudge.date}, its quietest {clock(nudge.hour)} of the fortnight, against that
+                    hour&apos;s average for the week ending {LATEST}. The drawing stops at the moment the nudge goes in; when exactly it
+                    fires is the command&apos;s rule, not the drawing&apos;s.
+                  </figcaption>
+                </figure>
+              </div>
+            </section>
+
+            <div className="rule my-12 sm:my-20" />
+          </>
+        )}
 
         {/* 6. What it will never say. */}
         <section id="never" className="scroll-mt-24">
@@ -308,12 +446,12 @@ export default function Home() {
           </div>
         </section>
 
-        <div className="rule my-20" />
+        <div className="rule my-12 sm:my-20" />
 
         {/* 6b. Questions a parent asks. */}
         <section id="questions" className="scroll-mt-24">
           <h2 className="display-sm max-w-[22ch] text-3xl text-ink sm:text-4xl">Questions a parent asks.</h2>
-          <div className="mt-8 grid gap-x-10 gap-y-6 md:grid-cols-2">
+          <div className="mt-8 hidden gap-x-10 gap-y-6 md:grid md:grid-cols-2">
             {FAQ.map(([q, a]) => (
               <div key={q} className="border-t border-line pt-4">
                 <p className="font-semibold text-ink">{q}</p>
@@ -321,9 +459,23 @@ export default function Home() {
               </div>
             ))}
           </div>
+          {/* A phone gets the same answers, one question a line, opened on tap. */}
+          <div className="fold-list mt-6 border-y border-line md:hidden">
+            {FAQ.map(([q, a]) => (
+              <details key={q} className="fold">
+                <summary>
+                  {q}
+                  <svg className="fold-mark" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                      <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                </summary>
+                <p className="pb-5 text-sm leading-relaxed text-muted">{a}</p>
+              </details>
+            ))}
+          </div>
         </section>
 
-        <div className="rule my-20" />
+        <div className="rule my-12 sm:my-20" />
 
         {/* 7. Privacy, demonstrated. */}
         <section id="privacy" className="scroll-mt-24">
@@ -337,7 +489,7 @@ export default function Home() {
           </div>
         </section>
 
-        <div className="rule my-20" />
+        <div className="rule my-12 sm:my-20" />
 
         {/* 8. Your Bee, in ten minutes. */}
         <section id="yours" className="scroll-mt-24">
@@ -375,7 +527,7 @@ export default function Home() {
           </p>
         </section>
 
-        <div className="rule my-20" />
+        <div className="rule my-12 sm:my-20" />
 
         {/* 9. Bring your own data. */}
         <section id="byo" className="scroll-mt-24">
@@ -412,7 +564,7 @@ export default function Home() {
           </div>
         </section>
 
-        <div className="rule my-20" />
+        <div className="rule my-12 sm:my-20" />
 
         {/* 10. Alexa+. */}
         <section id="alexa" className="scroll-mt-24">
@@ -425,10 +577,11 @@ export default function Home() {
           </p>
           <div className="mt-10">
             <McpProof />
+            <VoiceAsk />
           </div>
         </section>
 
-        <div className="rule my-20" />
+        <div className="rule my-12 sm:my-20" />
 
         {/* 10a. The agents: two clients of the same MCP server, held to the numbers a tool returned. */}
         <section id="agents" className="scroll-mt-24">
@@ -444,18 +597,13 @@ export default function Home() {
               <figure key={a.name} className="card flex min-w-0 flex-col p-6">
                 <p className="font-semibold text-ink">{a.name}</p>
                 <p className="mt-2 text-sm leading-relaxed text-muted">{a.body}</p>
-                <div className="mt-5 rounded-lg border border-line bg-[var(--raised)] p-4">
-                  <p className="font-mono text-[12px] leading-relaxed break-words text-muted">$ {a.command}</p>
-                  <blockquote className="mt-3 text-[15px] leading-relaxed text-ink">{a.answer}</blockquote>
-                  <p className="mt-3 font-mono text-[12px] leading-relaxed break-words text-muted">[{a.tools}]</p>
-                </div>
-                <figcaption className="mt-3 text-xs leading-relaxed text-muted">{a.caption}</figcaption>
+                <AgentRun a={a} />
               </figure>
             ))}
           </div>
         </section>
 
-        <div className="rule my-20" />
+        <div className="rule my-12 sm:my-20" />
 
         {/* 10b. Impact: who has paid for this count already, and what changes at fifty dollars. */}
         <section id="impact" className="scroll-mt-24">
@@ -464,7 +612,7 @@ export default function Home() {
             The case for who this serves, in the order a sceptic would ask it, with the study behind every sentence on its i. What
             it does not claim is at the end, in the same type.
           </p>
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
+          <div className="mt-10 hidden gap-6 md:grid md:grid-cols-2">
             {IMPACT.map((c) => (
               <div key={c.title} className="card min-w-0 p-6">
                 <p className="font-semibold text-ink">
@@ -472,6 +620,22 @@ export default function Home() {
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-muted">{c.body}</p>
               </div>
+            ))}
+          </div>
+          {/* A phone reads the eight claims as a list and opens the one it doubts. */}
+          <div className="fold-list mt-8 border-y border-line md:hidden">
+            {IMPACT.map((c) => (
+              <details key={c.title} className="fold">
+                <summary>
+                  {c.title}
+                  <svg className="fold-mark" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                      <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                </summary>
+                <p className="pb-5 text-sm leading-relaxed text-muted">
+                  {c.body} <Info term={c.term} />
+                </p>
+              </details>
             ))}
           </div>
           <p className="mt-6 max-w-[66ch] text-sm leading-relaxed text-muted">
@@ -482,7 +646,7 @@ export default function Home() {
           </p>
         </section>
 
-        <div className="rule my-20" />
+        <div className="rule my-12 sm:my-20" />
 
         {/* 11. Evidence: the results at a glance, then the prose folded beneath, then the literature. */}
         <section id="evidence" className="scroll-mt-24">
@@ -658,7 +822,7 @@ export default function Home() {
           </div>
         </section>
 
-        <div className="rule my-20" />
+        <div className="rule my-12 sm:my-20" />
 
         {/* 12. Developers. */}
         <section id="developers" className="scroll-mt-24">
@@ -717,6 +881,35 @@ export default function Home() {
           <p className="mt-3">Not a diagnosis, not a test, a count. Built for the Build, Ship, Shape: Amazon Developer Hackathon.</p>
         </footer>
       </main>
+    </>
+  );
+}
+
+/** One agent's run, word for word. A desk shows it open; a phone folds it under one line. */
+function AgentRun({ a }: { a: (typeof AGENTS)[number] }) {
+  const run = (
+    <>
+      <div className="rounded-lg border border-line bg-[var(--raised)] p-4">
+        <p className="text-[13px] leading-snug text-ink">{a.asked}</p>
+        <p className="mt-3 font-mono text-[12px] leading-relaxed break-words text-muted">$ {a.command}</p>
+        <blockquote className="mt-3 text-[15px] leading-relaxed text-ink">{a.answer}</blockquote>
+        <p className="mt-3 font-mono text-[12px] leading-relaxed break-words text-muted">[{a.tools}]</p>
+      </div>
+      <p className="mt-3 text-xs leading-relaxed text-muted">{a.caption}</p>
+    </>
+  );
+  return (
+    <>
+      <div className="mt-5 hidden md:block">{run}</div>
+      <details className="fold mt-4 border-t border-line md:hidden">
+        <summary>
+          The run, word for word
+          <svg className="fold-mark" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </summary>
+        <div className="pb-2">{run}</div>
+      </details>
     </>
   );
 }

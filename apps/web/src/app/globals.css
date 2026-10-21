@@ -717,9 +717,9 @@ ul > .coach-row:first-child {
   grid-template-areas:
     "what verdict"
     "fig fig"
-    "mean mean";
-  gap: 0.875rem 1.25rem;
-  padding: 1.5rem 0;
+    "more more";
+  gap: 0.625rem 1.25rem;
+  padding: 1.25rem 0 0.5rem;
   border-top: 1px solid var(--line);
 }
 
@@ -728,10 +728,14 @@ ul > .ev-row:first-child { border-top: 0; }
 .ev-row > [data-e="fig"] { grid-area: fig; }
 .ev-row > [data-e="mean"] { grid-area: mean; max-width: 60ch; }
 .ev-row > [data-e="verdict"] { grid-area: verdict; justify-self: end; }
+.ev-row > [data-e="more"] { grid-area: more; }
+.ev-more > summary { min-height: 2.75rem; padding: 0.25rem 0; font-size: 0.9375rem; font-weight: 500; color: var(--muted); }
 .ev-head { display: none; }
 
 @media (min-width: 768px) {
   .ev-row {
+    padding: 1.5rem 0;
+    row-gap: 0.875rem;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-areas:
       "what verdict"
@@ -757,3 +761,200 @@ ul > .ev-row:first-child { border-top: 0; }
     color: var(--muted);
   }
 }
+
+/*
+  The voice panel. The mic is the one primary control in the panel; the
+  three questions are quieter chips beside it that make the same call.
+  Both are at least 44px tall. Listening is shown by a word and by a
+  ring that breathes, so the state never rests on motion or colour alone.
+*/
+.voice-mic {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-height: 3rem;
+  padding: 0.5rem 1.25rem 0.5rem 0.5rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08), 0 8px 20px -10px var(--accent);
+  transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1), box-shadow 160ms ease;
+}
+
+.voice-mic-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent-ink) 16%, transparent);
+}
+
+.voice-mic.is-listening .voice-mic-icon::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 999px;
+  border: 2px solid var(--accent-ink);
+  opacity: 0.5;
+  animation: voice-breathe 1.4s cubic-bezier(0.23, 1, 0.32, 1) infinite;
+}
+
+@keyframes voice-breathe {
+  0% { transform: scale(0.9); opacity: 0.6; }
+  100% { transform: scale(1.25); opacity: 0; }
+}
+
+.voice-mic:active:not(:disabled),
+.voice-chip:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.voice-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-align: left;
+  transition:
+    border-color 140ms ease,
+    background-color 140ms ease,
+    transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .voice-chip:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+}
+
+.voice-chip[aria-busy="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  opacity: 1;
+}
+
+.voice-result {
+  display: grid;
+  gap: 0.875rem;
+}
+
+.voice-result > div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.voice-result dt {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+@media (min-width: 768px) {
+  .voice-result > div {
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: baseline;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .voice-mic.is-listening .voice-mic-icon::after { animation: none; opacity: 0.6; }
+  .voice-mic, .voice-chip { transition: none; }
+}
+
+/*
+  The nudge drawing: an afternoon of hours as columns, the usual best hour
+  drawn as an outline at the week's average, the turns so far as a solid
+  bar inside it, and a pin where the nudge goes into the Bee. Hours after
+  the moment are left empty, because the drawing stops at that moment.
+*/
+.nudge-cols {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  gap: 0.5rem;
+  align-items: end;
+}
+
+.nudge-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+  min-width: 0;
+}
+
+.nudge-track {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+  height: 10rem;
+}
+
+.nudge-bar {
+  width: min(100%, 2.75rem);
+  border-radius: 4px 4px 0 0;
+  background: var(--chart-mark);
+}
+
+.nudge-usual {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: min(100%, 2.75rem);
+  transform: translateX(-50%);
+  border: 1.5px dashed var(--muted);
+  border-bottom: 0;
+  border-radius: 4px 4px 0 0;
+}
+
+.nudge-pin {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.nudge-pin::after {
+  content: "";
+  width: 1.5px;
+  height: 0.75rem;
+  background: var(--ink);
+  margin-top: 2px;
+}
+
+.nudge-pin > span {
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.nudge-empty {
+  width: min(100%, 2.75rem);
+  height: 2px;
+  border-radius: 1px;
+  background: var(--line-strong);
+}
+
+/* The phone gets the same facts as the desk, folded: one line each, opened on tap. */
+.fold-list > details + details { border-top: 1px solid var(--line); }
+.fold-list .fold > summary { font-size: 1rem; line-height: 1.35; }

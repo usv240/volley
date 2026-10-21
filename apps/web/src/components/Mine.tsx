@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { DayView, clock, type Day } from "./DayView";
 import { Info } from "./Info";
+import { noteForCoach } from "./coachList";
 import demo from "../data/demo.json";
 
 /**
@@ -395,21 +396,29 @@ export function Mine({
             </p>
           </div>
           <div className="card p-6 sm:p-8">
-            <p className="eyebrow">Tomorrow, written from today&apos;s counts</p>
+            <p className="eyebrow">{coach ? "The note the family received" : "Tomorrow, written from today's counts"}</p>
             {note ? (
               <blockquote className="mt-4 border-l border-[var(--line-strong)] pl-4">
-                <p className="leading-relaxed text-ink">{note.text}</p>
+                <p className="leading-relaxed text-ink">{coach ? noteForCoach(note.text) : note.text}</p>
                 <footer className="mt-2 text-xs text-faint">
                   the {note.source} layer, from the fact: {note.fact.kind.replace(/_/g, " ")}
+                  {coach ? "; written to the parent, retold here in the third person" : ""}
                 </footer>
               </blockquote>
             ) : (
               <p className="mt-4 text-sm text-muted">No note yet.</p>
             )}
-            <p className="mt-4 text-sm leading-relaxed text-muted">
-              The same sentence <code className="font-mono text-xs">volley today</code> printed, and, with your consent, placed in your
-              Bee as a reminder <Info term="bedrock" />.
-            </p>
+            {coach ? (
+              <p className="mt-4 text-sm leading-relaxed text-muted">
+                The family&apos;s copy says &ldquo;you&rdquo;. It is the sentence their <code className="font-mono text-xs">volley today</code>{" "}
+                printed and, with their consent, placed in their Bee as a reminder <Info term="bedrock" />.
+              </p>
+            ) : (
+              <p className="mt-4 text-sm leading-relaxed text-muted">
+                The same sentence <code className="font-mono text-xs">volley today</code> printed, and, with your consent, placed in your
+                Bee as a reminder <Info term="bedrock" />.
+              </p>
+            )}
           </div>
         </div>
       )}

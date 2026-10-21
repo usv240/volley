@@ -113,28 +113,50 @@ function Row({
   verdict: Verdict;
   verdictWord?: string;
 }) {
+  // A phone shows the name, the verdict and the figure, and folds the
+  // rest under one line; a desk shows every part of the row at once.
+  const detail = (
+    <>
+      {figure && <p className="text-sm leading-snug text-muted">{second}</p>}
+      {chart}
+    </>
+  );
   return (
     <li className="ev-row">
       <div data-e="what">
         <p className="font-semibold leading-snug text-ink">{what}</p>
-        <p className="mt-1 text-sm leading-snug text-muted">{sub}</p>
+        <p className="mt-1 hidden text-sm leading-snug text-muted md:block">{sub}</p>
       </div>
       <div data-e="fig" className="min-w-0">
-        {figure && (
+        {figure ? (
           <p className="flex flex-wrap items-baseline gap-x-2">
             <span className="display-sm text-[1.75rem] leading-none text-ink tabular-nums">{figure}</span>
             <span className="text-sm text-muted">{unit}</span>
           </p>
+        ) : (
+          <p className="text-sm leading-snug text-ink">{second}</p>
         )}
-        <p className={`${figure ? "mt-1.5 text-muted" : "text-ink"} text-sm leading-snug`}>{second}</p>
-        {chart}
+        <div className="mt-1.5 hidden md:block">{detail}</div>
       </div>
-      <p data-e="mean" className="text-[15px] leading-relaxed text-ink">
+      <p data-e="mean" className="hidden text-[15px] leading-relaxed text-ink md:block">
         {meaning}
       </p>
       <div data-e="verdict">
         <VerdictPill kind={verdict} word={verdictWord} />
       </div>
+      <details data-e="more" className="fold ev-more md:hidden">
+        <summary>
+          What it means
+          <svg className="fold-mark" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </summary>
+        <div className="space-y-3 pb-2">
+          <p className="text-[15px] leading-relaxed text-ink">{meaning}</p>
+          <p className="text-sm leading-snug text-muted">{sub}</p>
+          {detail}
+        </div>
+      </details>
     </li>
   );
 }

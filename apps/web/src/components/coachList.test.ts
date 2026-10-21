@@ -4,6 +4,7 @@ import {
   LIST_KEY,
   addFamily,
   nameFamily,
+  noteForCoach,
   parseOpenFamily,
   parseShareLink,
   readFamilies,
@@ -81,4 +82,34 @@ describe("the week's direction, by the service's rule", () => {
 it("prints a date without shifting it by the time zone", () => {
   expect(shortDate("2026-09-28")).toBe("Sep 28");
   expect(shortDate("nonsense")).toBe("nonsense");
+});
+
+describe("the note, retold for the coach", () => {
+  it("turns the parent's 'you' into the third person and keeps every number", () => {
+    expect(
+      noteForCoach(
+        "Around six in the evening, you and Asha exchanged words back and forth 38 times. That hour holds the most talking between you two today.",
+      ),
+    ).toBe(
+      "Around six in the evening, the parent and Asha exchanged words back and forth 38 times. That hour holds the most talking between the two of them today.",
+    );
+    expect(noteForCoach("Your best hour with Asha was around 6pm, with 38 turns. Keep that one exactly as it is.")).toBe(
+      "The family's best hour with Asha was around 6pm, with 38 turns. Keep that one exactly as it is.",
+    );
+  });
+
+  it("handles contractions, a sentence that starts with you, and no child name", () => {
+    expect(noteForCoach("You had 157 turns. You're most in tune at 6pm, so keep it.")).toBe(
+      "The parent had 157 turns. The parent is most in tune at 6pm, so keep it.",
+    );
+    expect(noteForCoach("A quiet hour with your child at 4pm; you were away from 9 to 3.")).toBe(
+      "A quiet hour with the child at 4pm; the parent was away from 9 to 3.",
+    );
+    expect(noteForCoach("A first day counted. Wear the band tomorrow.")).toBe("A first day counted. Wear the band tomorrow.");
+  });
+
+  it("leaves no second person behind", () => {
+    const out = noteForCoach("You and Asha did well; your hour, yours to keep, between you two, you've earned it, you'll see.");
+    expect(out).not.toMatch(/\byou|\byour/i);
+  });
 });

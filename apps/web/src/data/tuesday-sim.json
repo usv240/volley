@@ -1,0 +1,62 @@
+{
+ "label": "SIMULATED Bee, simulated household",
+ "simulated_bee": true,
+ "bee_server": "python -m volley_agent.sim_bee (SIMULATED)",
+ "household": "demo-family (simulated)",
+ "date": "2026-10-21T19:53:56+00:00",
+ "command": "python -m volley_agent tuesday --sim-bee --record apps/agent/runs/tuesday-sim.json \"Which day this week was the quietest for talking, and what was I doing that day according to my Bee?\"",
+ "mcp_url": "https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws/mcp",
+ "model": [
+  "us.anthropic.claude-sonnet-4-6"
+ ],
+ "question": "Which day this week was the quietest for talking, and what was I doing that day according to my Bee?",
+ "tools_offered": [
+  "bee_create_todo",
+  "bee_get_daily_summary",
+  "bee_get_today",
+  "bee_list_daily_summaries",
+  "bee_list_todos",
+  "best_hour_this_week",
+  "household_settings",
+  "how_was_our_talking_today",
+  "one_thing_for_tomorrow",
+  "record_day",
+  "week_trend",
+  "what_volley_counts"
+ ],
+ "tools_called": [
+  "week_trend",
+  "bee_list_daily_summaries",
+  "bee_get_daily_summary"
+ ],
+ "tool_calls": [
+  {
+   "toolUseId": "tooluse_AyfpUYtDBy6UN1y4DJfowC",
+   "name": "week_trend",
+   "input": {}
+  },
+  {
+   "toolUseId": "tooluse_8YIZ3RedhH2jLLgb5wKkYB",
+   "name": "bee_list_daily_summaries",
+   "input": {
+    "startDate": "2025-07-14",
+    "endDate": "2025-07-20"
+   }
+  },
+  {
+   "toolUseId": "tooluse_GNNHfY8eGWc3gSncojcTge",
+   "name": "bee_get_daily_summary",
+   "input": {
+    "date": "2026-09-24"
+   }
+  }
+ ],
+ "answer": "Your quietest day was September 24, with 156 turns, the lowest of the week. Your Bee shows you spent most of that day on a long drive to the grandparents and back, with Asha napping through much of it. That explains the count perfectly, she was asleep in the car seat for big stretches of the day!",
+ "layer": "model",
+ "refused": [],
+ "tool_results": [
+  "{\"household_id\": \"demo-family\", \"simulated\": true, \"days\": [{\"date\": \"2026-09-22\", \"turns\": 166, \"best_hour\": 18}, {\"date\": \"2026-09-23\", \"turns\": 162, \"best_hour\": 19}, {\"date\": \"2026-09-24\", \"turns\": 156, \"best_hour\": 18}, {\"date\": \"2026-09-25\", \"turns\": 194, \"best_hour\": 19}, {\"date\": \"2026-09-26\", \"turns\": 270, \"best_hour\": 18}, {\"date\": \"2026-09-27\", \"turns\": 241, \"best_hour\": 19}, {\"date\": \"2026-09-28\", \"turns\": 157, \"best_hour\": 18}], \"direction\": \"up\", \"best_day\": \"2026-09-26\", \"quietest_day\": \"2026-09-24\", \"target_turns_per_hour\": 40, \"target_source\": \"LENA, Every Interaction Counts: their figure, stated as theirs\"}",
+  "{\"notice\": \"SIMULATED Bee: synthetic days written for Volley's simulated household (child: Asha). No real person's data.\", \"simulated\": true, \"daily_summaries\": [], \"timezone\": \"America/Los_Angeles\"}",
+  "{\"notice\": \"SIMULATED Bee: synthetic days written for Volley's simulated household (child: Asha). No real person's data.\", \"simulated\": true, \"daily_summary\": {\"id\": 5010, \"date\": \"2026-09-24\", \"short_summary\": \"A long drive to the grandparents and back; Asha napped late.\", \"summary\": \"## Summary\\n\\nYou left work early and drove Asha to her grandparents' house for dinner, a long drive each way. Asha fell asleep in the car on the way there and napped late into the afternoon, then slept again for most of the drive home. Most of the evening was spent in the car, and she went from the car seat straight to bed.\", \"simulated\": true}, \"timezone\": \"America/Los_Angeles\"}"
+ ]
+}

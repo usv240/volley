@@ -7,6 +7,7 @@ import demo from "../data/demo.json";
 import {
   addFamily,
   nameFamily,
+  noteForCoach,
   parseOpenFamily,
   parseShareLink,
   readFamilies,
@@ -329,7 +330,7 @@ export function Coach() {
           <span data-a="latest" className="text-right">
             Latest day
           </span>
-          <span data-a="note">Tomorrow&apos;s note</span>
+          <span data-a="note">The note the family received</span>
           <span data-a="act" />
         </div>
         <ul aria-label={n === 0 ? "An example family" : "Families you follow"}>
@@ -441,8 +442,8 @@ function Row({
           <div data-a="note" className="min-w-0">
             {summary ? (
               <p className="coach-note text-sm leading-snug text-ink">
-                <span className="coach-note-label">Tomorrow&apos;s note: </span>
-                {summary.note ?? <span className="text-muted">none until a day is counted</span>}
+                <span className="coach-note-label">The note the family received: </span>
+                {summary.note ? noteForCoach(summary.note) : <span className="text-muted">none until a day is counted</span>}
               </p>
             ) : (
               <>

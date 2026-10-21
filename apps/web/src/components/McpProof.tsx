@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { clock } from "./DayView";
+import { MCP_URL, PROTOCOL, rpc, toolJson } from "./mcpClient";
 
 /**
  * The agent, held to a real session from the visitor's own browser.
@@ -26,33 +27,12 @@ import { clock } from "./DayView";
  * is also the proof that the allowlist is wired rather than intended.
  */
 
-const MCP_URL = process.env.NEXT_PUBLIC_MCP_URL ?? "http://localhost:8791/mcp";
-const PROTOCOL = "2025-11-25";
-
 interface Line {
   request: string;
   status: number;
   ok: boolean;
   ms: number;
   note?: string;
-}
-
-async function rpc(body: unknown, session?: string) {
-  const headers: Record<string, string> = {
-    "content-type": "application/json",
-    "mcp-protocol-version": PROTOCOL,
-  };
-  if (session) headers["mcp-session-id"] = session;
-  const t0 = performance.now();
-  const res = await fetch(MCP_URL, { method: "POST", headers, body: JSON.stringify(body) });
-  const ms = Math.round(performance.now() - t0);
-  let json: unknown = null;
-  try {
-    json = await res.json();
-  } catch {
-    /* 202 and 204 carry no body */
-  }
-  return { status: res.status, ms, session: res.headers.get("mcp-session-id"), json };
 }
 
 interface Today {
@@ -65,16 +45,6 @@ interface Today {
   words_discarded: number | null;
   simulated: boolean;
   note?: string;
-}
-
-function toolJson<T>(json: unknown): T | null {
-  const text = (json as { result?: { content?: { text: string }[] } })?.result?.content?.[0]?.text;
-  if (!text) return null;
-  try {
-    return JSON.parse(text) as T;
-  } catch {
-    return null;
-  }
 }
 
 export function McpProof() {
