@@ -298,6 +298,26 @@ def build_app(store: Store | None = None, seed: bool = True, note_deps: dict | N
         store.set_share(hid, None)
         return {"revoked": True}
 
+    @app.get("/v1/households/{hid}/plan")
+    def week_plan(hid: str, request: Request):
+        """Three lines for the coming week, as a home visitor would write
+        them, from the last seven days of counts. Phrased once per set of
+        facts and kept, like the note."""
+        from .plan import phrase, week_facts
+
+        h = may_read(request, hid)
+        f = week_facts(store.list_days(hid))
+        if f is None:
+            raise HTTPException(404, "no days with the child there yet")
+        key = "plan-" + "-".join(str(f[k]) for k in ("days", "best_hour", "best_turns", "quiet_hour", "quiet_turns"))
+        kept = store.get_note(hid, key)
+        if kept and kept.get("facts") == f:
+            result = kept
+        else:
+            result = {"facts": f, **phrase(f, h.get("child_name"), note_deps)}
+            store.put_note(hid, key, result)
+        return {"household_id": hid, "simulated": h.get("simulated", False), **result, "disclaimer": DISCLAIMER}
+
     @app.delete("/v1/households/{hid}")
     def delete_household(hid: str, request: Request):
         household_or_404(hid)

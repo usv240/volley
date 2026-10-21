@@ -339,3 +339,30 @@ def test_a_kept_note_that_fails_a_newer_rule_is_phrased_again():
     store.put_note(hid, first["date"], {**kept, "text": "A lovely hour. Keep it exactly so."})
     again = client.get(f"/v1/households/{hid}/note", headers=k).json()
     assert again["text"] != "A lovely hour. Keep it exactly so." and len(calls) == 2
+
+
+def test_the_week_plan_names_three_things_and_keeps_to_the_counts():
+    seen = []
+
+    def create(system, user, model):
+        seen.append(user)
+        if model == "bad":
+            return "Around six you had 99 turns.\nGreat.\nWeekend: relax."
+        return ("Around seven in the evening is your best hour: ask Asha about her day then.\n"
+                "Around four in the afternoon, try naming what you are doing together.\n"
+                "At the weekend, try one meal where Asha tells the story.")
+
+    c = TestClient(build_app(store=MemoryStore(), seed=True, note_deps={"create_text": create, "models": ["bad", "good"], "enabled": True}))
+    plan = c.get(f"/v1/households/{DEMO_HOUSEHOLD}/plan").json()
+    assert plan["source"] == "bedrock" and plan["model"] == "good" and len(plan["lines"]) == 3
+    assert plan["attempts"][0]["ok"] is False
+    assert "turns a day" in seen[0] and "Asha" in seen[0]
+    # Kept: asking again does not call the model again.
+    c.get(f"/v1/households/{DEMO_HOUSEHOLD}/plan")
+    assert len(seen) == 2
+
+
+def test_the_week_plan_floor_needs_no_model():
+    c = TestClient(build_app(store=MemoryStore(), seed=True))
+    plan = c.get(f"/v1/households/{DEMO_HOUSEHOLD}/plan").json()
+    assert plan["source"] == "template" and len(plan["lines"]) == 3
