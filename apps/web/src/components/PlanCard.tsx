@@ -72,7 +72,7 @@ export function PlanCard({
         <h3 id={headingId} className="font-semibold text-ink">
           This week&apos;s plan
         </h3>
-        {isSimulated && <span className="coach-pill">The simulated family&apos;s</span>}
+        {isSimulated && <span className="coach-pill">The simulated family</span>}
       </div>
 
       {state.kind === "loading" && (

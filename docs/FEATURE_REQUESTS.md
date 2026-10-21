@@ -9,7 +9,7 @@ that produced it. Urgency uses the hackathon's scale: **critical**,
 ### 1. Carry the enrolled voice through to the developer data as a speaker label
 
 **Critical.** Volley counts back-and-forth between a parent and a child,
-so it has to know who said each thing. On this account 1,004 of 1,004
+so it has to know who said each thing. On this account 30,134 of 30,134
 utterances across 25 sessions came back `speaker: "Unknown"` on
 2026-10-19, after the app had enrolled the wearer's voice. A
 `speaker: "wearer"` or an `is_wearer` boolean would make the count exact

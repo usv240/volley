@@ -14,6 +14,7 @@ import { Nav } from "../components/Nav";
 import { PlanCard } from "../components/PlanCard";
 import { PrivacyProof } from "../components/PrivacyProof";
 import { StepsHandoff } from "../components/StepsHandoff";
+import { TomorrowCard } from "../components/TomorrowCard";
 import { VoiceAsk } from "../components/VoiceAsk";
 import { WorkedExample } from "../components/WorkedExample";
 
@@ -73,6 +74,14 @@ const SETUP_OPTIONS =
 // The simulated household's latest day: the week the nudge drawing averages ends on it.
 const LATEST = demo.days[demo.days.length - 1].date;
 
+// The nudge rule, as apps/ingest/volley_ingest/nudge.py states it: twenty
+// minutes into the usual best hour, a quarter of its usual turns or fewer.
+const NUDGE_CHECK_AFTER_MINUTES = 20;
+const NUDGE_QUIET_FRACTION = 0.25;
+// The turns so far in the drawing's evening are illustrative, chosen under
+// the line so the drawing shows an evening the rule fires on; the caption says so.
+const NUDGE_SO_FAR = 9;
+
 const FAQ = [
   ["Is a low day bad?", "No. It is a count of one day. The note names your best hour so you keep what already works, and one thing to try tomorrow. That is all it does."],
   ["Does it listen to my child?", "The Bee on your wrist transcribes what it hears, including your child. Volley reads that transcript on your computer, counts, and deletes the words. Nothing your child said is ever stored by Volley."],
@@ -94,24 +103,28 @@ export default function Home() {
     return Object.entries(by).sort((a, b) => b[1] - a[1])[0];
   })();
 
-  // The nudge drawing, read from the same simulated fortnight: the week's
-  // usual best hour and its average, and the evening that hour was
-  // quietest, drawn up to the moment that hour is under way.
+  // The nudge drawing: the week's usual best hour and its average, the
+  // line the rule fires at, and an evening drawn up to twenty minutes
+  // into that hour. The hours before it are the simulated family's
+  // quietest such evening; the turns so far in the hour are illustrative,
+  // under the line, because on no simulated evening did the rule fire.
   const nudge = (() => {
     if (!bestWeekHour) return null;
     const hour = Number(bestWeekHour[0]);
     const usual = Math.round(bestWeekHour[1] / week.length);
+    const threshold = Math.floor(NUDGE_QUIET_FRACTION * usual);
     const at = (d: Day, h: number) => d.hours.find((x) => x.hour === h);
     const quiet = days
       .filter((d) => (at(d, hour)?.utterances_child ?? 0) > 0)
       .reduce((a, b) => ((at(b, hour)?.turns ?? 0) < (at(a, hour)?.turns ?? 0) ? b : a));
+    const soFar = NUDGE_SO_FAR;
     const cols = [hour - 3, hour - 2, hour - 1, hour, hour + 1].map((h) => ({
       hour: h,
-      turns: h < hour ? (at(quiet, h)?.turns ?? 0) : h === hour ? (at(quiet, h)?.turns ?? 0) : null,
+      turns: h < hour ? (at(quiet, h)?.turns ?? 0) : h === hour ? soFar : null,
     }));
-    const soFar = at(quiet, hour)?.turns ?? 0;
     const max = Math.max(usual, ...cols.map((c) => c.turns ?? 0));
-    return { hour, usual, date: quiet.date, soFar, cols, max };
+    const checkAt = clock(hour).replace(/(am|pm)$/, `:${NUDGE_CHECK_AFTER_MINUTES}$1`);
+    return { hour, usual, threshold, date: quiet.date, soFar, cols, max, checkAt };
   })();
 
   return (
@@ -130,7 +143,7 @@ export default function Home() {
             </h1>
             <p className="mt-5 max-w-[58ch] text-[17px] leading-relaxed text-ink sm:mt-6 sm:text-lg">
               Volley hears the back-and-forth with your child on the Bee you already wear, counts it, throws the words away on your own
-              computer <Info term="onYourComputer" />, and taps you on the wrist when your best hour goes quiet. The count researchers
+              computer <Info term="onYourComputer" />, and sends a nudge to your Bee when your best hour goes quiet. The count researchers
               take with a recorder parents cannot buy, for a few cents a month.
             </p>
             <p className="mt-3 max-w-[58ch] text-pretty text-sm leading-relaxed text-muted">
@@ -266,17 +279,8 @@ export default function Home() {
                 <Info term="noPercentile" />.
               </p>
             </div>
-            <div className="card p-6 sm:p-8">
-              <p className="eyebrow">Tomorrow, written from today&apos;s counts</p>
-              <blockquote className="mt-4 border-l border-[var(--line-strong)] pl-4">
-                <p className="leading-relaxed text-ink">{bestHourNote(today, demo.child_name)}</p>
-                <footer className="mt-2 text-xs text-faint">the template layer, from the fact: best hour</footer>
-              </blockquote>
-              <p className="mt-4 text-sm leading-relaxed text-muted">
-                Rules pick the fact; Claude on Bedrock phrases it; every digit must come from the fact or the template is used{" "}
-                <Info term="bedrock" />. With your consent the sentence goes into your Bee as a reminder at that hour.
-              </p>
-            </div>
+            {/* The live note for the latest day, the same one the coach page shows; the template sentence only if the service cannot be read. */}
+            <TomorrowCard id={demo.household_id} fallback={bestHourNote(today, demo.child_name)} />
             <PlanCard id={demo.household_id} simulated className="lg:col-span-2" />
           </div>
         </section>
@@ -309,7 +313,7 @@ export default function Home() {
 
                 <figure className="card min-w-0 p-6 sm:p-8">
                   <p className="font-semibold text-ink">One evening, simulated</p>
-                  <dl className="mt-4 grid grid-cols-3 gap-4 text-sm">
+                  <dl className="mt-4 grid grid-cols-2 gap-4 text-sm sm:grid-cols-4">
                     <div>
                       <dt className="text-muted">usual hour</dt>
                       <dd className="font-semibold text-ink">{clock(nudge.hour)}</dd>
@@ -319,7 +323,11 @@ export default function Home() {
                       <dd className="font-semibold text-ink tabular-nums">{nudge.usual} turns</dd>
                     </div>
                     <div>
-                      <dt className="text-muted">so far</dt>
+                      <dt className="text-muted">nudges at</dt>
+                      <dd className="font-semibold text-ink tabular-nums">{nudge.threshold} or fewer</dd>
+                    </div>
+                    <div>
+                      <dt className="text-muted">so far, illustrative</dt>
                       <dd className="font-semibold text-ink tabular-nums">{nudge.soFar} turns</dd>
                     </div>
                   </dl>
@@ -328,9 +336,9 @@ export default function Home() {
                     style={{ ["--cols" as string]: nudge.cols.length }}
                     role="img"
                     aria-label={`Simulated evening: ${nudge.cols
-                      .filter((c) => c.turns !== null)
+                      .filter((c) => c.turns !== null && c.hour !== nudge.hour)
                       .map((c) => `${clock(c.hour)} ${c.turns} turns`)
-                      .join(", ")}; ${clock(nudge.hour)} usually has ${nudge.usual}, and the nudge goes into the Bee while that hour is under way.`}
+                      .join(", ")}; ${clock(nudge.hour)} usually has ${nudge.usual}, the rule fires at ${nudge.threshold} or fewer by ${nudge.checkAt}, and so far there are ${nudge.soFar}, an illustrative count under that line, so the nudge goes into the Bee.`}
                   >
                     {nudge.cols.map((c) => {
                       const now = c.hour === nudge.hour;
@@ -339,19 +347,20 @@ export default function Home() {
                           <span className="h-4 text-xs leading-4 text-muted tabular-nums">{c.turns === null || now ? "" : c.turns}</span>
                           <div className="nudge-track">
                             {now && <span className="nudge-usual" style={{ height: `${(100 * nudge.usual) / nudge.max}%` }} />}
-                            {now && (
-                              <span className="nudge-pin" style={{ bottom: `calc(${(100 * nudge.usual) / nudge.max}% + 0.5rem)` }}>
-                                <span>nudge</span>
-                              </span>
-                            )}
                             {c.turns === null ? (
                               <span className="nudge-empty" />
                             ) : (
                               <span className="nudge-bar" style={{ height: `${Math.max(2, (100 * c.turns) / nudge.max)}%` }} />
                             )}
+                            {now && <span className="nudge-line" style={{ bottom: `${(100 * nudge.threshold) / nudge.max}%` }} />}
+                            {now && (
+                              <span className="nudge-pin" style={{ bottom: `calc(${(100 * nudge.threshold) / nudge.max}% + 0.375rem)` }}>
+                                <span>nudge</span>
+                              </span>
+                            )}
                           </div>
                           <span className={`h-4 text-xs leading-4 ${now ? "font-semibold text-ink" : "text-muted"}`}>{clock(c.hour)}</span>
-                          <span className="h-4 whitespace-nowrap text-[11px] leading-4 text-muted">{now ? "now" : c.turns === null ? "not yet" : ""}</span>
+                          <span className="h-4 whitespace-nowrap text-[11px] leading-4 text-muted">{now ? nudge.checkAt : c.turns === null ? "not yet" : ""}</span>
                         </div>
                       );
                     })}
@@ -365,11 +374,17 @@ export default function Home() {
                       <span className="inline-block h-3 w-3 rounded-sm border-[1.5px] border-dashed border-[var(--muted)]" />
                       usual for that hour, the week&apos;s average
                     </li>
+                    <li className="flex items-center gap-2">
+                      <span className="inline-block h-0 w-3 border-t-[1.5px] border-[var(--ink)]" />
+                      nudges at {nudge.threshold} or fewer by {nudge.checkAt}
+                    </li>
                   </ul>
                   <figcaption className="mt-4 text-xs leading-relaxed text-muted">
-                    Simulated: the simulated family&apos;s {nudge.date}, its quietest {clock(nudge.hour)} of the fortnight, against that
-                    hour&apos;s average for the week ending {LATEST}. The drawing stops at the moment the nudge goes in; when exactly it
-                    fires is the command&apos;s rule, not the drawing&apos;s.
+                    The rule, as <code className="font-mono text-[11px]">volley live --nudge</code> runs it: twenty minutes into the hour
+                    the family usually talks most, a quarter of that hour&apos;s usual turns or fewer puts the nudge in, once a day at
+                    most. Here that is {nudge.threshold} or fewer of the {nudge.usual} usual at {clock(nudge.hour)}, the week ending{" "}
+                    {LATEST}. The hours before it are the simulated family&apos;s {nudge.date}; the {nudge.soFar} turns so far are
+                    illustrative, chosen under the line, because on no simulated evening did the rule fire.
                   </figcaption>
                 </figure>
               </div>

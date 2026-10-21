@@ -31,16 +31,21 @@ export function planSourceLabel(source: string): string {
   return source === "bedrock" ? SOURCE_LABEL.bedrock : SOURCE_LABEL.template;
 }
 
-function turnsADay(n: number): string {
-  return `${n} ${n === 1 ? "turn" : "turns"} a day`;
+/** "about 44 turns in that hour, on average": the hour's average over the days, never a day's total. */
+function turnsInThatHour(n: number): string {
+  return `about ${n} ${n === 1 ? "turn" : "turns"} in that hour, on average`;
 }
 
-/** The facts the plan was written from, in one short line of clock times. */
+/**
+ * The facts the plan was written from, in one short line of clock times.
+ * The best hour is the week's, which can differ from the latest day's, so
+ * the line says so.
+ */
 export function planFactsLine(f: PlanFacts): string {
   const span = `From ${f.days} ${f.days === 1 ? "day" : "days"}`;
-  const best = `best hour ${clock(f.best_hour)}, about ${turnsADay(f.best_turns)}`;
+  const best = `best hour across the week ${clock(f.best_hour)}, ${turnsInThatHour(f.best_turns)}`;
   if (f.quiet_hour === null || f.quiet_turns === null) return `${span}: ${best}.`;
-  return `${span}: ${best}; quiet hour ${clock(f.quiet_hour)}, about ${turnsADay(f.quiet_turns)}.`;
+  return `${span}: ${best}; quiet hour ${clock(f.quiet_hour)}, ${turnsInThatHour(f.quiet_turns)}.`;
 }
 
 /**

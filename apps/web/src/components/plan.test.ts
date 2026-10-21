@@ -4,12 +4,14 @@ import { SOURCE_LABEL, parsePlan, planFactsLine, planLineLabels, planSourceLabel
 const FACTS = { days: 7, best_hour: 18, best_turns: 22, quiet_hour: 8, quiet_turns: 3 };
 
 describe("planFactsLine", () => {
-  it("names both hours as clock times and turns a day", () => {
-    expect(planFactsLine(FACTS)).toBe("From 7 days: best hour 6pm, about 22 turns a day; quiet hour 8am, about 3 turns a day.");
+  it("names both hours as clock times, the best as the week's, and turns as that hour's average", () => {
+    expect(planFactsLine(FACTS)).toBe(
+      "From 7 days: best hour across the week 6pm, about 22 turns in that hour, on average; quiet hour 8am, about 3 turns in that hour, on average.",
+    );
   });
   it("drops the quiet hour when there is none, and counts one day and one turn in the singular", () => {
     expect(planFactsLine({ days: 1, best_hour: 12, best_turns: 1, quiet_hour: null, quiet_turns: null })).toBe(
-      "From 1 day: best hour 12pm, about 1 turn a day.",
+      "From 1 day: best hour across the week 12pm, about 1 turn in that hour, on average.",
     );
   });
 });

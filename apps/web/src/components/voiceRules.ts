@@ -100,7 +100,7 @@ export function spokenAnswer(tool: Tool, data: J | null): string | null {
     const hour = num(data.hour);
     const turns = num(data.turns_this_week);
     if (hour === null || turns === null) return null;
-    return `Across ${span(simulated, num(data.days))}, ${clock(hour)} was the busiest hour: ${turns} turns in that hour altogether.`;
+    return `Across ${span(simulated, num(data.days))}, ${clock(hour)} was the busiest hour across the week: ${turns} turns in that hour altogether.`;
   }
   if (tool === "week_trend") {
     const direction = str(data.direction);

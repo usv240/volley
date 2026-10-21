@@ -66,6 +66,8 @@ fails if this paragraph and that file disagree.
 Amazon Transcribe: the Bee already transcribes, and Volley must never
 handle audio. Amazon Rekognition or anything that would see a child.
 API Gateway: the endpoint speaks one protocol and needs no stages.
+- Kiro and Kiro Crew: not used. The build ran in one coding agent from the first commit; a second workspace mid-window would have added nothing a judge can see. Every AWS integration here is a service the product calls at run time.
+- SageMaker: not used. The one model, the role model, is trained on CHILDES transcripts that stay on the builder's machine under TalkBank's rules, so training never leaves it; a training job would have meant uploading the corpus.
 
 ## Amazon Polly
 

@@ -876,8 +876,9 @@ ul > .ev-row:first-child { border-top: 0; }
 /*
   The nudge drawing: an afternoon of hours as columns, the usual best hour
   drawn as an outline at the week's average, the turns so far as a solid
-  bar inside it, and a pin where the nudge goes into the Bee. Hours after
-  the moment are left empty, because the drawing stops at that moment.
+  bar inside it, a line at the quarter the rule fires at, and a pin on
+  that line where the nudge goes into the Bee. Hours after the moment are
+  left empty, because the drawing stops at that moment.
 */
 .nudge-cols {
   display: grid;
@@ -918,6 +919,15 @@ ul > .ev-row:first-child { border-top: 0; }
   border: 1.5px dashed var(--muted);
   border-bottom: 0;
   border-radius: 4px 4px 0 0;
+}
+
+/* The line the rule fires at: a quarter of the usual turns, drawn across the usual hour's column. */
+.nudge-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  border-top: 1.5px solid var(--ink);
 }
 
 .nudge-pin {

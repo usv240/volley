@@ -162,3 +162,9 @@ were deliberately not used, and the AWS document says why.
 **What worked well:** it authenticates with the existing Bee login, so there is no second token to manage.
 
 **Would we build with it again:** yes.
+
+## Not used, and why
+
+- Kiro and Kiro Crew: not used. The build ran in one coding agent from the first commit; a second workspace mid-window would have added nothing a judge can see. Every AWS integration here is a service the product calls at run time.
+- SageMaker: not used. The one model, the role model, is trained on CHILDES transcripts that stay on the builder's machine under TalkBank's rules, so training never leaves it; a training job would have meant uploading the corpus.
+- Bee Skill (bee-computer/bee-skill): read, not installed. Its first instruction is to run `bee now`, which returns the wearer's last ten hours of conversations into the coding agent; the wearer's own rule keeps those out of any model, so the Bee is reached through its CLI and its MCP server behind an allow-list instead.

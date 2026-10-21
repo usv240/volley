@@ -51,7 +51,7 @@ const IMPACT = [
   {
     title: "Somebody has already paid for it, at city scale",
     term: "paidFor" as const,
-    body: "Providence won a Bloomberg Philanthropies grand prize to put the research recorder in families' homes with coaching, and community classes built on the same instrument raised turns in an evaluation. The demand is proven. The barrier is that the instrument is a programme, not a purchase.",
+    body: "Providence won a Bloomberg Philanthropies grand prize to put the research recorder in families' homes with coaching, and community classes built on the same instrument raised turns in an evaluation. The demand is proven. The barrier is that the instrument is a programme, not a purchase. In 2025 home visiting reached 301,595 US families over 3.1 million visits; 16.7 million could benefit, and half the children who could are three to five (NHVRC, 2026 Yearbook).",
   },
   {
     title: "It is coachable, in randomised trials, at this age",
@@ -187,7 +187,7 @@ export default function EvidencePage() {
             <div className="card min-w-0 p-6">
               <p className="font-semibold text-ink">Run it</p>
               <pre tabIndex={0} className="mt-3 overflow-x-auto rounded-lg border border-line bg-[var(--raised)] p-3 font-mono text-[12px] leading-relaxed text-ink">
-                {"python -m venv .venv\n.venv/Scripts/pip install -e packages/serve-return[dev] -e apps/ingest[dev] -e apps/server[dev]\n.venv/Scripts/python -m pytest packages apps    # every test\ncd apps/web && npm install && npm test && npm run dev"}
+                {"python -m venv .venv\n.venv/Scripts/pip install -e packages/serve-return[dev] -e apps/ingest[dev] -e apps/server[dev]\n.venv/Scripts/python -m pytest packages apps harness -q    # every test\ncd apps/web && npm install && npm test && npm run dev"}
               </pre>
             </div>
             <div className="card min-w-0 p-6">

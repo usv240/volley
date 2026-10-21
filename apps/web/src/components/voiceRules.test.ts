@@ -24,7 +24,7 @@ describe("the sentence read back", () => {
       "On the simulated family's latest counted day, there were 157 turns, and the best hour was 6pm.",
     );
     expect(spokenAnswer("best_hour_this_week", { hour: 19, turns_this_week: 309, days: 7, simulated: true })).toBe(
-      "Across the simulated family's last 7 days, 7pm was the busiest hour: 309 turns in that hour altogether.",
+      "Across the simulated family's last 7 days, 7pm was the busiest hour across the week: 309 turns in that hour altogether.",
     );
     expect(spokenAnswer("one_thing_for_tomorrow", { date: "2026-09-28", text: "Ask Asha about one thing.", simulated: true })).toBe(
       "On the simulated family's latest counted day, the one thing for tomorrow was: Ask Asha about one thing.",
@@ -54,7 +54,7 @@ describe("the sentence read back", () => {
 
   it("says a week's busiest hour as that hour's total across the week, not as one day's", () => {
     expect(spokenAnswer("best_hour_this_week", { hour: 19, turns_this_week: 309, days: 7, simulated: false })).toBe(
-      "Across the last 7 days, 7pm was the busiest hour: 309 turns in that hour altogether.",
+      "Across the last 7 days, 7pm was the busiest hour across the week: 309 turns in that hour altogether.",
     );
   });
 

@@ -1,0 +1,12 @@
+{
+ "date": "2026-10-21",
+ "cli": "@beeai/cli",
+ "sessions_with_utterances": 259,
+ "utterances": 30134,
+ "by_speaker_label": {
+  "unknown": 30134
+ },
+ "sessions_skipped_non_json_reply": 0,
+ "unknown_share_pct": 0.0,
+ "note": "counts only; no text, title or time was kept"
+}

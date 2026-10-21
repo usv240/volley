@@ -240,7 +240,7 @@ export function Mine({
           This page shows one household&apos;s counts, read with its key <Info term="mine" />. On the computer where your Bee is signed
           in, after{" "}
           <Link prefetch={false} href="/#yours" className="text-ink underline underline-offset-4">
-            the three install steps
+            the install steps
           </Link>
           :
         </p>

@@ -3,7 +3,7 @@
 Every requirement in the hackathon rules and every judging criterion,
 with the file, command or link that proves it. Written to be checked,
 not believed. Numbers are generated from committed result files, and
-156 tests guard the claims.
+158 tests guard the claims.
 
 **In one line:** a step counter for conversations with your child. The
 Bee on a parent's wrist hears the day; Volley counts the back-and-forth
@@ -39,7 +39,8 @@ https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws/v1/docs
 ### Technical implementation
 
 - **The hard problem, solved and measured.** The Bee labels every speaker
-  "Unknown" (1,004 of 1,004 utterances). `serve_return.blind` reads child
+  "Unknown" (30,134 of 30,134 utterances across 259 sessions, counted in
+  `harness/bee/unknown_tally.json`). `serve_return.blind` reads child
   and adult from the words and the pauses: an averaged perceptron trained
   on CHILDES, scored only on families it never saw (six folds by child),
   with its steady undercount corrected by a scale learned from other
@@ -65,7 +66,7 @@ https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws/v1/docs
   ([AGENT.md](AGENT.md)). The note is phrased on Bedrock from rules-chosen
   facts behind the same gate, with a template as the floor.
 - **The Coach on Amazon Bedrock AgentCore Runtime**, as an endpoint anything can invoke, verified live ([apps/agentcore](../apps/agentcore/README.md)).
-- **156 tests.** `pytest packages apps harness`.
+- **158 tests.** `pytest packages apps harness`.
 
 ### Design
 
@@ -90,6 +91,8 @@ https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws/v1/docs
   Challenge grand prize to put the research recorder in family homes; the
   recorder has never been sold to a parent. The Bee costs about fifty
   dollars and is already worn.
+- **The audience, sized.** In 2025, evidence-based home visiting reached 301,595 families in the United States over 3.1 million visits, and 16.7 million families could benefit, 1.8 percent of them reached; half of the 21 million children who could benefit are three to five, Volley's ages.
+  (NHVRC, 2026 Home Visiting Yearbook; in [citations.json](citations.json)).
 - **Who carries it past the hackathon.** Home-visiting and city
   programmes already pay for this count, and its gains fade when the
   visits end. `volley share` gives the person coaching a family a

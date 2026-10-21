@@ -268,6 +268,11 @@
    "key": "talkbankrules",
    "url": "https://talkbank.org/0share/rules.html",
    "what": "CC BY-NC-SA 3.0 and the ground rules: no incorporation of the data in commercial products or models; use for developing algorithms allowed; data not to be uploaded to systems that keep it; identifiable data stored locally only and not circulated. Volley evaluates the counter on the operator's machine, ships nothing from the corpus, and publishes counts only."
+  },
+  {
+   "key": "nhvrc2026",
+   "url": "https://nhvrc.org/yearbook/2026-yearbook",
+   "what": "National Home Visiting Resource Center, 2026 Home Visiting Yearbook, 2025 data: 301,595 families served by evidence-based home visiting over 3,138,327 visits; 16,752,200 families and 21,774,500 children could benefit, of whom 10,881,300 (50 percent) are aged 3 to 5; about 1.8 percent of potential beneficiaries were reached. Read 2026-10-21 from the yearbook summary PDF."
   }
  ]
 }

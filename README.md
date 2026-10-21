@@ -22,7 +22,8 @@ What is not measured says so on the site in the same type size as
 the numbers.
 
 **No speaker labels, no problem, measured.** The Bee labels every speaker
-"Unknown" (1,004 of 1,004 utterances on this account). `volley setup
+"Unknown" (30,134 of 30,134 utterances on this account,
+`harness/bee/unknown_tally.json`). `volley setup
 --blind` reads who is the child and who the adult from the words and
 the pauses instead, with `serve_return.blind`, trained on CHILDES. On
 families it never saw: the day's turn count within 9.6 percent of the
@@ -38,7 +39,7 @@ it. Every
 session is in `harness/blind/results.json`; `python harness/blind/run.py`
 reproduces it.
 
-**On the Bee itself, no person in the room.** A real CHILDES mother-child conversation, voiced by Amazon Polly with an adult and a child voice at its original timing, played to the band for 190 seconds: the Bee wrote 124 utterances for 125 played and kept 75 of 75 turns, so its segmentation loses none. Volley's blind count with a model and scale that never saw this family: 66 (-12.0 percent; 58 before the scale), 76.6 percent of lines given the right speaker. `harness/beeloop` reproduces it. 156 tests.
+**On the Bee itself, no person in the room.** A real CHILDES mother-child conversation, voiced by Amazon Polly with an adult and a child voice at its original timing, played to the band for 190 seconds: the Bee wrote 124 utterances for 125 played and kept 75 of 75 turns, so its segmentation loses none. Volley's blind count with a model and scale that never saw this family: 66 (-12.0 percent; 58 before the scale), 76.6 percent of lines given the right speaker. `harness/beeloop` reproduces it. 158 tests.
 
 | Document | What it answers |
 |---|---|
@@ -66,7 +67,7 @@ Volley counts the exchanges between a parent and a child, today.
 ```
 python -m venv .venv && . .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -e "packages/serve-return[dev]" -e "apps/ingest[dev]" -e "apps/server[dev]" -e "apps/agent[dev]"
-python -m pytest packages apps harness -q          # 156 tests, the same two lines CI runs
+python -m pytest packages apps harness -q          # 158 tests, the same two lines CI runs
 cd apps/web && npm ci && npm test && npm run dev   # the site, on localhost:3000
 ```
 
