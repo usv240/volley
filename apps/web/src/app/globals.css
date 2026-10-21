@@ -36,6 +36,9 @@
   --accent-soft: #e8edfb;
   --warn: #9a6b12;
   --warn-bg: #fbf1dc;
+  --warn-strong: #7a540c;
+  --good: #23704a;
+  --good-bg: #e2f1e7;
   --chart-mark: #1f4fd8;
   --chart-track: #e6e0d4;
   --shadow: 0 1px 2px rgba(28, 26, 23, 0.04), 0 8px 24px -12px rgba(28, 26, 23, 0.18);
@@ -58,6 +61,9 @@
     --accent-soft: #1b2740;
     --warn: #e0b45c;
     --warn-bg: #2a220f;
+    --warn-strong: #e0b45c;
+    --good: #6cc596;
+    --good-bg: #15281e;
     --chart-mark: #5b86e5;
     --chart-track: #2a303b;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
@@ -80,6 +86,9 @@
   --accent-soft: #1b2740;
   --warn: #e0b45c;
   --warn-bg: #2a220f;
+  --warn-strong: #e0b45c;
+  --good: #6cc596;
+  --good-bg: #15281e;
   --chart-mark: #5b86e5;
   --chart-track: #2a303b;
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
@@ -414,4 +423,337 @@ a:focus-visible,
   */
   white-space: normal;
   cursor: pointer;
+}
+
+/*
+  The coach's list of families: one row per family, read at a glance.
+
+  A phone gets two-line rows (name and the latest day's turns, then the
+  week's bars and its direction, then the note and the one action); a
+  desk gets one aligned row per family under a quiet header. The whole
+  row opens the family, through the name's button stretched over it, and
+  the remove action sits above that layer so the two never collide.
+*/
+.coach-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "name latest"
+    "bars dir"
+    "note note"
+    "act act";
+  column-gap: 1rem;
+  row-gap: 0.625rem;
+  align-items: center;
+  padding: 1rem;
+  border-top: 1px solid var(--line);
+  transition: background-color 140ms ease;
+}
+
+.card > .coach-head,
+ul > .coach-row:first-child {
+  border-top: 0;
+}
+
+.coach-row > [data-a="name"] { grid-area: name; }
+.coach-row > [data-a="bars"] { grid-area: bars; }
+.coach-row > [data-a="dir"] { grid-area: dir; justify-self: end; }
+.coach-row > [data-a="latest"] { grid-area: latest; }
+.coach-row > [data-a="note"] { grid-area: note; }
+.coach-row > [data-a="act"] { grid-area: act; }
+.coach-row > [data-a="act"]:empty { display: none; }
+.coach-row > [data-a="msg"] { grid-column: 1 / -1; }
+
+.coach-head { display: none; }
+
+.coach-name {
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.coach-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  max-width: 100%;
+  min-height: 1.75rem;
+  text-align: left;
+}
+
+.coach-open::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.coach-open:focus-visible {
+  outline: none;
+}
+
+.coach-row:has(.coach-open:focus-visible) {
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+
+.coach-chevron {
+  color: var(--muted);
+  transition: transform 180ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .coach-row:has(.coach-open):hover {
+    background: color-mix(in srgb, var(--raised) 45%, var(--surface));
+  }
+  .coach-row:hover .coach-chevron {
+    transform: translateX(2px);
+  }
+}
+
+.coach-row:has(.coach-open):active {
+  background: color-mix(in srgb, var(--raised) 70%, var(--surface));
+}
+
+.coach-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+  height: 28px;
+}
+
+.coach-bar {
+  flex: none;
+  width: 14px;
+  border-radius: 2px 2px 0 0;
+  background: var(--chart-mark);
+}
+
+.coach-bar-none {
+  height: 2px;
+  border-radius: 1px;
+  background: var(--line-strong);
+}
+
+.coach-bar-wait {
+  height: 12px;
+  background: var(--raised);
+}
+
+.coach-skel {
+  display: block;
+  border-radius: 4px;
+  background: var(--raised);
+}
+
+.coach-note {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.coach-note-label {
+  font-weight: 600;
+}
+
+.coach-pill {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  height: 1.375rem;
+  padding: 0 0.5rem;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.coach-remove,
+.coach-text-btn,
+.coach-back {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  transition: color 140ms ease;
+}
+
+.coach-remove,
+.coach-text-btn {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--line-strong);
+}
+
+.coach-remove {
+  color: var(--muted);
+}
+
+.coach-text-btn {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.coach-back {
+  gap: 0.375rem;
+  padding-right: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.coach-remove:hover,
+.coach-back:hover {
+  color: var(--ink);
+}
+
+.coach-remove-short { display: none; }
+
+.coach-notice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 1rem;
+  padding: 0.25rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  background: var(--surface);
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+@media (min-width: 768px) {
+  .coach-row {
+    grid-template-columns: minmax(0, 1.15fr) 6.25rem 7.25rem 4.5rem minmax(0, 2fr) 4.5rem;
+    grid-template-areas: "name bars dir latest note act";
+    column-gap: 1.5rem;
+    padding: 0.875rem 1.25rem;
+    min-height: 4.75rem;
+  }
+  .coach-row > [data-a="dir"] { justify-self: start; }
+  .coach-row > [data-a="act"] { justify-self: end; }
+  .coach-row > [data-a="act"]:empty { display: block; }
+  .coach-row > [data-a="msg"] { grid-column: 2 / 6; grid-row: 1; }
+  .coach-head {
+    display: grid;
+    min-height: 0;
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
+  .coach-bar { width: 10px; }
+  .coach-note { -webkit-line-clamp: 2; }
+  .coach-note-label { display: none; }
+  .coach-remove-short { display: inline; }
+  .coach-remove-long { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .coach-chevron { transition: none; }
+}
+
+/* The evidence summary's verdicts: a word and a mark, never colour alone. */
+.verdict {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 0.375rem;
+  height: 1.625rem;
+  padding: 0 0.625rem;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.verdict-good { background: var(--good-bg); color: var(--good); }
+.verdict-weak { background: var(--warn-bg); color: var(--warn-strong); }
+.verdict-trade { background: var(--raised); color: var(--ink); }
+
+/* Disclosures that hold the long prose under the evidence summary. */
+.fold > summary {
+  display: flex;
+  min-height: 3.5rem;
+  cursor: pointer;
+  list-style: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.fold > summary::-webkit-details-marker { display: none; }
+
+.fold-mark {
+  flex: none;
+  color: var(--muted);
+  transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.fold[open] .fold-mark { transform: rotate(180deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .fold-mark { transition: none; }
+}
+
+/*
+  The evidence summary's rows. A phone reads each measurement top to
+  bottom with its verdict beside its name; a desk reads one row across:
+  what, result, meaning, verdict, under one quiet header.
+*/
+.ev-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "what verdict"
+    "fig fig"
+    "mean mean";
+  gap: 0.875rem 1.25rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--line);
+}
+
+ul > .ev-row:first-child { border-top: 0; }
+.ev-row > [data-e="what"] { grid-area: what; }
+.ev-row > [data-e="fig"] { grid-area: fig; }
+.ev-row > [data-e="mean"] { grid-area: mean; max-width: 60ch; }
+.ev-row > [data-e="verdict"] { grid-area: verdict; justify-self: end; }
+.ev-head { display: none; }
+
+@media (min-width: 768px) {
+  .ev-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      "what verdict"
+      "fig mean";
+    column-gap: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .ev-row {
+    grid-template-columns: minmax(0, 12.5rem) minmax(0, 1.3fr) minmax(0, 1fr) 7.25rem;
+    grid-template-areas: "what fig mean verdict";
+    align-items: start;
+    column-gap: 2rem;
+  }
+  .ev-row > [data-e="verdict"] { justify-self: start; }
+  .ev-head {
+    display: grid;
+    padding: 0.5rem 0 0.75rem;
+    border-top: 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
 }

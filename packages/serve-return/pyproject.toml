@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "serve-return"
-version = "0.1.0"
-description = "Count adult-child conversational turns from any speaker-labelled transcript, by the published five-second rule, and keep no words."
+version = "0.1.1"
+description = "Count adult-child conversational turns by the published five-second rule, from labelled transcripts or, with a bundled role model, unlabelled ones; keeps no words."
 readme = "README.md"
 requires-python = ">=3.10"
-license = { text = "MIT" }
+license = { text = "MIT; models/childes_roles.json is CC BY-NC-SA 3.0, see models/NOTICE.md" }
 authors = [{ name = "Ujwal Vanjare" }]
 keywords = ["conversational turns", "serve and return", "child language", "LENA", "Bee"]
 classifiers = [
@@ -33,7 +33,7 @@ where = ["."]
 include = ["serve_return*"]
 
 [tool.setuptools.package-data]
-serve_return = ["models/*.json"]
+serve_return = ["models/*.json", "models/NOTICE.md"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

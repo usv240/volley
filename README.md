@@ -34,7 +34,7 @@ it. Every
 session is in `harness/blind/results.json`; `python harness/blind/run.py`
 reproduces it.
 
-**On the Bee itself, no person in the room.** A real CHILDES mother-child conversation, voiced by Amazon Polly with an adult and a child voice at its original timing, played to the band for 190 seconds: the Bee wrote 124 utterances for 125 played and kept 75 of 75 turns, so its segmentation loses none. Volley's blind count with a model and scale that never saw this family: 66 (-12.0 percent; 58 before the scale), 76.6 percent of lines given the right speaker. `harness/beeloop` reproduces it. 131 tests.
+**On the Bee itself, no person in the room.** A real CHILDES mother-child conversation, voiced by Amazon Polly with an adult and a child voice at its original timing, played to the band for 190 seconds: the Bee wrote 124 utterances for 125 played and kept 75 of 75 turns, so its segmentation loses none. Volley's blind count with a model and scale that never saw this family: 66 (-12.0 percent; 58 before the scale), 76.6 percent of lines given the right speaker. `harness/beeloop` reproduces it. 140 tests.
 
 | Document | What it answers |
 |---|---|
@@ -54,14 +54,15 @@ Sibling projects in this hackathon, each with its own repository and
 docs: Earshot (Fire TV, hearing in noise), Bellwether (Bee, speech as a
 vital sign), EveryWord (Fire TV), Nightlight (Ring). Volley reuses
 Bellwether's Bee client, server, stack and video pipeline; it shares no
-claim with it.
+claim with it. Bellwether follows one adult's own speech over months;
+Volley counts the exchanges between a parent and a child, today.
 
 ## Run it
 
 ```
 python -m venv .venv && . .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -e "packages/serve-return[dev]" -e "apps/ingest[dev]" -e "apps/server[dev]" -e "apps/agent[dev]"
-python -m pytest packages apps harness -q          # 131 tests, the same two lines CI runs
+python -m pytest packages apps harness -q          # 140 tests, the same two lines CI runs
 cd apps/web && npm ci && npm test && npm run dev   # the site, on localhost:3000
 ```
 
@@ -77,7 +78,10 @@ volley setup --blind         # the Bee labels every speaker Unknown; Volley read
 volley today                 # count since the last run, throw the words away, remind tomorrow
 ```
 
-`volley connect` gives your counts a page of your own; `volley today
+`volley setup --daily 20:30` counts every evening without typing, using
+the computer's own scheduler; `--only-with-child yes` sets aside stretches
+with no child's voice, so evenings with other adults do not count (measured
+in harness/beeloop/with_child.py). `volley connect` gives your counts a page of your own; `volley today
 --conversation <id>` counts one session and reads nothing else.
 `volley share` makes a read-only link for whoever coaches your family,
 a home visitor for instance: it shows the days, the week and the note at

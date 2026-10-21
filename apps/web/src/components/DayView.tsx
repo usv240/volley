@@ -39,6 +39,18 @@ export function clock(h: number): string {
   return x < 12 ? `${x}am` : `${x - 12}pm`;
 }
 
+/**
+ * The note's template layer for a day, the sentence the service falls
+ * back to when no model phrases it: the best hour, kept as it is. The
+ * front page and the coach's example row both print it for the
+ * simulated family, so the two never disagree.
+ */
+export function bestHourNote(day: Day, child: string | null): string {
+  if (day.best_hour === null) return "A first day counted. Wear the band tomorrow and the hours that matter will show.";
+  const most = Math.max(...day.hours.map((h) => h.turns));
+  return `Your best hour with ${child ?? "your child"} was around ${clock(day.best_hour)}, with ${most} turns. Keep that one exactly as it is.`;
+}
+
 export function DayView({ day, child, simulated, label }: { day: Day; child: string | null; simulated: boolean; label?: string }) {
   const width = Math.max(1, ...day.hours.map((h) => h.turns));
   const who = child ?? "your child";
@@ -46,7 +58,7 @@ export function DayView({ day, child, simulated, label }: { day: Day; child: str
     <div className="card p-6 sm:p-8">
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <div>
-          <p className="eyebrow">{label ?? (simulated ? "A simulated family, labelled as one" : "The operator's own day")}</p>
+          <p className="eyebrow">{label ?? (simulated ? "A simulated family, labelled as one" : "The builder's own day")}</p>
           <p className="mt-2 flex items-baseline gap-3">
             <span className="display text-5xl text-ink">{day.turns}</span>
             <span className="text-muted">

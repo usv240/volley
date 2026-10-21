@@ -60,5 +60,7 @@ Labels are yours: a Bee wristband labels the wearer one way and other
 voices another; CHILDES uses MOT, FAT, CHI. Anything you do not map is
 ignored, which is what a third adult in the room should be.
 
-MIT. Part of Volley, built for the Build, Ship, Shape: Amazon Developer
+The code is MIT. The bundled role model, `serve_return/models/childes_roles.json`, is trained on the
+CHILDES Gleason corpus and is licensed CC BY-NC-SA 3.0, the corpus's own licence: non-commercial use
+only. Its attribution and terms are in `serve_return/models/NOTICE.md`. Part of Volley, built for the Build, Ship, Shape: Amazon Developer
 Hackathon.

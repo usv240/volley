@@ -10,5 +10,10 @@
  "corpus_sessions": 54,
  "gate_refused_pct": 70.6,
  "gate_turns_lost_pct": 15.7,
- "written_by": "harness/beeloop/controls.py, harness/blind/adults_only.py, harness/blind/presence.py"
+ "written_by": "harness/beeloop/controls.py, harness/blind/adults_only.py, harness/blind/presence.py",
+ "with_child_real": 66,
+ "with_child_real_every": 66,
+ "with_child_adults": 0,
+ "with_child_onevoice": 0,
+ "with_child_written_by": "harness/beeloop/with_child.py"
 }

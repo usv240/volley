@@ -110,11 +110,11 @@ export const TERMS = {
   },
   harness: {
     label: "the hand count",
-    text: "Five of the operator's own conversations counted blind by a person from the Bee app's transcript view, against the program's count. Reported whichever way it comes out, next to the published agreement for the research instrument.",
+    text: "Not done. No person has hand-counted a day recorded on the Bee, because no real people are part of this entry. What was done instead is on this page: the public corpus with its human speaker labels, and one real corpus conversation played to the builder's own Bee. A hand count of a family's day is the check still owed, and it would be reported whichever way it came out.",
   },
   corpus: {
     label: "the public corpus",
-    text: "The CHILDES Gleason corpus: 24 children aged 2;1 to 5;2 recorded in the 1970s with their mother, with their father and at dinner, transcribed by researchers with speaker labels and time-aligned in 2026 by TalkBank's aligner. Fifty-four sessions, 26.59 hours. Volley ran the rule over it with the corpus's own labels on 2026-09-30 and published every number it produced; the corpus is never shipped and is cited as the TalkBank rules require.",
+    text: "The CHILDES Gleason corpus: 24 children aged 2;1 to 5;2 recorded in the 1970s with their mother, with their father and at dinner, transcribed by researchers with speaker labels and time-aligned in 2026 by TalkBank's aligner. Fifty-four sessions, 26.59 hours. Volley ran the rule over it with the corpus's own labels on 2026-09-30 and published every number it produced; the transcripts are never shipped and the corpus is cited as the TalkBank rules require.",
   },
   windowOnCorpus: {
     label: "why the window barely shows here",
@@ -126,7 +126,7 @@ export const TERMS = {
   },
   validated: {
     label: "validated",
-    text: "The word is used here only for the published instrument and its studies. Volley's own count is checked against a public corpus, and on the operator's own Bee against a real corpus conversation played to it, both on this page. No person has hand-counted a day, because no real people are part of this entry. It has not been validated on children other than the corpus's, and the page says so.",
+    text: "The word is used here only for the published instrument and its studies. Volley's own count is checked against a public corpus, and on the builder's own Bee against a real corpus conversation played to it, both on this page. No person has hand-counted a day, because no real people are part of this entry. It has not been validated on children other than the corpus's, and the page says so.",
   },
   paidFor: {
     label: "already paid for",
@@ -166,7 +166,7 @@ export const TERMS = {
   },
   playlogueLicence: {
     label: "CC BY-NC-SA",
-    text: "TalkBank shares its corpora under CC BY-NC-SA 3.0 and its ground rules, which forbid putting the data into a product or a model and allow using it to develop and evaluate algorithms. Volley does the allowed thing only: the transcripts evaluate the counter on the operator's machine, are never shipped, uploaded or trained on, and what reaches this page is the counts. The rules ask for three citations: the corpus's own reference, its DOI with the year retrieved, and MacWhinney (2000) for CHILDES with its NICHD grant; all three are in the list.",
+    text: "TalkBank shares CHILDES under CC BY-NC-SA 3.0: non-commercial, share-alike, and not to be built into a commercial product. Volley is free and non-commercial. The model that reads who is speaking without labels (serve_return/models/childes_roles.json) is trained on the Gleason transcripts and ships with the package under CC BY-NC-SA 3.0; the code is MIT. The transcripts themselves are never committed, uploaded or sent to any service. A commercial use would need a model trained on licensed data. The rules ask for three citations: the corpus's own reference, its DOI with the year retrieved, and MacWhinney (2000) for CHILDES with its NICHD grant; all three are in the list.",
   },
 } as const;
 

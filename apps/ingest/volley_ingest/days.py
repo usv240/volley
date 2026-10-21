@@ -35,8 +35,9 @@ def to_rule(u: Utterance) -> RuleUtterance | None:
     return RuleUtterance(start=u.start_s, speaker=u.speaker or "", text=u.text, end=u.end_s)
 
 
-def count_days(utterances: list[Utterance], h: Household) -> list[DayCounts]:
-    """One DayCounts per local date that had any mapped speech, in order."""
+def count_days(utterances: list[Utterance], h: Household, report: dict | None = None) -> list[DayCounts]:
+    """One DayCounts per local date that had any mapped speech, in order.
+    ``report``, if given, receives how many stretches were set aside."""
     roles = roles_for(h)
     by_day: dict[str, list[RuleUtterance]] = {}
     for u in utterances:
@@ -52,6 +53,17 @@ def count_days(utterances: list[Utterance], h: Household) -> list[DayCounts]:
 
         from serve_return.blind import calibrate_day
 
+        if h.only_with_child:
+            from .presence import with_child
+
+            set_aside = 0
+            for d in list(by_day):
+                kept, dropped = with_child(by_day[d])
+                set_aside += dropped
+                by_day[d] = kept
+            by_day = {d: us for d, us in by_day.items() if us}
+            if report is not None:
+                report["stretches_set_aside"] = set_aside
         by_day = {d: relabel(us) for d, us in by_day.items()}
         return [calibrate_day(count_day(by_day[d], roles, date=d, tz_offset_hours=h.tz_offset_hours)) for d in sorted(by_day)]
     return [count_day(by_day[d], roles, date=d, tz_offset_hours=h.tz_offset_hours) for d in sorted(by_day)]

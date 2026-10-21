@@ -151,6 +151,12 @@ def cmd_setup(cli: BeeCli, args) -> int:
         h.child_name = args.child_name or None
     if args.tz is not None:
         h.tz_offset_hours = args.tz
+    elif not Household.path().exists():
+        # A first setup takes this computer's own offset, so the hours on
+        # the day view are the parent's hours without a flag to look up.
+        from datetime import datetime
+
+        h.tz_offset_hours = round(datetime.now().astimezone().utcoffset().total_seconds() / 3600, 2)
     if args.api_url:
         h.api_url = args.api_url
     if args.api_key:
@@ -160,6 +166,15 @@ def cmd_setup(cli: BeeCli, args) -> int:
     if getattr(args, "blind", False):
         h.blind = True
         print("blind: roles are read from the transcript, because the Bee labels every speaker Unknown")
+    if getattr(args, "only_with_child", None) is not None:
+        h.only_with_child = args.only_with_child
+        print("only with your child: stretches with no child's voice are set aside; measured, this drops most adults-only talk "
+              "and about one real turn in six" if h.only_with_child else "every stretch is counted")
+    if getattr(args, "daily", None):
+        from .schedule import schedule
+
+        h.daily_at = None if args.daily == "off" else args.daily
+        print(schedule(args.daily))
     if not (args.parent and args.child) and not h.blind:
         try:
             rows = cli.conversations_list(limit=10)
@@ -201,8 +216,12 @@ def cmd_today(cli: BeeCli, args) -> int:
     for raw in with_utterances(cli, rows):
         utterances.extend(normalize_conversation(raw))
     read = words_in(utterances)
-    days = count_days(utterances, h)
+    report: dict = {}
+    days = count_days(utterances, h, report)
     del utterances  # the words end here
+    aside = report.get("stretches_set_aside")
+    if aside:
+        print(f"{aside} three-minute stretch{'es' if aside != 1 else ''} with no child's voice set aside")
     if not days:
         print("nothing counted yet: no mapped speech since the last run")
         return 0
@@ -266,10 +285,13 @@ def main(argv: list[str] | None = None, cli: BeeCli | None = None) -> int:
     s.add_argument("--parent")
     s.add_argument("--child")
     s.add_argument("--child-name", dest="child_name")
-    s.add_argument("--tz", type=float, help="hours from UTC, for example 5.5")
+    s.add_argument("--tz", type=float, help="hours from UTC, for example 5.5; a first setup uses this computer's own")
     s.add_argument("--api-url", dest="api_url")
     s.add_argument("--api-key", dest="api_key")
     s.add_argument("--reminders", type=lambda v: v.lower() in ("1", "true", "yes"), help="write tomorrow's one thing into your Bee: yes or no")
+    s.add_argument("--only-with-child", dest="only_with_child", type=lambda v: v.lower() in ("1", "true", "yes"),
+                   help="blind only: set aside stretches with no child's voice: yes or no")
+    s.add_argument("--daily", help="run volley today every evening at this local time, HH:MM, or off")
     c = sub.add_parser("connect", help="make a household on the service so your own days show on the site")
     c.add_argument("--name", default="ours", help="a name you choose; it is the only text the service keeps")
     c.add_argument("--api-url", dest="api_url", help="another deployment of the service, if you run your own")

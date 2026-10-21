@@ -3,12 +3,14 @@ import blind from "../data/blind.json";
 import device from "../data/device.json";
 import controls from "../data/controls.json";
 import demo from "../data/demo.json";
-import { DayView, clock, type Day } from "../components/DayView";
+import { DayView, bestHourNote, clock, type Day } from "../components/DayView";
 import { DropZone } from "../components/DropZone";
+import { EvidenceSummary } from "../components/EvidenceSummary";
 import { Info } from "../components/Info";
 import { McpProof } from "../components/McpProof";
 import { Nav } from "../components/Nav";
 import { PrivacyProof } from "../components/PrivacyProof";
+import { StepsHandoff } from "../components/StepsHandoff";
 import { WorkedExample } from "../components/WorkedExample";
 
 /**
@@ -58,8 +60,33 @@ const STEPS = [
   { title: "Turn on Developer Mode in the Bee app", body: "Settings, then tap the version number five times.", live: true, term: "developerMode" as const },
   { title: "Sign in the tool to your Bee", body: "bee login, then approve it in the app.", live: true },
   { title: "Install Volley", body: 'pip install serve-return "volley-bee @ git+https://github.com/usv240/volley#subdirectory=apps/ingest"', live: true },
-  { title: "Count the day", body: "volley setup --blind --child-name Asha --tz 5.5\nvolley today", live: true },
+  { title: "Count the day", body: "volley setup --blind --child-name Asha\nvolley today", live: true },
   { title: "See your days in a browser, if you want to", body: "volley connect\nvolley today", live: true, term: "mine" as const },
+];
+
+const SETUP_OPTIONS =
+  "Two setup options: volley setup --daily 20:30 counts every evening without typing, and --only-with-child yes sets aside stretches where no voice sounds like a child (the evidence on the page says what that costs).";
+
+// Quoted from docs/AGENT.md, "Two real runs, 2026-09-30", word for word.
+const AGENTS = [
+  {
+    name: "The Coach",
+    body: "Answers a parent the way Alexa+ would, over Volley's seven MCP tools; the model never sees the household's key. It is also deployed on Amazon Bedrock AgentCore Runtime, so Alexa+, a scheduled job or another agent can invoke it.",
+    command: 'volley-agent coach --demo "how was our talking today, and what should I try tomorrow?"',
+    answer:
+      "You and your little one had 157 turns today, your liveliest stretch was at six in the evening, and the quietest time when your child was around was at four in the afternoon. Tomorrow, try leaning into that six o'clock window, that's when the two of you are most in tune, with 38 turns in that hour alone. See if you can bring a little of that same energy to four o'clock too!",
+    tools: "model; tools: how_was_our_talking_today, one_thing_for_tomorrow",
+    caption: "A real run on 2026-09-30, Sonnet on the first rung, against the deployed server, on the simulated household.",
+  },
+  {
+    name: "Tuesday",
+    body: "Why was Tuesday quiet is a question the counts cannot answer and the parent's own Bee can. Tuesday holds Bee's own MCP server beside Volley's, behind a five-tool allow-list: the daily summaries, today's brief, the to-do list and creating one to-do. The transcript, search, photo and location tools are never offered, and neither server is told the other exists.",
+    command: 'volley-agent tuesday --demo "Which day this week was the quietest for talking, and what was I doing that day according to my Bee?"',
+    answer:
+      "The quietest day this week was September 24, with 156 turns, the lowest of the seven days. Unfortunately, your Bee doesn't have a summary captured for that day, so I can't tell you what was filling your time. If you remember what was going on that day, that context might help explain the lighter count!",
+    tools: "model; tools: week_trend, bee_list_daily_summaries, bee_get_daily_summary",
+    caption: "A real run on 2026-09-30, on the simulated household. The Bee had no summary for that day, and the agent said so rather than inventing one.",
+  },
 ];
 
 const IMPACT = [
@@ -108,7 +135,7 @@ const IMPACT = [
 const FAQ = [
   ["Is a low day bad?", "No. It is a count of one day. The note names your best hour so you keep what already works, and one thing to try tomorrow. That is all it does."],
   ["Does it listen to my child?", "The Bee on your wrist transcribes what it hears, including your child. Volley reads that transcript on your computer, counts, and deletes the words. Nothing your child said is ever stored by Volley."],
-  ["What if my child does not talk yet?", "Volley counts transcribed words, and a baby's babble may not be transcribed. Until that is measured, Volley is for children of talking age, about three to six. The research instrument counts sounds; this does not, and says so."],
+  ["What if my child does not talk yet?", "Volley counts transcribed words, and a baby's babble may not be transcribed. Until that is measured, Volley is for children of talking age, about two to five. The research instrument counts sounds; this does not, and says so."],
   ["Do I need to talk all day?", "No. Turns are exchanges, not volume. Ten good minutes at bath time count more than an hour of narration the child does not answer."],
   ["What is a good number?", "LENA, whose recorder the studies used, publishes forty turns an hour as a target. Volley shows that figure as theirs and sets none of its own."],
   ["Who can see this?", "You, with your key. The simulated family on this page is public and says so. There is no account with Volley beyond a name you chose."],
@@ -135,12 +162,12 @@ export default function Home() {
 
       <main id="top" className="mx-auto max-w-[1120px] px-5 pb-28 sm:px-8">
         {/* 1. Hero: the claim, the tagline, the two numbers, today's day. */}
-        <section className="grid gap-10 pt-16 lg:grid-cols-[1.05fr_1fr] lg:items-start">
+        <section className="grid gap-10 pt-8 sm:pt-12 lg:grid-cols-[1.05fr_1fr] lg:items-start lg:pt-14">
           <div>
-            <h1 className="display max-w-[16ch] text-5xl leading-[1.02] text-ink sm:text-6xl">
+            <h1 className="display max-w-[16ch] text-[2.5rem] leading-[1.04] text-ink sm:text-6xl sm:leading-[1.02]">
               Your child&apos;s brain is built in the back-and-forth. Volley counts it.
             </h1>
-            <p className="mt-6 max-w-[58ch] text-lg leading-relaxed text-ink">
+            <p className="mt-5 max-w-[58ch] text-[17px] leading-relaxed text-ink sm:mt-6 sm:text-lg">
               A step counter for conversations with your child. Volley counts the back-and-forth from the Bee on your wrist, throws the
               words away on your own computer <Info term="onYourComputer" />, and puts one thing to try tomorrow into your Bee as a
               reminder.
@@ -148,7 +175,7 @@ export default function Home() {
             <p className="mt-4 max-w-[58ch] leading-relaxed text-muted">
               A turn <Info term="turn" /> is you saying something and your child answering within five seconds, or the other way round.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-7 flex flex-wrap gap-3 sm:mt-8">
               <a href="#how" className="primary">
                 See how it counts
               </a>
@@ -166,7 +193,7 @@ export default function Home() {
               Measured, not claimed: on {corpus.hours} hours of public parent-child recordings we did not make, the
               rule counted <strong className="text-ink">{corpus.turns.toLocaleString("en-US")} turns</strong> from the human speaker
               labels, <strong className="text-ink">zero</strong> inside any stretch where one person spoke alone{" "}
-              <Info term="corpus" />; on the operator&apos;s own Bee, hearing a real parent-child conversation voiced by Amazon Polly
+              <Info term="corpus" />; on the builder&apos;s own Bee, hearing a real parent-child conversation voiced by Amazon Polly
               with no person in the room, Volley counted <strong className="text-ink">{device.turns_blind} of {device.turns_true} turns</strong>{" "}
               with no speaker labels at all. Neither is a hand count by a person, and the page says what that leaves{" "}
               <Info term="validated" />.
@@ -254,12 +281,8 @@ export default function Home() {
             </div>
             <div className="card p-6 sm:p-8">
               <p className="eyebrow">Tomorrow, written from today&apos;s counts</p>
-              <blockquote className="mt-4 border-l border-line-strong pl-4">
-                <p className="leading-relaxed text-ink">
-                  {today.best_hour !== null
-                    ? `Your best hour with ${demo.child_name} was around ${clock(today.best_hour)}, with ${Math.max(...today.hours.map((h) => h.turns))} turns. Keep that one exactly as it is.`
-                    : "A first day counted. Wear the band tomorrow and the hours that matter will show."}
-                </p>
+              <blockquote className="mt-4 border-l border-[var(--line-strong)] pl-4">
+                <p className="leading-relaxed text-ink">{bestHourNote(today, demo.child_name)}</p>
                 <footer className="mt-2 text-xs text-faint">the template layer, from the fact: best hour</footer>
               </blockquote>
               <p className="mt-4 text-sm leading-relaxed text-muted">
@@ -319,7 +342,8 @@ export default function Home() {
         {/* 8. Your Bee, in ten minutes. */}
         <section id="yours" className="scroll-mt-24">
           <h2 className="display-sm max-w-[22ch] text-3xl text-ink sm:text-4xl">Your own day, in ten minutes.</h2>
-          <ol className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2">
+          <StepsHandoff steps={STEPS} note={SETUP_OPTIONS} />
+          <ol className="mt-8 grid grid-cols-1 gap-4 md:mt-10 md:grid-cols-2">
             {STEPS.map((s, i) => (
               <li key={s.title} className="card min-w-0 p-5">
                 <div className="flex items-baseline gap-3">
@@ -337,6 +361,15 @@ export default function Home() {
             ))}
           </ol>
           <p className="mt-6 max-w-[66ch] text-sm leading-relaxed text-muted">
+            Two setup options: <code className="font-mono text-xs text-ink">volley setup --daily 20:30</code> counts every evening
+            without typing, and <code className="font-mono text-xs text-ink">--only-with-child yes</code> sets aside stretches where
+            no voice sounds like a child;{" "}
+            <a href="#evidence" className="text-[var(--accent)] underline underline-offset-4">
+              the evidence
+            </a>{" "}
+            says what that costs.
+          </p>
+          <p className="mt-3 max-w-[66ch] text-sm leading-relaxed text-muted">
             Recording other people is your responsibility under local law; the setup screen says so before anything runs. The child
             wears nothing. Your child&apos;s words never leave your computer.
           </p>
@@ -397,6 +430,33 @@ export default function Home() {
 
         <div className="rule my-20" />
 
+        {/* 10a. The agents: two clients of the same MCP server, held to the numbers a tool returned. */}
+        <section id="agents" className="scroll-mt-24">
+          <h2 className="display-sm max-w-[24ch] text-3xl text-ink sm:text-4xl">Two agents that may only say what a tool returned.</h2>
+          <p className="mt-4 max-w-[66ch] leading-relaxed text-muted">
+            Both are built on the Strands Agents SDK, phrase with Claude on Amazon Bedrock, and reach Volley only through the MCP server
+            Alexa+ would use. Every number in an answer must have come back from a tool, and the words the coach never uses (delay,
+            behind, risk, deficit, disorder, diagnosis, percentile, IQ) may not appear. A refused answer goes back once with the
+            violation named; a second refusal is replaced by the tool results read out plainly.
+          </p>
+          <div className="mt-10 grid gap-6 md:grid-cols-2">
+            {AGENTS.map((a) => (
+              <figure key={a.name} className="card flex min-w-0 flex-col p-6">
+                <p className="font-semibold text-ink">{a.name}</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{a.body}</p>
+                <div className="mt-5 rounded-lg border border-line bg-[var(--raised)] p-4">
+                  <p className="font-mono text-[12px] leading-relaxed break-words text-muted">$ {a.command}</p>
+                  <blockquote className="mt-3 text-[15px] leading-relaxed text-ink">{a.answer}</blockquote>
+                  <p className="mt-3 font-mono text-[12px] leading-relaxed break-words text-muted">[{a.tools}]</p>
+                </div>
+                <figcaption className="mt-3 text-xs leading-relaxed text-muted">{a.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+
+        <div className="rule my-20" />
+
         {/* 10b. Impact: who has paid for this count already, and what changes at fifty dollars. */}
         <section id="impact" className="scroll-mt-24">
           <h2 className="display-sm max-w-[24ch] text-3xl text-ink sm:text-4xl">Cities have paid for this count. Parents have never been able to buy it.</h2>
@@ -416,7 +476,7 @@ export default function Home() {
           </div>
           <p className="mt-6 max-w-[66ch] text-sm leading-relaxed text-muted">
             Not claimed: that Volley has changed any child&apos;s outcome; that its count equals the research recorder&apos;s; that
-            a parent should aim for any number. One family has worn it. Every study above is resolved on PubMed or Crossref in the
+            a parent should aim for any number. Every study above is resolved on PubMed or Crossref in the
             repository&apos;s citations file, with what it showed and what it did not, and a test refuses any citation in this page
             that is not there.
           </p>
@@ -424,32 +484,56 @@ export default function Home() {
 
         <div className="rule my-20" />
 
-        {/* 11. Evidence: refused first, then baselines, then agreement. */}
+        {/* 11. Evidence: the results at a glance, then the prose folded beneath, then the literature. */}
         <section id="evidence" className="scroll-mt-24">
           <h2 className="display-sm max-w-[24ch] text-3xl text-ink sm:text-4xl">What it refused to count, what it beat, and how close it is to a person.</h2>
           <p className="mt-4 max-w-[66ch] leading-relaxed text-muted">
             Written for somebody who came here to find the weak point. Measured here, read from the literature, and not done yet are
-            kept apart on purpose.
+            kept apart on purpose. Every figure below is read from the results the harness committed.
           </p>
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
-            <div className="card min-w-0 p-6">
-              <p className="eyebrow">Refusals, measured here</p>
-              <p className="mt-3 leading-relaxed text-muted">
-                On the public corpus, <strong className="text-ink">{corpus.turns_inside_them} turns</strong> inside its{" "}
-                {corpus.single_speaker_stretches} stretches of a minute or more where one person spoke alone{" "}
-                <Info term="corpus" />, from the human speaker labels. Without labels it is the weak point: two adults from a real family
-                dinner, no child, played to the Bee for {controls.adults_seconds} seconds, gave{" "}
-                <strong className="text-ink">{controls.adults_false_turns} false turns</strong>, and one adult voice gave{" "}
-                {controls.onevoice_false_turns}, against {controls.real_turns_same_length} for a real parent and child of the same
-                length. On the corpus, removing the child leaves false turns at {controls.corpus_false_as_pct_of_real} percent of the
-                real count. A check for a child&apos;s presence refused {controls.gate_refused_pct} percent of adults-only stretches but
-                lost {controls.gate_turns_lost_pct} percent of true turns, so it is not shipped. The Bee&apos;s own speaker label would
-                end this.
-              </p>
-            </div>
-            <div className="card min-w-0 p-6">
-              <p className="eyebrow">Against the obvious alternatives</p>
-              <p className="mt-3 leading-relaxed text-muted">
+          <EvidenceSummary />
+          <div className="mt-8 border-y border-line">
+            <details className="fold">
+              <summary>
+                The weak point in full: one voice, two adults, and the opt-in check
+              <svg className="fold-mark" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </summary>
+              <div className="pb-6">
+                <p className="max-w-[70ch] leading-relaxed text-muted">
+                  On the public corpus, <strong className="text-ink">{corpus.turns_inside_them} turns</strong> inside its{" "}
+                  {corpus.single_speaker_stretches} stretches of a minute or more where one person spoke alone{" "}
+                  <Info term="corpus" />, from the human speaker labels. Without labels it is the weak point: two adults from a real
+                  family dinner, no child, played to the Bee for {controls.adults_seconds} seconds, gave{" "}
+                  <strong className="text-ink">{controls.adults_false_turns} false turns</strong>, and one adult voice gave{" "}
+                  {controls.onevoice_false_turns}, against {controls.real_turns_same_length} for a real parent and child of the same
+                  length. On the corpus, removing the child leaves false turns at {controls.corpus_false_as_pct_of_real} percent of the
+                  real count.
+                </p>
+                <p className="mt-3 max-w-[70ch] leading-relaxed text-muted">
+                  A check that a child is present now ships as an opt-in setting,{" "}
+                  <code className="font-mono text-xs text-ink">volley setup --only-with-child yes</code>. On the Bee it kept{" "}
+                  <strong className="text-ink">
+                    {controls.with_child_real} of {controls.with_child_real_every}
+                  </strong>{" "}
+                  turns of the real conversation, took two adults from {controls.adults_false_turns} false turns to{" "}
+                  <strong className="text-ink">{controls.with_child_adults}</strong>, and one adult voice from{" "}
+                  {controls.onevoice_false_turns} to <strong className="text-ink">{controls.with_child_onevoice}</strong>. On the corpus,
+                  held out by family, it refused {controls.gate_refused_pct} percent of adults-only stretches and lost{" "}
+                  {controls.gate_turns_lost_pct} percent of true turns. That loss is the trade, and it is why the check is a choice and
+                  not the default. The Bee&apos;s own speaker label would end this.
+                </p>
+              </div>
+            </details>
+            <details className="fold border-t border-line">
+              <summary>
+                Against the obvious alternatives: adult word count and a bare speaker-change count
+              <svg className="fold-mark" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </summary>
+              <p className="max-w-[70ch] pb-6 leading-relaxed text-muted">
                 Adult word count, which the last consumer device sold: across the corpus&apos;s {corpus.sessions} sessions it ranks
                 with turns at Spearman <strong className="text-ink">{corpus.spearman_adult_words_vs_turns}</strong>, and two sessions
                 with the same adult words carried turns{" "}
@@ -458,72 +542,85 @@ export default function Home() {
                 {corpus.alternations_within_window_percent} percent of alternations, because the corpus&apos;s aligned timing has no
                 gaps <Info term="windowOnCorpus" />; the window&apos;s work is in a day, not a lab session.
               </p>
-            </div>
-            <div className="card min-w-0 border-[var(--warn)] p-6">
-              <p className="eyebrow text-[var(--warn)]">Nobody has done yet</p>
-              <p className="mt-3 leading-relaxed text-muted">
-                A child under three on this device; a family other than the operator&apos;s; the Bee against a LENA recorder on the
-                same afternoon, which is the study to run first with a grant.
-              </p>
-            </div>
-          </div>
-          {/*
-            The Bee labels every speaker Unknown. This is the answer, measured
-            on families the model never saw, with the naive alternative beside it.
-          */}
-          <div id="blind" className="card mt-6 p-6 sm:p-8">
-            <p className="eyebrow">No speaker labels, measured on families it never saw</p>
-            <p className="mt-3 max-w-[70ch] leading-relaxed text-muted">
-              The Bee labels every speaker &ldquo;Unknown&rdquo;, so Volley reads who is the child and who the adult from the words and
-              the pauses, with a model trained on CHILDES and scored only on families it was not trained on. Across{" "}
-              {blind.sessions} sessions it counted <strong className="text-ink">{blind.turns_blind.toLocaleString("en-US")} turns</strong>{" "}
-              against {blind.turns_true.toLocaleString("en-US")} true ({blind.total_error_pct > 0 ? "+" : ""}{blind.total_error_pct} percent); the median session was within{" "}
-              <strong className="text-ink">{blind.median_abs_session_error_pct} percent</strong>, and turns per hour tracked the truth at a
-              correlation of <strong className="text-ink">{blind.correlation_per_hour}</strong>. Treating every pause as a change of speaker
-              missed by {Math.abs(blind.naive_total_error_pct)} percent. Misread roles merge exchanges, so a raw blind count runs low by a
-              steady {Math.round((blind.turn_scale_min - 1) * 100)} to {Math.round((blind.turn_scale_max - 1) * 100)} percent; Volley scales
-              for it with a factor learned only from other families, which took the median session error from{" "}
-              {blind.uncalibrated_median_abs_session_error_pct} to {blind.median_abs_session_error_pct} percent. Each utterance&apos;s role was right{" "}
-              {blind.role_accuracy_pct} percent of the time, so a single exchange can be misread; a day, a week and a trend are what it is
-              for.
-            </p>
-            <p className="mt-4 max-w-[70ch] leading-relaxed text-muted">
-              <span className="font-semibold text-ink">On the Bee itself.</span> A real mother-and-child conversation from the same
-              corpus, voiced by Amazon Polly with an adult and a child voice at its original timing, played to the band for{" "}
-              {Math.round(device.played_seconds)} seconds, no person in the room. The Bee wrote {device.utterances_bee} utterances for{" "}
-              {device.utterances_played} played and kept <strong className="text-ink">{device.turns_bee_with_true_roles} of{" "}
-              {device.turns_true} turns</strong>: its segmentation loses none. Volley, with no labels and a model that never saw this
-              family or its scale, counted <strong className="text-ink">{device.turns_blind}</strong> ({device.blind_error_pct} percent), with{" "}
-              {device.role_accuracy_pct} percent of lines given the right speaker. One session; the corpus says how much one session
-              varies.
-            </p>
-          </div>
-          <div className="card mt-6 p-6 sm:p-8">
-            <p className="eyebrow">On recordings we did not make, measured 2026-09-30</p>
-            <p className="mt-3 max-w-[70ch] leading-relaxed text-muted">
-              The CHILDES Gleason corpus: {corpus.sessions} sessions, {corpus.hours} hours, 24 children aged 2;1 to 5;2 with their
-              mother, with their father and at the family dinner table, human speaker labels, aligned timing. The rule counted{" "}
-              {corpus.turns.toLocaleString("en-US")} turns: {corpus.turns_per_hour_min} to {corpus.turns_per_hour_max} an hour by
-              session, median {corpus.turns_per_hour_median}. Dinner {corpus.by_situation.Dinner.turns_per_hour}, with the mother{" "}
-              {corpus.by_situation.Mother.turns_per_hour}, with the father {corpus.by_situation.Father.turns_per_hour} an hour.
-              Children under three, {corpus.under_36_months.turns_per_hour} an hour across {corpus.under_36_months.sessions} sessions;
-              three and over, {corpus.from_36_months.turns_per_hour} across {corpus.from_36_months.sessions}. A fifty-second window
-              instead of five changed the count to {corpus.turns_with_50s_window.toLocaleString("en-US")}. {corpus.files_without_time_marks}{" "}
-              files had no timing and were skipped by name.
-            </p>
-            <p className="mt-3 max-w-[70ch] text-sm leading-relaxed text-muted">
-              What this shows: the rule, the roles and the alternation logic hold on human-labelled recordings at twenty times the
-              published daylong target, which is what half an hour of a parent&apos;s full attention looks like. What it does not show:
-              the window, because the aligner&apos;s timing is contiguous; the device&apos;s transcription of a two-year-old, because
-              these are human transcripts; and any family&apos;s day. The hand count on the operator&apos;s own Bee is the number
-              that answers the last two <Info term="harness" />. <code className="font-mono text-xs">volley verify</code> recomputes
-              every figure in this paragraph from the committed results, and from the corpus itself where it is present.
-            </p>
-          </div>
-          <details className="card group mt-6 p-6 sm:p-8">
-            <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 font-semibold text-ink">
-              Read from the literature: every study on this page
-              <span aria-hidden="true" className="text-muted transition-transform group-open:rotate-45">+</span>
+            </details>
+            {/*
+              The Bee labels every speaker Unknown. This is the answer, measured
+              on families the model never saw, with the naive alternative beside it.
+            */}
+            <details id="blind" className="fold scroll-mt-24 border-t border-line">
+              <summary>
+                No speaker labels: how roles are read, and the run on the Bee
+              <svg className="fold-mark" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </summary>
+              <div className="pb-6">
+                <p className="max-w-[70ch] leading-relaxed text-muted">
+                  The Bee labels every speaker &ldquo;Unknown&rdquo;, so Volley reads who is the child and who the adult from the words
+                  and the pauses, with a model trained on CHILDES and scored only on families it was not trained on. Across{" "}
+                  {blind.sessions} sessions it counted <strong className="text-ink">{blind.turns_blind.toLocaleString("en-US")} turns</strong>{" "}
+                  against {blind.turns_true.toLocaleString("en-US")} true ({blind.total_error_pct > 0 ? "+" : ""}
+                  {blind.total_error_pct} percent); the median session was within{" "}
+                  <strong className="text-ink">{blind.median_abs_session_error_pct} percent</strong>, and turns per hour tracked the truth
+                  at a correlation of <strong className="text-ink">{blind.correlation_per_hour}</strong>. Treating every pause as a
+                  change of speaker missed by {Math.abs(blind.naive_total_error_pct)} percent. Misread roles merge exchanges, so a raw
+                  blind count runs low by a steady {Math.round((1 - 1 / blind.turn_scale_min) * 100)} to{" "}
+                  {Math.round((1 - 1 / blind.turn_scale_max) * 100)} percent; Volley scales for it with a factor learned only from other
+                  families, which took the median session error from {blind.uncalibrated_median_abs_session_error_pct} to{" "}
+                  {blind.median_abs_session_error_pct} percent. Each utterance&apos;s role was right {blind.role_accuracy_pct} percent of
+                  the time, so a single exchange can be misread; a day, a week and a trend are what it is for.
+                </p>
+                <p className="mt-4 max-w-[70ch] leading-relaxed text-muted">
+                  <span className="font-semibold text-ink">On the Bee itself.</span> A real mother-and-child conversation from the same
+                  corpus, voiced by Amazon Polly with an adult and a child voice at its original timing, played to the band for{" "}
+                  {Math.round(device.played_seconds)} seconds, no person in the room. The Bee wrote {device.utterances_bee} utterances
+                  for {device.utterances_played} played and kept{" "}
+                  <strong className="text-ink">
+                    {device.turns_bee_with_true_roles} of {device.turns_true} turns
+                  </strong>
+                  : its segmentation loses none. Volley, with no labels and a model that never saw this family or its scale, counted{" "}
+                  <strong className="text-ink">{device.turns_blind}</strong> ({device.blind_error_pct} percent), with{" "}
+                  {device.role_accuracy_pct} percent of lines given the right speaker. One session; the corpus says how much one session
+                  varies.
+                </p>
+              </div>
+            </details>
+            <details className="fold border-t border-line">
+              <summary>
+                The public corpus, every rate, measured 2026-09-30
+              <svg className="fold-mark" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </summary>
+              <div className="pb-6">
+                <p className="max-w-[70ch] leading-relaxed text-muted">
+                  The CHILDES Gleason corpus: {corpus.sessions} sessions, {corpus.hours} hours, 24 children aged 2;1 to 5;2 with their
+                  mother, with their father and at the family dinner table, human speaker labels, aligned timing. The rule counted{" "}
+                  {corpus.turns.toLocaleString("en-US")} turns: {corpus.turns_per_hour_min} to {corpus.turns_per_hour_max} an hour by
+                  session, median {corpus.turns_per_hour_median}. Dinner {corpus.by_situation.Dinner.turns_per_hour}, with the mother{" "}
+                  {corpus.by_situation.Mother.turns_per_hour}, with the father {corpus.by_situation.Father.turns_per_hour} an hour.
+                  Children under three, {corpus.under_36_months.turns_per_hour} an hour across {corpus.under_36_months.sessions}{" "}
+                  sessions; three and over, {corpus.from_36_months.turns_per_hour} across {corpus.from_36_months.sessions}. A
+                  fifty-second window instead of five changed the count to {corpus.turns_with_50s_window.toLocaleString("en-US")}.{" "}
+                  {corpus.files_without_time_marks} files had no timing and were skipped by name.
+                </p>
+                <p className="mt-3 max-w-[70ch] text-sm leading-relaxed text-muted">
+                  What this shows: the rule, the roles and the alternation logic hold on human-labelled recordings at twenty times the
+                  published daylong target, which is what half an hour of a parent&apos;s full attention looks like. What it does not
+                  show: the window, because the aligner&apos;s timing is contiguous; the device&apos;s transcription of a two-year-old,
+                  because these are human transcripts; and any family&apos;s day. No person has hand-counted a day on the Bee, and
+                  that count is what would answer the last two <Info term="harness" />.{" "}
+                  <code className="font-mono text-xs">volley verify</code> recomputes every figure in this paragraph from the committed
+                  results, and from the corpus itself where it is present.
+                </p>
+              </div>
+            </details>
+            <details className="fold border-t border-line">
+              <summary>
+                Read from the literature: every study on this page
+              <svg className="fold-mark" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </summary>
             <ul className="mt-3 space-y-2 text-sm leading-relaxed text-muted">
               <li>Gilkerson J et al. Language Experience in the Second Year of Life and Language Outcomes in Late Childhood. Pediatrics 2018. PMID 30201624. Three authors work for the LENA Foundation.</li>
@@ -556,7 +653,9 @@ export default function Home() {
                 on Hugging Face; the harness for it is in the repository and runs the day access opens.
               </li>
             </ul>
-          </details>
+              <div className="pb-6" />
+            </details>
+          </div>
         </section>
 
         <div className="rule my-20" />

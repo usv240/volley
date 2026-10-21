@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { clock } from "./DayView";
 
 /**
  * The agent, held to a real session from the visitor's own browser.
@@ -12,10 +13,12 @@ import { useState } from "react";
  * the time it took. Nothing is recorded or mocked; the endpoint is the
  * one Alexa+ would use.
  *
- * The tool it calls is deliberate. `what_volley_counts` describes the
- * rule and returns none of the numbers, which is the honest answer to
- * "what is this thing counting", and it proves the point of the privacy
- * section: the server can explain the count and cannot repeat a word.
+ * It calls two tools. `what_volley_counts` describes the rule and
+ * returns none of the numbers, which is the honest answer to "what is
+ * this thing counting". `how_was_our_talking_today`, with no household
+ * named, answers for the public simulated family, which is what Alexa+
+ * would read out: counts and an hour, and no word of speech, because
+ * the server never had one.
  *
  * Origin is the interesting part of this. The server validates it, the
  * site's own origin is handed to the server by the stack that knows it,
@@ -52,16 +55,40 @@ async function rpc(body: unknown, session?: string) {
   return { status: res.status, ms, session: res.headers.get("mcp-session-id"), json };
 }
 
+interface Today {
+  date: string;
+  turns: number;
+  best_hour: number | null;
+  quietest_hour_with_child: number | null;
+  longest_volley: number | null;
+  questions_adult: number | null;
+  words_discarded: number | null;
+  simulated: boolean;
+  note?: string;
+}
+
+function toolJson<T>(json: unknown): T | null {
+  const text = (json as { result?: { content?: { text: string }[] } })?.result?.content?.[0]?.text;
+  if (!text) return null;
+  try {
+    return JSON.parse(text) as T;
+  } catch {
+    return null;
+  }
+}
+
 export function McpProof() {
   const [lines, setLines] = useState<Line[]>([]);
   const [running, setRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [answer, setAnswer] = useState<string | null>(null);
+  const [today, setToday] = useState<Today | null>(null);
 
   const run = async () => {
     setRunning(true);
     setError(null);
     setAnswer(null);
+    setToday(null);
     const out: Line[] = [];
     const push = (l: Line) => {
       out.push(l);
@@ -96,10 +123,23 @@ export function McpProof() {
         { jsonrpc: "2.0", id: 3, method: "tools/call", params: { name: "what_volley_counts", arguments: {} } },
         session,
       );
-      const text = (call.json as { result?: { content?: { text: string }[] } })?.result?.content?.[0]?.text;
-      const parsed = text ? (JSON.parse(text) as { rule?: string }) : null;
+      const parsed = toolJson<{ rule?: string }>(call.json);
       push({ request: "tools/call what_volley_counts", status: call.status, ok: !!parsed, ms: call.ms });
-      setAnswer(parsed?.rule ?? text ?? null);
+      setAnswer(parsed?.rule ?? null);
+
+      const asked = await rpc(
+        { jsonrpc: "2.0", id: 4, method: "tools/call", params: { name: "how_was_our_talking_today", arguments: {} } },
+        session,
+      );
+      const day = toolJson<Today>(asked.json);
+      push({
+        request: "tools/call how_was_our_talking_today",
+        status: asked.status,
+        ok: !!day,
+        ms: asked.ms,
+        note: day?.simulated ? "the simulated family" : undefined,
+      });
+      setToday(day);
 
       const bye = await fetch(MCP_URL, { method: "DELETE", headers: { "mcp-session-id": session } });
       push({ request: "DELETE session", status: bye.status, ok: bye.status === 204, ms: 0 });
@@ -116,9 +156,10 @@ export function McpProof() {
         <div className="max-w-[60ch]">
           <p className="eyebrow">Live, from this page</p>
           <p className="mt-2 leading-relaxed text-muted">
-            Open a session against the deployed server, list its tools, and ask it what
-            Volley counts. Every request below is real and timed. The tool chosen is the one
-            that returns no data, because that is the point.
+            Open a session against the deployed server, list its tools, ask it what Volley
+            counts, then ask how the talking went today for the simulated family, the way
+            Alexa+ would. Every request below is real and timed, and no answer can hold a word
+            of speech, because the server never had one.
           </p>
         </div>
         <button type="button" onClick={() => void run()} disabled={running} className="primary">
@@ -152,11 +193,27 @@ export function McpProof() {
         </table>
       )}
 
-      {answer && (
-        <blockquote className="mt-6 border-l-2 border-[var(--accent)] pl-4">
-          <p className="text-sm leading-relaxed text-ink">{answer}</p>
-          <footer className="mt-2 text-xs text-faint">the server, just now</footer>
-        </blockquote>
+      {(answer || today) && (
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
+          {answer && (
+            <figure className="rounded-lg border border-line bg-[var(--raised)] p-4">
+              <figcaption className="font-mono text-[12px] text-muted">what_volley_counts</figcaption>
+              <p className="mt-2 text-sm leading-relaxed text-ink">{answer}</p>
+            </figure>
+          )}
+          {today && (
+            <figure className="rounded-lg border border-line bg-[var(--raised)] p-4">
+              <figcaption className="font-mono text-[12px] text-muted">how_was_our_talking_today</figcaption>
+              <p className="mt-2 text-sm leading-relaxed text-ink">
+                On {today.date}, {today.simulated ? "the simulated family" : "this household"} had {today.turns} turns
+                {today.best_hour !== null ? `; the best hour was ${clock(today.best_hour)}` : ""}
+                {today.longest_volley ? `, the longest exchange ${today.longest_volley} turns` : ""}
+                {today.words_discarded !== null ? `, and ${today.words_discarded} words were read and thrown away to count it` : ""}.
+              </p>
+              {today.note && <p className="mt-2 text-xs leading-relaxed text-muted">The server adds: {today.note}</p>}
+            </figure>
+          )}
+        </div>
       )}
 
       {error && <p className="mt-4 text-sm text-[var(--warn)]">{error}</p>}

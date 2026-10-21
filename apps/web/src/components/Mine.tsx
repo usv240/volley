@@ -22,10 +22,11 @@ import demo from "../data/demo.json";
  * remove things: one forgets the key here, one deletes the household
  * and every count on the service, and that one asks first.
  *
- * The same page serves a coach (`/coach/#h=<household>&s=<share>`): the
- * read-only share a parent made with `volley share` or the button below.
- * It reads the days, the week and the note and shows no control that
- * writes, because the service would refuse one anyway.
+ * The same view serves a coach: /coach/ keeps the list of families
+ * whose share links were opened in this browser (see Coach) and hands
+ * this component one of them. It reads the days, the week and the note
+ * and shows no control that writes, because the service would refuse
+ * one anyway.
  */
 
 // A no-key visitor still sees what the page is for, labelled as simulated.
@@ -47,6 +48,7 @@ interface Household {
   household_id: string;
   name: string;
   child_name: string | null;
+  simulated?: boolean;
   created?: string;
 }
 
@@ -85,9 +87,20 @@ function readCreds(mode: Mode): Creds | null {
   }
 }
 
-export function Mine({ mode = "owner" }: { mode?: Mode }) {
+export function Mine({
+  mode = "owner",
+  family,
+  onRemove,
+}: {
+  mode?: Mode;
+  /** Handed in by the coach's list; the page then reads nothing from the address bar. */
+  family?: Creds;
+  /** The coach's "Remove from this browser"; absent for the simulated example. */
+  onRemove?: () => void;
+}) {
   const coach = mode === "coach";
-  const [creds, setCreds] = useState<Creds | null | undefined>(undefined);
+  const [creds, setCreds] = useState<Creds | null | undefined>(family);
+  const [ended, setEnded] = useState(false);
   const [share, setShare] = useState<string | null>(null);
   const [household, setHousehold] = useState<Household | null>(null);
   const [days, setDays] = useState<Day[]>([]);
@@ -97,13 +110,14 @@ export function Mine({ mode = "owner" }: { mode?: Mode }) {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
+    if (family) return;
     setCreds(readCreds(mode));
     // A link pasted into a tab already on this page changes only the
     // fragment, which is not a navigation; read it then too.
     const onHash = () => setCreds(readCreds(mode));
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
-  }, [mode]);
+  }, [mode, family]);
 
   useEffect(() => {
     if (!creds) return;
@@ -113,10 +127,14 @@ export function Mine({ mode = "owner" }: { mode?: Mode }) {
     (async () => {
       setBusy(true);
       setError(null);
+      setEnded(false);
       try {
         const h = await fetch(base, { headers });
-        if (h.status === 401)
-          throw new Error(coach ? "this share was ended or replaced by the family" : "the key in this browser is not this household's key");
+        if (h.status === 401 && coach) {
+          if (!cancelled) setEnded(true);
+          return;
+        }
+        if (h.status === 401) throw new Error("the key in this browser is not this household's key");
         if (h.status === 404) throw new Error("this household no longer exists on the service");
         if (!h.ok) throw new Error(`the service answered ${h.status}`);
         const d = await fetch(`${base}/days`, { headers });
@@ -244,6 +262,23 @@ export function Mine({ mode = "owner" }: { mode?: Mode }) {
     );
   }
 
+  if (coach && ended) {
+    return (
+      <section>
+        <h1 className="display-sm text-3xl text-ink">This family ended the share.</h1>
+        <p className="mt-4 max-w-[60ch] leading-relaxed text-muted">
+          The link they made for you no longer reads anything. Nothing they counted was ever stored here. If they make a new link,
+          open it in this browser and the family comes back to your list.
+        </p>
+        {onRemove && (
+          <button type="button" className="secondary mt-6" onClick={onRemove}>
+            Remove from this browser
+          </button>
+        )}
+      </section>
+    );
+  }
+
   const latest = days.length ? days[days.length - 1] : null;
   const child = household?.child_name ?? null;
   const weekMax = week ? Math.max(1, ...week.days.map((d) => d.turns)) : 1;
@@ -257,17 +292,26 @@ export function Mine({ mode = "owner" }: { mode?: Mode }) {
             {child ? `, with ${child}` : ""}
           </h1>
           <p className="mt-3 text-sm text-muted">
-            {coach
-              ? "Read from the service with the share the family made; it cannot change anything"
-              : "Read from the service with the key in this browser"}{" "}
+            {household?.simulated
+              ? "The simulated family from the front page, read from the service, which lets anyone read it"
+              : coach
+                ? "Read from the service with the share the family made; it cannot change anything"
+                : "Read from the service with the key in this browser"}{" "}
             <Info term="mine" />
             {busy ? ", fetching" : ""}.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <button type="button" className="ghost" onClick={forget}>
-            Forget this browser
-          </button>
+          {!coach && (
+            <button type="button" className="ghost" onClick={forget}>
+              Forget this browser
+            </button>
+          )}
+          {coach && onRemove && (
+            <button type="button" className="ghost min-h-11" onClick={onRemove}>
+              Remove from this browser
+            </button>
+          )}
           {!coach && (
             <button type="button" className="ghost" onClick={() => void makeShare(false)} disabled={busy}>
               Share with your coach
@@ -318,8 +362,10 @@ export function Mine({ mode = "owner" }: { mode?: Mode }) {
           <DayView
             day={latest}
             child={child}
-            simulated={false}
-            label={coach ? "The family's own day, from their Bee" : "Your own day, from your Bee"}
+            simulated={!!household?.simulated}
+            label={
+              household?.simulated ? undefined : coach ? "The family's own day, from their Bee" : "Your own day, from your Bee"
+            }
           />
         </div>
       )}
@@ -351,7 +397,7 @@ export function Mine({ mode = "owner" }: { mode?: Mode }) {
           <div className="card p-6 sm:p-8">
             <p className="eyebrow">Tomorrow, written from today&apos;s counts</p>
             {note ? (
-              <blockquote className="mt-4 border-l-2 border-[var(--accent)] pl-4">
+              <blockquote className="mt-4 border-l border-[var(--line-strong)] pl-4">
                 <p className="leading-relaxed text-ink">{note.text}</p>
                 <footer className="mt-2 text-xs text-faint">
                   the {note.source} layer, from the fact: {note.fact.kind.replace(/_/g, " ")}
@@ -368,7 +414,12 @@ export function Mine({ mode = "owner" }: { mode?: Mode }) {
         </div>
       )}
 
-      {coach ? (
+      {coach && household?.simulated ? (
+        <p className="mt-10 max-w-[66ch] text-sm leading-relaxed text-muted">
+          These are counts and the note, never a word of speech <Info term="household" />. This family is simulated and labelled as
+          one; the service lets anyone read it, and refuses anything that would write.
+        </p>
+      ) : coach ? (
         <p className="mt-10 max-w-[66ch] text-sm leading-relaxed text-muted">
           These are counts and the note, never a word of speech <Info term="household" />. The family made this link and can end
           it at any time, after which it reads nothing; the service refuses anything from it that would write.

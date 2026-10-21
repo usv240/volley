@@ -161,9 +161,11 @@ criterion, with its evidence: [FOR_JUDGES.md](FOR_JUDGES.md).
 - Speaker labels are the device's. The count is as good as they are,
   and the harness measures the disagreement.
 - Without labels, adults talking to each other count as turns, at about
-  four in ten of a real day's rate. A presence check that would refuse
-  them costs a sixth of the true turns, so it is measured
-  (harness/blind/presence.py) and not shipped.
+  four in ten of a real day's rate. `volley setup --only-with-child yes`
+  sets those stretches aside: on the Bee, the real conversation kept all
+  66 counted turns and the two adult controls fell from 21 and 14 false
+  turns to 0 (harness/beeloop/with_child.py); on the corpus it costs a
+  sixth of the true turns (harness/blind/presence.py), so it is opt-in.
 - Talking age, about three to six, until the undercount on younger
   children is measured on the corpus.
 - One family. The pilot to run next: the Bee against a LENA recorder on

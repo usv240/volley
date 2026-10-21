@@ -37,6 +37,11 @@ class Household:
     # The Bee labels every speaker "Unknown" today. Blind households have
     # their roles read from the transcript by serve_return.blind instead.
     blind: bool = False
+    # Opt-in, blind only: set aside three-minute stretches with no line that
+    # sounds like a child (presence.py), so adults talking do not count.
+    only_with_child: bool = False
+    # The local time `volley setup --daily` scheduled, if any; informational.
+    daily_at: str | None = None
 
     @property
     def ready(self) -> bool:

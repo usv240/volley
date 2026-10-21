@@ -33,10 +33,12 @@
   storage only.
 
 - The public corpus (CHILDES Gleason) is used under CC BY-NC-SA 3.0
-  and the TalkBank ground rules for the one thing they allow, developing
-  and evaluating an algorithm: it stays on the operator's machine, is
-  never committed, uploaded, trained on or sent to any model, and only
-  counts reach the site. The three citations the rules ask for are on
+  and the TalkBank ground rules, non-commercially. The transcripts stay
+  on the builder's machine and are never committed, uploaded or sent to
+  any service. The label-free role model is trained on them and ships
+  under the same CC BY-NC-SA 3.0 licence (serve_return/models/NOTICE.md),
+  not under the code's MIT licence; a commercial use would need a model
+  trained on licensed data. Only counts reach the site. The three citations the rules ask for are on
   the site and in EVIDENCE.md.
 
 ## Consent

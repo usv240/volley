@@ -3,7 +3,7 @@
 Every requirement in the hackathon rules and every judging criterion,
 with the file, command or link that proves it. Written to be checked,
 not believed. Numbers are generated from committed result files, and
-131 tests guard the claims.
+140 tests guard the claims.
 
 **In one line:** a step counter for conversations with your child. The
 Bee on a parent's wrist hears the day; Volley counts the back-and-forth
@@ -61,7 +61,7 @@ https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws/v1/docs
   ([AGENT.md](AGENT.md)). The note is phrased on Bedrock from rules-chosen
   facts behind the same gate, with a template as the floor.
 - **The Coach on Amazon Bedrock AgentCore Runtime**, as an endpoint anything can invoke, verified live ([apps/agentcore](../apps/agentcore/README.md)).
-- **131 tests.** `pytest packages apps harness`.
+- **140 tests.** `pytest packages apps harness`.
 
 ### Design
 

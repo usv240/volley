@@ -19,7 +19,17 @@ PYPROJECT = Path(__file__).resolve().parents[1] / "pyproject.toml"
 def test_only_the_package_is_discovered_and_the_model_ships_with_it():
     cfg = tomllib.loads(PYPROJECT.read_text(encoding="utf-8"))["tool"]["setuptools"]
     assert cfg["packages"]["find"]["include"] == ["serve_return*"]
-    assert cfg["package-data"] == {"serve_return": ["models/*.json"]}
+    assert cfg["package-data"] == {"serve_return": ["models/*.json", "models/NOTICE.md"]}
+
+
+def test_the_model_ships_with_its_own_licence_and_says_so_in_the_metadata():
+    """The weights are trained on CHILDES, which TalkBank shares under CC
+    BY-NC-SA 3.0. The code is MIT; the model file is not, and the package
+    metadata and the notice beside the file both say so."""
+    meta = tomllib.loads(PYPROJECT.read_text(encoding="utf-8"))["project"]
+    assert "CC BY-NC-SA 3.0" in meta["license"]["text"] and "MIT" in meta["license"]["text"]
+    notice = (PYPROJECT.parent / "serve_return" / "models" / "NOTICE.md").read_text(encoding="utf-8")
+    assert "CC BY-NC-SA 3.0" in notice and "10.21415/T5101R" in notice and "MacWhinney" in notice
 
 
 def test_the_shipped_model_is_where_package_data_says():

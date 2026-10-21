@@ -1,0 +1,34 @@
+{
+ "threshold": 9.91,
+ "rule": "apps/ingest/volley_ingest/presence.py",
+ "rows": {
+  "parent_and_child": {
+   "turns_true": 75,
+   "utterances_bee": 124,
+   "turns_every_stretch": 66,
+   "turns_only_with_child": 66,
+   "stretches_set_aside": 1
+  },
+  "adults": {
+   "turns_true": 0,
+   "utterances_bee": 63,
+   "turns_every_stretch": 21,
+   "turns_only_with_child": 0,
+   "stretches_set_aside": 1
+  },
+  "silence": {
+   "turns_true": 0,
+   "utterances_bee": 16,
+   "turns_every_stretch": 1,
+   "turns_only_with_child": 1,
+   "stretches_set_aside": 1
+  },
+  "onevoice": {
+   "turns_true": 0,
+   "utterances_bee": 92,
+   "turns_every_stretch": 14,
+   "turns_only_with_child": 0,
+   "stretches_set_aside": 1
+  }
+ }
+}
