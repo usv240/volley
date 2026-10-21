@@ -28,7 +28,10 @@ the pauses instead, with `serve_return.blind`, trained on CHILDES. On
 families it never saw: the day's turn count within 9.6 percent of the
 true count in the median session (49 of 54 sessions within 20
 percent, +1.6 percent in total), turns per hour correlated with the
-truth at 0.874, against a naive count that misses 87.3 percent. The
+truth at 0.874. The fairest baseline, every line a new speaker scaled
+the same way, matches the total and is worse per session (13.4 percent)
+and per hour (0.766); a pause-only count misses 87.3 percent, but this
+corpus's alignment zeroes most pauses, so that one is a weak baseline. The
 raw blind count runs low by a steady 11 to 15 percent because misread
 roles merge exchanges; a scale learned only from other families corrects
 it. Every

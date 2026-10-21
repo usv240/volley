@@ -47,6 +47,7 @@ SYSTEM = "\n".join(
         "4. Two sentences. Warm, plain, second person, present tense. No emojis. No dashes of any kind as punctuation.",
         "5. Name the hour the way a person says it, for example 'around six in the evening'.",
         "6. The second sentence names one small thing to do and starts with 'Tomorrow,'. A note with nothing to do is refused.",
+        "7. A value counted over an hour is that hour's total turns: say 'turns in that hour', never call it one exchange, one stretch, or a run in a row.",
         "Reply with the two sentences only.",
     ]
 )
@@ -79,17 +80,25 @@ def sanitise(text: str) -> str:
 
 
 def _bedrock_create_text(system: str, user: str, model: str) -> str:
-    from anthropic import AnthropicBedrock  # lazy: tests inject a fake
+    """One call through Bedrock's own Converse API. boto3 ships with the
+    Lambda runtime, so no model SDK sits between the service and Bedrock;
+    on 2026-10-21 the Anthropic SDK's path started failing for Sonnet from
+    Lambda with an API-version error while this one did not."""
+    import boto3  # lazy: tests inject a fake
 
-    client = AnthropicBedrock(aws_region=os.environ.get("AWS_REGION", "us-east-1"))
-    response = client.messages.create(model=model, max_tokens=200, system=system, messages=[{"role": "user", "content": user}])
-    if getattr(response, "stop_reason", None) == "refusal":
+    client = boto3.client("bedrock-runtime", region_name=os.environ.get("AWS_REGION", "us-east-1"))
+    response = client.converse(
+        modelId=model,
+        system=[{"text": system}],
+        messages=[{"role": "user", "content": [{"text": user}]}],
+        inferenceConfig={"maxTokens": 200},
+    )
+    if response.get("stopReason") == "content_filtered":
         raise RuntimeError("model declined")
-    text = " ".join(b.text for b in response.content if getattr(b, "type", "") == "text").strip()
+    text = " ".join(b.get("text", "") for b in response["output"]["message"]["content"]).strip()
     if not text:
         raise RuntimeError("empty response")
     return text
-
 
 def phrase_note(fact: dict, child: str | None, floor: str, accept, deps: dict | None = None) -> dict:
     """The note with its provenance. ``accept(text)`` is the caller's gate:

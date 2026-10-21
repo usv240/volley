@@ -10,6 +10,7 @@ and the thing a parent runs once to see that it is real.
 from __future__ import annotations
 
 import json
+from pathlib import Path
 import subprocess
 import sys
 import time
@@ -36,7 +37,7 @@ def _utterance_from_event(event: dict) -> tuple[str | None, str, float] | None:
 
 
 def run(cli: BeeCli, h: Household, seconds: int = 600, lines=None, nudge: bool = False, speak: bool = False,
-        clock=None, poll_seconds: float = 30.0, say=None) -> int:
+        clock=None, poll_seconds: float = 30.0, say=None, record: str | None = None) -> int:
     """Count turns as they happen. With ``nudge``, also watch the family's
     usual best hour and put one sentence into the Bee if it goes quiet
     (nudge.py). A quiet hour has no events, so the stream is read on a
@@ -87,6 +88,10 @@ def run(cli: BeeCli, h: Household, seconds: int = 600, lines=None, nudge: bool =
         blind_roles = Roles.of(adult=["adult"], child=["child"])
 
     started = clock()
+    log: dict = {"started": started.isoformat(timespec="seconds"), "seconds": seconds, "blind": h.blind,
+                 "usual": None if usual is None else {"hour": usual.hour, "turns": usual.turns, "days": usual.days},
+                 "rule": {"check_after_minutes": nd.CHECK_AFTER_MINUTES, "quiet_fraction": nd.QUIET_FRACTION},
+                 "checks": [], "nudge": None, "words_kept": 0}
 
     def check() -> None:
         now = clock()
@@ -96,13 +101,20 @@ def run(cli: BeeCli, h: Household, seconds: int = 600, lines=None, nudge: bool =
         # quiet. Five minutes of grace for starting just after the hour.
         if started > now.replace(minute=0, second=0, microsecond=0) + timedelta(minutes=5):
             return
-        if not nd.should_nudge(now, usual, by_hour.get((date, now.hour), 0), nd.nudged_today(date)):
+        so_far = by_hour.get((date, now.hour), 0)
+        if usual is not None and now.hour == usual.hour and (not log["checks"] or log["checks"][-1]["minute"] != now.minute):
+            log["checks"].append({"minute": now.minute, "turns_this_hour": so_far})
+        if not nd.should_nudge(now, usual, so_far, nd.nudged_today(date)):
             return
         text = nd.message(h.child_name)
         print(f"  nudge at {now:%H:%M}: {text}")
+        placed = None
         if h.write_reminders_to_bee:
-            cli.todo_create(text, nd.due_in_a_minute())
+            placed = cli.todo_create(text, nd.due_in_a_minute())
             print("  placed in your Bee, due in a minute")
+        log["nudge"] = {"at": now.isoformat(timespec="seconds"), "turns_this_hour": so_far, "text": text,
+                        "placed_in_bee": bool(h.write_reminders_to_bee),
+                        "todo_id": placed.get("id") if isinstance(placed, dict) else None, "spoken": bool(speak)}
         if speak:
             (say or nd.say)(text)
         nd.mark_nudged(date)
@@ -161,4 +173,11 @@ def run(cli: BeeCli, h: Household, seconds: int = 600, lines=None, nudge: bool =
         if proc:
             proc.terminate()
     print(f"{turns} turns")
+    if record:
+        import json as _json
+
+        log["turns_counted"] = turns
+        Path(record).parent.mkdir(parents=True, exist_ok=True)
+        Path(record).write_text(_json.dumps(log, indent=1), encoding="utf-8")
+        print(f"wrote {record}: counts and times only")
     return 0

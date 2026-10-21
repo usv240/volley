@@ -1,0 +1,404 @@
+{
+ "corpus": "CHILDES Gleason, doi 10.21415/T5101R",
+ "what": "the child-present check on, with a turn scale learned with it on, held out by family",
+ "folds": "6 folds by child; scale learned on training families by 4 inner folds",
+ "gated_scale_by_fold": [
+  1.347,
+  1.5464,
+  1.3632,
+  1.3141,
+  1.39,
+  1.4194
+ ],
+ "sessions": 54,
+ "total_error_pct": 5.5,
+ "median_abs_session_error_pct": 14.4,
+ "sessions_within_20pct": 36,
+ "false_as_pct_of_real": 16.4,
+ "compare_check_off": {
+  "total_error_pct": 1.6,
+  "median_abs_session_error_pct": 9.6,
+  "sessions_within_20pct": 49,
+  "false_as_pct_of_real": 43.1
+ },
+ "rows": [
+  {
+   "session": "Dinner/andy",
+   "gold": 183,
+   "gated": 209,
+   "false_without_child": 3,
+   "error_pct": 14.2
+  },
+  {
+   "session": "Dinner/guy",
+   "gold": 186,
+   "gated": 174,
+   "false_without_child": 12,
+   "error_pct": -6.5
+  },
+  {
+   "session": "Dinner/martin",
+   "gold": 489,
+   "gated": 613,
+   "false_without_child": 77,
+   "error_pct": 25.4
+  },
+  {
+   "session": "Dinner/theresa",
+   "gold": 258,
+   "gated": 245,
+   "false_without_child": 0,
+   "error_pct": -5.0
+  },
+  {
+   "session": "Father/andy",
+   "gold": 294,
+   "gated": 373,
+   "false_without_child": 112,
+   "error_pct": 26.9
+  },
+  {
+   "session": "Father/guy",
+   "gold": 370,
+   "gated": 339,
+   "false_without_child": 44,
+   "error_pct": -8.4
+  },
+  {
+   "session": "Father/martin",
+   "gold": 221,
+   "gated": 273,
+   "false_without_child": 53,
+   "error_pct": 23.5
+  },
+  {
+   "session": "Father/theresa",
+   "gold": 505,
+   "gated": 415,
+   "false_without_child": 50,
+   "error_pct": -17.8
+  },
+  {
+   "session": "Mother/andy",
+   "gold": 309,
+   "gated": 348,
+   "false_without_child": 39,
+   "error_pct": 12.6
+  },
+  {
+   "session": "Mother/guy",
+   "gold": 382,
+   "gated": 193,
+   "false_without_child": 0,
+   "error_pct": -49.5
+  },
+  {
+   "session": "Mother/martin",
+   "gold": 447,
+   "gated": 523,
+   "false_without_child": 211,
+   "error_pct": 17.0
+  },
+  {
+   "session": "Dinner/bobby",
+   "gold": 358,
+   "gated": 527,
+   "false_without_child": 77,
+   "error_pct": 47.2
+  },
+  {
+   "session": "Dinner/helen",
+   "gold": 359,
+   "gated": 407,
+   "false_without_child": 22,
+   "error_pct": 13.4
+  },
+  {
+   "session": "Father/bobby",
+   "gold": 490,
+   "gated": 535,
+   "false_without_child": 80,
+   "error_pct": 9.2
+  },
+  {
+   "session": "Father/helen",
+   "gold": 565,
+   "gated": 646,
+   "false_without_child": 131,
+   "error_pct": 14.3
+  },
+  {
+   "session": "Father/nanette",
+   "gold": 212,
+   "gated": 195,
+   "false_without_child": 0,
+   "error_pct": -8.0
+  },
+  {
+   "session": "Father/ursula",
+   "gold": 615,
+   "gated": 666,
+   "false_without_child": 104,
+   "error_pct": 8.3
+  },
+  {
+   "session": "Mother/helen",
+   "gold": 613,
+   "gated": 702,
+   "false_without_child": 135,
+   "error_pct": 14.5
+  },
+  {
+   "session": "Mother/nanette",
+   "gold": 290,
+   "gated": 353,
+   "false_without_child": 131,
+   "error_pct": 21.7
+  },
+  {
+   "session": "Dinner/charlie",
+   "gold": 362,
+   "gated": 459,
+   "false_without_child": 70,
+   "error_pct": 26.8
+  },
+  {
+   "session": "Dinner/isadora",
+   "gold": 174,
+   "gated": 209,
+   "false_without_child": 29,
+   "error_pct": 20.1
+  },
+  {
+   "session": "Dinner/olivia",
+   "gold": 144,
+   "gated": 134,
+   "false_without_child": 0,
+   "error_pct": -6.9
+  },
+  {
+   "session": "Dinner/victor",
+   "gold": 440,
+   "gated": 560,
+   "false_without_child": 56,
+   "error_pct": 27.3
+  },
+  {
+   "session": "Father/charlie",
+   "gold": 473,
+   "gated": 465,
+   "false_without_child": 225,
+   "error_pct": -1.7
+  },
+  {
+   "session": "Father/isadora",
+   "gold": 566,
+   "gated": 643,
+   "false_without_child": 65,
+   "error_pct": 13.6
+  },
+  {
+   "session": "Father/olivia",
+   "gold": 462,
+   "gated": 432,
+   "false_without_child": 57,
+   "error_pct": -6.5
+  },
+  {
+   "session": "Father/victor",
+   "gold": 411,
+   "gated": 414,
+   "false_without_child": 38,
+   "error_pct": 0.7
+  },
+  {
+   "session": "Mother/charlie",
+   "gold": 560,
+   "gated": 579,
+   "false_without_child": 94,
+   "error_pct": 3.4
+  },
+  {
+   "session": "Mother/isadora",
+   "gold": 448,
+   "gated": 485,
+   "false_without_child": 79,
+   "error_pct": 8.3
+  },
+  {
+   "session": "Dinner/david",
+   "gold": 285,
+   "gated": 262,
+   "false_without_child": 0,
+   "error_pct": -8.1
+  },
+  {
+   "session": "Dinner/john",
+   "gold": 159,
+   "gated": 212,
+   "false_without_child": 76,
+   "error_pct": 33.3
+  },
+  {
+   "session": "Dinner/patricia",
+   "gold": 280,
+   "gated": 388,
+   "false_without_child": 59,
+   "error_pct": 38.6
+  },
+  {
+   "session": "Dinner/wanda",
+   "gold": 325,
+   "gated": 294,
+   "false_without_child": 81,
+   "error_pct": -9.5
+  },
+  {
+   "session": "Father/david",
+   "gold": 44,
+   "gated": 59,
+   "false_without_child": 0,
+   "error_pct": 34.1
+  },
+  {
+   "session": "Father/john",
+   "gold": 287,
+   "gated": 313,
+   "false_without_child": 74,
+   "error_pct": 9.1
+  },
+  {
+   "session": "Father/patricia",
+   "gold": 407,
+   "gated": 468,
+   "false_without_child": 172,
+   "error_pct": 15.0
+  },
+  {
+   "session": "Mother/david",
+   "gold": 496,
+   "gated": 591,
+   "false_without_child": 35,
+   "error_pct": 19.2
+  },
+  {
+   "session": "Mother/john",
+   "gold": 350,
+   "gated": 272,
+   "false_without_child": 46,
+   "error_pct": -22.3
+  },
+  {
+   "session": "Mother/patricia",
+   "gold": 574,
+   "gated": 664,
+   "false_without_child": 88,
+   "error_pct": 15.7
+  },
+  {
+   "session": "Mother/wanda",
+   "gold": 303,
+   "gated": 284,
+   "false_without_child": 72,
+   "error_pct": -6.3
+  },
+  {
+   "session": "Dinner/eddie",
+   "gold": 349,
+   "gated": 361,
+   "false_without_child": 19,
+   "error_pct": 3.4
+  },
+  {
+   "session": "Dinner/katie",
+   "gold": 299,
+   "gated": 229,
+   "false_without_child": 53,
+   "error_pct": -23.4
+  },
+  {
+   "session": "Dinner/william",
+   "gold": 477,
+   "gated": 391,
+   "false_without_child": 132,
+   "error_pct": -18.0
+  },
+  {
+   "session": "Father/eddie",
+   "gold": 546,
+   "gated": 513,
+   "false_without_child": 0,
+   "error_pct": -6.0
+  },
+  {
+   "session": "Father/katie",
+   "gold": 348,
+   "gated": 292,
+   "false_without_child": 40,
+   "error_pct": -16.1
+  },
+  {
+   "session": "Father/richard",
+   "gold": 553,
+   "gated": 542,
+   "false_without_child": 72,
+   "error_pct": -2.0
+  },
+  {
+   "session": "Mother/katie",
+   "gold": 165,
+   "gated": 179,
+   "false_without_child": 56,
+   "error_pct": 8.5
+  },
+  {
+   "session": "Dinner/laurel",
+   "gold": 289,
+   "gated": 402,
+   "false_without_child": 98,
+   "error_pct": 39.1
+  },
+  {
+   "session": "Dinner/susan",
+   "gold": 346,
+   "gated": 224,
+   "false_without_child": 44,
+   "error_pct": -35.3
+  },
+  {
+   "session": "Dinner/xavia",
+   "gold": 359,
+   "gated": 274,
+   "false_without_child": 13,
+   "error_pct": -23.7
+  },
+  {
+   "session": "Father/frank",
+   "gold": 374,
+   "gated": 400,
+   "false_without_child": 97,
+   "error_pct": 7.0
+  },
+  {
+   "session": "Father/laurel",
+   "gold": 542,
+   "gated": 852,
+   "false_without_child": 146,
+   "error_pct": 57.2
+  },
+  {
+   "session": "Father/susan",
+   "gold": 576,
+   "gated": 521,
+   "false_without_child": 16,
+   "error_pct": -9.5
+  },
+  {
+   "session": "Mother/frank",
+   "gold": 425,
+   "gated": 361,
+   "false_without_child": 37,
+   "error_pct": -15.1
+  }
+ ]
+}

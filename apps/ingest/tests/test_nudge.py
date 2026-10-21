@@ -77,8 +77,13 @@ def test_a_quiet_usual_hour_puts_one_nudge_into_the_bee_and_says_it_once(tmp_pat
     import itertools
 
     ticks = itertools.chain((datetime(2026, 10, 21, 18, m) for m in (5, 15, 22, 30, 40)), itertools.repeat(datetime(2026, 10, 21, 18, 50)))
+    rec = tmp_path / "run.json"
     rc = run(BeeCli(runner=runner), h, seconds=1, lines=quiet(), nudge=True, speak=True,
-             clock=lambda: next(ticks), poll_seconds=0.01, say=spoken.append)
+             clock=lambda: next(ticks), poll_seconds=0.01, say=spoken.append, record=str(rec))
+    logged = json.loads(rec.read_text(encoding="utf-8"))
+    assert logged["nudge"]["placed_in_bee"] and logged["nudge"]["todo_id"] == 1 and logged["words_kept"] == 0
+    assert logged["usual"] == {"hour": 18, "turns": 24.0, "days": 1} and logged["checks"]
+    assert "Asha" not in json.dumps(logged["checks"])
     assert rc == 0
     creates = [a for a in created if "todos" in a and "create" in a]
     assert len(creates) == 1 and creates[0][creates[0].index("--text") + 1] == nd.message("Asha")
