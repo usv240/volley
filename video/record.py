@@ -324,8 +324,8 @@ def plan(r: Recorder):
 
 STATS = [
     ("26.59 h", "of independent family recordings, 54 sessions"),
-    ("20,344", "turns counted, none inside a stretch where one person spoke alone"),
-    ("66 of 75", "turns found on the Bee from a replayed conversation: an undercount, published"),
+    ("20,344", "reference turns from the human speaker labels; without labels, a typical session lands within 9.6 percent"),
+    ("66 of 75", "turns found on the physical Bee from a replayed research conversation"),
 ]
 STATS_JS = """
 (() => {
@@ -344,6 +344,22 @@ STATS_JS = """
 """ % (24, 160, json.dumps(STATS), 560, 48, 24, 112, 32)
 
 
+CAP_JS = """
+(() => {
+  let k = document.getElementById('__cap');
+  if (!k) {
+    k = document.createElement('div'); k.id = '__cap';
+    k.style.cssText = 'position:fixed;left:40px;right:40px;bottom:40px;z-index:2147483645;padding:18px 24px;background:#191d25;' +
+      'border:1px solid #2a303b;border-radius:12px;font-family:Inter,system-ui,sans-serif;box-shadow:0 20px 60px rgba(0,0,0,.35);transition:opacity 300ms ease';
+    k.innerHTML = '<b style="display:block;font:600 30px/1.1 Inter,system-ui,sans-serif;letter-spacing:0.04em;color:#f3f1ec;white-space:nowrap;overflow:hidden"></b>' +
+      '<i style="display:block;font-style:normal;font:400 16px/1.3 Inter,system-ui,sans-serif;color:#aeb3bd;margin-top:6px"></i>';
+    document.body.appendChild(k);
+  }
+  return k;
+})();
+"""
+
+
 def proof(r: Recorder):
     r.scroll_to(EVIDENCE, rest=URL_BAR_HEIGHT + 100 * SCALE)
     r.page.evaluate("document.getElementById('__cursor').style.opacity='0'")
@@ -351,9 +367,9 @@ def proof(r: Recorder):
     yield
     r.on_phrase("Twenty-six hours")
     r.page.evaluate("window.__stat(0)")
-    r.on_phrase("Twenty thousand turns")
+    r.on_phrase("Twenty thousand reference turns")
     r.page.evaluate("window.__stat(1)")
-    r.on_phrase("On the Bee")
+    r.on_phrase("On the physical Bee")
     r.page.evaluate("window.__stat(2)")
     r.on_phrase("child-present check")
     r.page.evaluate("document.getElementById('__stats').style.opacity='0'")
@@ -364,17 +380,38 @@ def proof(r: Recorder):
     r.hold_beat()
 
 
+ALEXA_SUB = "A browser stand-in for Alexa+'s voice; the MCP call to Volley's server is the real one, on the simulated family"
+
+
 def alexa(r: Recorder):
     r.scroll_to(ALEXA, rest=URL_BAR_HEIGHT + 120 * SCALE)
+    shown: list[str] = []
+
+    def cap(text: str) -> None:
+        shown.append(text)
+        r.page.evaluate(CAP_JS)
+        r.page.evaluate("([t, s]) => { const k = document.getElementById('__cap'); k.querySelector('b').innerHTML = t; k.querySelector('i').textContent = s; }",
+                        ['<span style="color:#7aa2ff;margin:0 .35em">&rarr;</span>'.join(shown), ALEXA_SUB])
+
     yield
     r.on_phrase("Parents can ask out loud")
     r.scroll_to(ASK, rest=URL_BAR_HEIGHT + 520 * SCALE)
+    r.on_phrase("the question")
     r.click(ASK)
+    cap("QUESTION")
     r.page.wait_for_selector("#alexa dd:has-text('On the simulated family')", timeout=30_000)
+    # The result block, enlarged, so the tool call line is read and not inferred.
+    r.page.evaluate("const d = document.querySelector('#alexa dl.voice-result'); d.style.transition = 'transform 400ms ease'; d.style.transformOrigin = '0 0'; d.style.transform = 'scale(1.12)';")
+    r.on_phrase("the tool")
     r.point("#alexa dd:has-text('tools/call')")
-    r.on_phrase("never had a word")
+    cap("MCP TOOL CALLED")
+    r.on_phrase("the counts back")
     r.point("#alexa dd:has-text('On the simulated family')")
+    cap("COUNTS BACK")
+    r.on_phrase("the answer spoken")
+    cap("SPOKEN")
     r.on_phrase("Two Strands agents")
+    r.page.evaluate("document.getElementById('__cap').remove()")
     r.page.goto(SITE_EVIDENCE, wait_until="networkidle", timeout=90_000)
     r.page.wait_for_selector(AGENTS, timeout=60_000)
     r.scroll_to(AGENTS, rest=URL_BAR_HEIGHT + 120 * SCALE)
@@ -406,11 +443,12 @@ CLOSE_JS = """
     'align-items:center;justify-content:center;text-align:center;padding:0 8%%;opacity:0;transition:opacity 900ms ease';
   k.innerHTML = '<div style="font:600 %dpx/1 Fraunces, Georgia, serif;letter-spacing:-0.02em">Volley</div>' +
     '<div style="font:400 %dpx/1.3 Fraunces, Georgia, serif;margin-top:%dpx;max-width:24ch">A step counter for conversations with your child.</div>' +
-    '<div style="font:500 %dpx/1.3 Inter, system-ui, sans-serif;color:#aeb3bd;margin-top:%dpx;letter-spacing:0.08em;text-transform:uppercase">Built on Bee and AWS</div>';
+    '<div style="font:400 %dpx/1.4 Inter, system-ui, sans-serif;color:#aeb3bd;margin-top:%dpx;max-width:44ch">Because what matters is not how many words we say. It is the conversations we share.</div>' +
+    '<div style="font:500 %dpx/1.3 Inter, system-ui, sans-serif;color:#7c828d;margin-top:%dpx;letter-spacing:0.08em;text-transform:uppercase">Built on Bee and AWS</div>';
   document.body.appendChild(k);
   requestAnimationFrame(() => { k.style.opacity = '1'; });
 })();
-""" % (160, 52, 36, 22, 64)
+""" % (160, 52, 36, 24, 48, 18, 40)
 
 
 def close(r: Recorder):

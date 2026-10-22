@@ -42,41 +42,41 @@ A terminal: the reminder in the Bee's todo list, its alarm at three the next aft
 
 **1:01, term-nudge, a terminal, a real run rendered**
 
-A terminal labelled live Bee stream: volley live watching the usual hour, the hour going quiet, the nudge printed and placed in the Bee; its sentence held large for the rest of the beat. The real run.
+A terminal labelled live Bee stream: volley live watching the usual hour, the hour going quiet, the nudge printed and placed in the Bee; its sentence held large; then the same reminder read back from the Bee. The real run.
 
-> Volley does not only count yesterday. During the hour we usually talk most, it watches the Bee's live stream. If that hour goes quiet, the nudge reaches the Bee right then, and a speaker in the room says it, the way an Echo could. One idea, while there is still time to connect.
+> Volley does not only count yesterday. During the hour we usually talk most, it watches the Bee's live stream. If that hour goes quiet, the nudge reaches the Bee right then, and a speaker in the room says it, the way an Echo could. A minute later, there it is, read back from the Bee.
 
 **1:22, plan, the website, in a real browser**
 
 The day, an hour at a time; then the week's plan, written by Claude on Amazon Bedrock, the three lines pointed to in turn, then the gate line.
 
-> Over a week, patterns appear: a busy evening, a quiet afternoon with the child right there. Claude on Amazon Bedrock turns them into practical coaching, the way a home visitor would: keep the hour that works, one idea for the quiet one, one for the weekend. A gate in code refuses any number the counts did not hold.
+> Over a week, patterns appear. Claude on Amazon Bedrock turns them into practical coaching, the way a home visitor would: keep the hour that works, one idea for the quiet one, one for the weekend. A gate in code refuses any number the counts did not hold.
 
-**1:45, proof, the website, in a real browser**
+**1:41, proof, the website, in a real browser**
 
-Three large numbers, one at a time: 26.59 hours, 20,344 turns, 66 of 75; then the evidence row where two adults count as zero beside the real conversation's sixty-six.
+Three large numbers, one at a time: 26.59 hours, 20,344 reference turns, 66 of 75 on the physical Bee; then the evidence row where two adults count as zero beside the real conversation's sixty-six.
 
-> Does it hold up? Twenty-six hours of independent family recordings. Twenty thousand turns counted, and none where one person spoke alone. On the Bee, sixty-six of seventy-five: an undercount, and we publish it. And with the child-present check on, two adults with no child in the room count as zero.
+> Does it hold up? Twenty-six hours of independent family recordings. Twenty thousand reference turns from the human labels; without labels, Volley's count lands within ten percent on a typical session. On the physical Bee, sixty-six of seventy-five turns found. And with the child-present check on, two adults with no child in the room count as zero.
 
-**2:04, ecosystem, the website, in a real browser**
+**2:03, ecosystem, the website, in a real browser**
 
 Ask out loud: a question tapped, the tool call line, the answer read aloud. Then the agents section on the evidence page, simulated Bee data labelled first.
 
-> Parents can ask out loud. Volley's MCP server lets Alexa Plus answer from the counts alone; it never had a word to repeat. Two Strands agents explain a quiet day from the Bee's own summary, one hosted on AgentCore. This one runs on simulated Bee data.
+> Parents can ask out loud. This browser stands in for Alexa Plus and makes the same MCP call: the question, the tool, the counts back, the answer spoken. Two Strands agents explain a quiet day from the Bee's own summary, one hosted on AgentCore. This one runs on simulated Bee data.
 
-**2:22, beyond, the website, in a real browser**
+**2:23, beyond, the website, in a real browser**
 
 The coach's list of families; then the install line and the cost.
 
-> For families with a home visitor, a read-only view carries the coaching between visits: counts and the note, never a word of speech. Open source on PyPI. Four cents a family a month, on a band they already wear.
+> For families with a home visitor, a read-only view carries the coaching between visits, never a word of speech. Open source on PyPI. Four cents a family a month.
 
-**2:38, close, the website, in a real browser**
+**2:35, close, the website, in a real browser**
 
 The first screen, pointer hidden; then the final card: Volley, a step counter for conversations with your child, built on Bee and AWS.
 
 > Volley does not ask parents to talk more. It helps them notice when to connect. Because what matters is not how many words we say. It is the conversations we share.
 
-Estimated 2:50 of a 3:00 ceiling. The real narration decides the
+Estimated 2:47 of a 3:00 ceiling. The real narration decides the
 final cut, and `python video/beats.py` exits non-zero if the plan is
 over before a frame is recorded.
 

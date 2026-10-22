@@ -123,12 +123,12 @@ BEATS: list[Beat] = [
     Beat(
         key="term-nudge",
         action="term_nudge",
-        shows="A terminal labelled live Bee stream: volley live watching the usual hour, the hour going quiet, the nudge printed and placed in the Bee; its sentence held large for the rest of the beat. The real run.",
+        shows="A terminal labelled live Bee stream: volley live watching the usual hour, the hour going quiet, the nudge printed and placed in the Bee; its sentence held large; then the same reminder read back from the Bee. The real run.",
         min_hold=12,
         say=(
             "Volley does not only count yesterday. During the hour we usually talk most, it watches the Bee's live stream. "
             "If that hour goes quiet, the nudge reaches the Bee right then, and a speaker in the room says it, the way an Echo could. "
-            "One idea, while there is still time to connect."
+            "A minute later, there it is, read back from the Bee."
         ),
     ),
     Beat(
@@ -136,7 +136,7 @@ BEATS: list[Beat] = [
         action="plan",
         shows="The day, an hour at a time; then the week's plan, written by Claude on Amazon Bedrock, the three lines pointed to in turn, then the gate line.",
         say=(
-            "Over a week, patterns appear: a busy evening, a quiet afternoon with the child right there. "
+            "Over a week, patterns appear. "
             "Claude on Amazon Bedrock turns them into practical coaching, the way a home visitor would: keep the hour that works, one idea for the quiet one, one for the weekend. "
             "A gate in code refuses any number the counts did not hold."
         ),
@@ -144,11 +144,11 @@ BEATS: list[Beat] = [
     Beat(
         key="proof",
         action="proof",
-        shows="Three large numbers, one at a time: 26.59 hours, 20,344 turns, 66 of 75; then the evidence row where two adults count as zero beside the real conversation's sixty-six.",
+        shows="Three large numbers, one at a time: 26.59 hours, 20,344 reference turns, 66 of 75 on the physical Bee; then the evidence row where two adults count as zero beside the real conversation's sixty-six.",
         say=(
             "Does it hold up? Twenty-six hours of independent family recordings. "
-            "Twenty thousand turns counted, and none where one person spoke alone. "
-            "On the Bee, sixty-six of seventy-five: an undercount, and we publish it. "
+            "Twenty thousand reference turns from the human labels; without labels, Volley's count lands within ten percent on a typical session. "
+            "On the physical Bee, sixty-six of seventy-five turns found. "
             "And with the child-present check on, two adults with no child in the room count as zero."
         ),
     ),
@@ -158,7 +158,7 @@ BEATS: list[Beat] = [
         shows="Ask out loud: a question tapped, the tool call line, the answer read aloud. Then the agents section on the evidence page, simulated Bee data labelled first.",
         min_hold=15,
         say=(
-            "Parents can ask out loud. Volley's MCP server lets Alexa Plus answer from the counts alone; it never had a word to repeat. "
+            "Parents can ask out loud. This browser stands in for Alexa Plus and makes the same MCP call: the question, the tool, the counts back, the answer spoken. "
             "Two Strands agents explain a quiet day from the Bee's own summary, one hosted on AgentCore. This one runs on simulated Bee data."
         ),
     ),
@@ -168,8 +168,8 @@ BEATS: list[Beat] = [
         shows="The coach's list of families; then the install line and the cost.",
         min_hold=6,
         say=(
-            "For families with a home visitor, a read-only view carries the coaching between visits: counts and the note, never a word of speech. "
-            "Open source on PyPI. Four cents a family a month, on a band they already wear."
+            "For families with a home visitor, a read-only view carries the coaching between visits, never a word of speech. "
+            "Open source on PyPI. Four cents a family a month."
         ),
     ),
     Beat(
