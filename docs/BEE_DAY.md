@@ -74,3 +74,23 @@ reminder marker for that day removed so it would write again:
 One session, voiced, not a family's day. It shows the product path runs
 on live Bee data and agrees with the harness; how close the count is to
 the truth is what `harness/beeloop` and `harness/blind` measure.
+
+## The nudge, live, 2026-10-22
+
+`volley live --nudge --say --seconds 2400 --record harness/live/nudge-2026-10-22.json`
+started at 14:58 local with the band on. From the counted days the usual
+best hour is 15:00 (66 turns). It watched the Bee's live stream, checked
+the rule every minute of that hour, and at 15:20, with the hour quiet,
+spoke the sentence through this computer's speaker, an Echo stand-in,
+and placed it in the Bee as a reminder due a minute later (todo
+29255610). It watched to 15:38 and wrote the record: 39 checks,
+the time it fired, 0 words kept.
+
+## A second family, at dinner, 2026-10-22
+
+`python harness/beeloop/make.py --session Dinner/eddie --seconds 300`
+then `--play` at 14:28: a mother, a father and a child from the same
+corpus, 290 seconds, three Polly voices. Bee session 11551909. The
+Bee wrote 152 lines for 166 played; with the true speakers it kept
+88 of 96 turns; Volley with no labels, model and scale fitted
+without this family, counted 62. `harness/beeloop/dinner.json`.

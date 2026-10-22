@@ -1,0 +1,22 @@
+{
+ "session": "Dinner/eddie",
+ "corpus": "CHILDES Gleason, doi 10.21415/T5101R",
+ "played_seconds": 289.8,
+ "utterances_played": 166,
+ "utterances_bee": 152,
+ "clock_shift_s": -3.45,
+ "aligned_overlap_pct": 95.4,
+ "bee_sessions": [
+  {
+   "id": 11551909,
+   "state": "COMPLETED"
+  }
+ ],
+ "turns_true": 96,
+ "turns_bee_with_true_roles": 88,
+ "turns_blind_uncalibrated": 54,
+ "turn_scale": 1.1467,
+ "turns_blind": 62,
+ "role_accuracy_on_bee_utterances_pct": 64.5,
+ "blind_model": "trained on every Gleason family except eddie"
+}

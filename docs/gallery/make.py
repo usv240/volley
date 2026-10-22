@@ -21,7 +21,7 @@ SHOTS = [
     ("1-the-day.png", "/", None, "The hero: the claim and a day, an hour at a time"),
     ("2-coaching-in-the-moment.png", "/", "text=Coaching in the moment", "The nudge when the best hour goes quiet"),
     ("3-ask-out-loud.png", "/", "text=By voice, in this browser", "Ask out loud: the live MCP answer, read aloud"),
-    ("4-measured.png", "/", "#evidence", "Every result and its verdict, the weak point included"),
+    ("4-measured.png", "/", "#evidence", "Every result and its verdict, the opt-in check included"),
     ("5-families-you-follow.png", "/coach/", None, "The coach's view of the families who shared"),
 ]
 

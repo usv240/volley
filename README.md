@@ -39,7 +39,7 @@ it. Every
 session is in `harness/blind/results.json`; `python harness/blind/run.py`
 reproduces it.
 
-**On the Bee itself, no person in the room.** A real CHILDES mother-child conversation, voiced by Amazon Polly with an adult and a child voice at its original timing, played to the band for 190 seconds: the Bee wrote 124 utterances for 125 played and kept 75 of 75 turns, so its segmentation loses none. Volley's blind count with a model and scale that never saw this family: 66 (-12.0 percent; 58 before the scale), 76.6 percent of lines given the right speaker. `harness/beeloop` reproduces it. 158 tests.
+**On the Bee itself, no person in the room.** A real CHILDES mother-child conversation, voiced by Amazon Polly with an adult and a child voice at its original timing, played to the band for 190 seconds: the Bee wrote 124 utterances for 125 played and kept 75 of 75 turns, so its segmentation loses none. Volley's blind count with a model and scale that never saw this family: 66 (-12.0 percent; 58 before the scale), 76.6 percent of lines given the right speaker. A second family at dinner, three voices, 290 seconds, played on 2026-10-22: 62 of 96 turns with no labels (`harness/beeloop/dinner.json`). On 2026-10-22 `volley live --nudge --say` ran for real: watching the usual hour, it spoke the nudge in the room at 15:20 and placed it in the Bee (`harness/live/nudge-2026-10-22.json`). `harness/beeloop` reproduces the playback. 158 tests.
 
 | Document | What it answers |
 |---|---|

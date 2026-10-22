@@ -1,0 +1,12 @@
+{
+ "date": "2026-10-22",
+ "usual_hour": 15,
+ "usual_turns": 66.0,
+ "watched_minutes": 39,
+ "fired_at": "15:20",
+ "turns_this_hour": 0,
+ "placed_in_bee": true,
+ "spoken": true,
+ "words_kept": 0,
+ "written_by": "volley live --nudge --say --record, kept as harness/live/nudge-2026-10-22.json"
+}

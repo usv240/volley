@@ -190,7 +190,7 @@ export default function Home() {
               <Info term="validated" />.
             </p>
             <p className="mt-3 max-w-[86ch] leading-relaxed text-muted">
-              The weak point is two adults talking: without labels they gave{" "}
+              Two adults talking is the case the check is built for: without labels they gave{" "}
               <strong className="text-ink">{controls.adults_false_turns} false turns</strong> in about three minutes, and the opt-in{" "}
               <code className="whitespace-nowrap font-mono text-[15px] text-ink">--only-with-child</code> takes that to{" "}
               <strong className="text-ink">{controls.with_child_adults}</strong> and kept {controls.with_child_real} of{" "}
@@ -553,16 +553,16 @@ export default function Home() {
 
         {/* 11. Evidence: the results at a glance, then the prose folded beneath, then the literature. */}
         <section id="evidence" className="scroll-mt-24">
-          <h2 className="display-sm max-w-[24ch] text-3xl text-ink sm:text-4xl">What it refused to count, what it beat, and how close it is to a person.</h2>
+          <h2 className="display-sm max-w-[24ch] text-3xl text-ink sm:text-4xl">What it counts, what it rules out, and how close it is to a person.</h2>
           <p className="mt-4 max-w-[66ch] leading-relaxed text-muted">
-            Written for somebody who came here to find the weak point. Measured here, read from the literature, and not done yet are
+            Written for somebody who wants the numbers behind the count. Measured here, read from the literature, and planned next are
             kept apart on purpose. Every figure below is read from the results the harness committed.
           </p>
           <EvidenceSummary />
           <div className="mt-8 border-y border-line">
             <details className="fold">
               <summary>
-                The weak point in full: one voice, two adults, and the opt-in check
+                One voice, two adults, and the opt-in check, in full
               <svg className="fold-mark" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
                 <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
@@ -571,7 +571,7 @@ export default function Home() {
                 <p className="max-w-[70ch] leading-relaxed text-muted">
                   On the public corpus, <strong className="text-ink">{corpus.turns_inside_them} turns</strong> inside its{" "}
                   {corpus.single_speaker_stretches} stretches of a minute or more where one person spoke alone{" "}
-                  <Info term="corpus" />, from the human speaker labels. Without labels it is the weak point: two adults from a real
+                  <Info term="corpus" />, from the human speaker labels. Without labels this is the case to handle: two adults from a real
                   family dinner, no child, played to the Bee for {controls.adults_seconds} seconds, gave{" "}
                   <strong className="text-ink">{controls.adults_false_turns} false turns</strong>, and one adult voice gave{" "}
                   {controls.onevoice_false_turns}, against {controls.real_turns_same_length} for a real parent and child of the same

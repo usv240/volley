@@ -1,0 +1,182 @@
+{
+ "started": "2026-10-22T14:58:12+00:00",
+ "seconds": 2400,
+ "blind": true,
+ "usual": {
+  "hour": 15,
+  "turns": 66.0,
+  "days": 1
+ },
+ "rule": {
+  "check_after_minutes": 20,
+  "quiet_fraction": 0.25
+ },
+ "checks": [
+  {
+   "minute": 0,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 1,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 2,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 3,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 4,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 5,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 6,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 7,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 8,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 9,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 10,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 11,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 12,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 13,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 14,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 15,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 16,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 17,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 18,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 19,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 20,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 21,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 22,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 23,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 24,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 25,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 26,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 27,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 28,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 29,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 30,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 31,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 32,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 33,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 34,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 35,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 36,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 37,
+   "turns_this_hour": 0
+  },
+  {
+   "minute": 38,
+   "turns_this_hour": 0
+  }
+ ],
+ "nudge": {
+  "at": "2026-10-22T15:20:13+00:00",
+  "turns_this_hour": 0,
+  "text": "This is usually your best hour with your child. A question about their day would start one.",
+  "placed_in_bee": true,
+  "todo_id": 29255610,
+  "spoken": true
+ },
+ "words_kept": 0,
+ "turns_counted": 0
+}

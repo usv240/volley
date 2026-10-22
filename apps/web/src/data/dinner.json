@@ -1,0 +1,14 @@
+{
+ "session_kind": "a family dinner, mother, father and child",
+ "played_seconds": 289.8,
+ "utterances_played": 166,
+ "utterances_bee": 152,
+ "aligned_overlap_pct": 95.4,
+ "turns_true": 96,
+ "turns_bee_with_true_roles": 88,
+ "turns_blind": 62,
+ "turns_blind_uncalibrated": 54,
+ "role_accuracy_pct": 64.5,
+ "played_on": "2026-10-22",
+ "written_by": "harness/beeloop/score.py, kept as harness/beeloop/dinner.json"
+}

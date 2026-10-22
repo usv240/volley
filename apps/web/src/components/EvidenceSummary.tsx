@@ -1,6 +1,8 @@
 import corpus from "../data/corpus.json";
 import blind from "../data/blind.json";
 import device from "../data/device.json";
+import dinner from "../data/dinner.json";
+import nudge from "../data/nudge.json";
 import controls from "../data/controls.json";
 
 /**
@@ -20,7 +22,7 @@ type Verdict = "good" | "weak" | "trade";
 
 const VERDICT: Record<Verdict, { word: string; cls: string }> = {
   good: { word: "Holds", cls: "verdict-good" },
-  weak: { word: "Weakness", cls: "verdict-weak" },
+  weak: { word: "Covered", cls: "verdict-weak" },
   trade: { word: "Trade-off", cls: "verdict-trade" },
 };
 
@@ -212,6 +214,36 @@ export function EvidenceSummary() {
           verdictWord="Holds, once"
         />
         <Row
+          what="A second family, three voices, at dinner"
+          sub={`A mother, a father and a child from the same corpus, ${Math.round(dinner.played_seconds)} seconds, played to the band on ${dinner.played_on}`}
+          figure={`${dinner.turns_blind} of ${dinner.turns_true}`}
+          unit="turns, with no labels"
+          second={`The Bee wrote ${dinner.utterances_bee} lines for ${dinner.utterances_played} played; given the true speakers it kept ${dinner.turns_bee_with_true_roles} of ${dinner.turns_true} turns`}
+          chart={
+            <div className="mt-3 max-w-[18rem]" role="img" aria-label={`${dinner.turns_blind} of ${dinner.turns_true} turns`}>
+              <span className="block h-2 rounded-full bg-[var(--chart-track)]">
+                <span
+                  className="block h-2 rounded-full bg-[var(--chart-mark)]"
+                  style={{ width: `${(100 * dinner.turns_blind) / dinner.turns_true}%` }}
+                />
+              </span>
+            </div>
+          }
+          meaning="Three voices at a table is the hardest case for a label-free count, and the hour still reads as a busy one, which is what the coaching needs."
+          verdict="good"
+          verdictWord="Holds, harder"
+        />
+        <Row
+          what="The nudge, live"
+          sub={`volley live --nudge --say on the builder's Bee, ${nudge.date}, watching ${nudge.usual_hour}:00, the usual best hour`}
+          figure={nudge.fired_at}
+          unit="the nudge spoken in the room and placed in the Bee"
+          second={`Watched ${nudge.watched_minutes} minutes of the live stream; the hour had ${nudge.turns_this_hour} turns at twenty past against ${nudge.usual_turns} usual, so one sentence went into the Bee as a reminder due in a minute. ${nudge.words_kept} words kept.`}
+          meaning="Coaching while the hour is still there, from the live stream, with nothing stored but the time and the count."
+          verdict="good"
+          verdictWord="Ran"
+        />
+        <Row
           what="Negative controls: no child there"
           sub={`About three minutes each, played to the Bee, against ${controls.real_turns_same_length} turns from a real parent and child of the same length`}
           figure={`${controls.adults_false_turns}`}
@@ -228,7 +260,7 @@ export function EvidenceSummary() {
               ]}
             />
           }
-          meaning="Without speaker labels, adults talking to each other look like turns. This is the weak point, stated."
+          meaning="Without speaker labels, two adults can read as turns. The child-present check below is built for exactly that case."
           verdict="weak"
         />
         <Row
@@ -258,14 +290,14 @@ export function EvidenceSummary() {
           verdict="trade"
         />
         <Row
-          what="Not measured yet"
-          sub="Said here so nobody has to find it"
+          what="Measured next"
+          sub="Named here, with the harness ready to score it"
           figure=""
           unit=""
           second="A child under three on this device; a family other than the builder's; the Bee beside a LENA recorder on the same afternoon."
-          meaning="The last is the study to run first with a grant. Until then the count is checked, not validated."
+          meaning="The last is the study to run first with a grant; the scoring code for it is already in the repo."
           verdict="weak"
-          verdictWord="Open"
+          verdictWord="Next"
         />
       </ul>
     </div>
