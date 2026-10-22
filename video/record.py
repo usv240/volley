@@ -401,11 +401,14 @@ def alexa(r: Recorder):
     cap("QUESTION")
     r.page.wait_for_selector("#alexa dd:has-text('On the simulated family')", timeout=30_000)
     # The result block, enlarged, so the tool call line is read and not inferred.
-    r.page.evaluate("const d = document.querySelector('#alexa dl.voice-result'); d.style.transition = 'transform 400ms ease'; d.style.transformOrigin = '0 0'; d.style.transform = 'scale(1.12)';")
+    r.page.evaluate("const d = document.querySelector('#alexa dl.voice-result'); d.style.transition = 'transform 400ms ease'; d.style.transformOrigin = '0 0'; d.style.transform = 'scale(1.08)';")
     r.on_phrase("the tool")
+    # The tool call line itself, enlarged in place: the one line that proves the call.
+    r.page.evaluate("const d = [...document.querySelectorAll('#alexa dd')].find(e => e.textContent.includes('tools/call')); d.style.transition = 'transform 400ms ease'; d.style.transformOrigin = '0 50%'; d.style.transform = 'scale(1.45)'; d.style.background = '#fff7cc'; d.style.padding = '2px 6px'; d.style.borderRadius = '6px';")
     r.point("#alexa dd:has-text('tools/call')")
     cap("MCP TOOL CALLED")
     r.on_phrase("the counts back")
+    r.page.evaluate("const d = [...document.querySelectorAll('#alexa dd')].find(e => e.textContent.includes('tools/call')); d.style.transform = 'scale(1.0)'; d.style.background = ''; const a = [...document.querySelectorAll('#alexa dd')].find(e => e.textContent.includes('On the simulated family')); a.style.transition = 'transform 400ms ease'; a.style.transformOrigin = '0 50%'; a.style.transform = 'scale(1.1)';")
     r.point("#alexa dd:has-text('On the simulated family')")
     cap("COUNTS BACK")
     r.on_phrase("the answer spoken")
