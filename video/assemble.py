@@ -150,7 +150,13 @@ def plan() -> tuple[list[dict], dict[str, float]]:
 
     # With no television take, its beats are expected to be absent and
     # are cut from the plan rather than reported as never recorded.
-    planned = [b for b in BEATS if not (b.is_tv and not tv["beats"])]
+    # A terminal beat with no capture yet (the afternoon nudge run, until
+    # its hour comes) is dropped and named, like a missing television take.
+    tv_keys = {m["key"] for m in tv["beats"]}
+    planned = [b for b in BEATS if not (b.is_tv and b.key not in tv_keys)]
+    dropped = [b.key for b in BEATS if b.is_tv and b.key not in tv_keys]
+    if dropped and tv["beats"]:
+        print(f"no capture yet for {dropped}: cutting without them")
     missing = [b.key for b in planned if b.key not in marks]
     if missing:
         raise SystemExit(

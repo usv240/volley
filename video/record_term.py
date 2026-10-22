@@ -42,33 +42,63 @@ CAPTURE = OUT / "term-capture.json"
 
 # The beats and the commands each shows. Output is captured once and
 # rendered as many times as the cut needs.
+# The session is the real one played to the band on 2026-10-19 (BEE_DAY.md).
+# The reminder marker for that day is cleared first so the command writes
+# the reminder again on camera, as it did the first time.
 SHOTS = {
-    "term-today": [
-        ["volley", "status"],
-        ["volley", "today", "--now"],
+    "term-count": [
+        ["volley", "today", "--conversation", "11418600"],
     ],
     "term-reminder": [
-        ["bee", "todos", "list", "--limit", "3"],
-        ["volley", "live", "--seconds", "20"],
+        ["bee", "todos", "list", "--limit", "2"],
+    ],
+    # The afternoon run. Captured separately with `capture --only term-nudge`
+    # while the family's usual hour is on; it watches for up to forty minutes.
+    "term-nudge": [
+        ["volley", "live", "--nudge", "--say", "--seconds", "2400", "--record", "harness/live/nudge-2026-10-22.json"],
     ],
 }
+
+
+def _clear_reminder_marker() -> None:
+    from volley_ingest.household import home
+
+    marker = home() / "reminders" / "2026-10-19.written"
+    if marker.exists():
+        marker.unlink()
 
 
 def capture() -> int:
     from volley_ingest.household import Household
 
     h = Household.load()
-    if h is None or not h.parent_labels or not h.child_labels:
+    if h is None or not h.ready:
         print("no household: run volley setup first, and only capture a real day", file=sys.stderr)
         return 2
+    only = sys.argv[sys.argv.index("--only") + 1] if "--only" in sys.argv else None
     OUT.mkdir(parents=True, exist_ok=True)
     record: dict = {"captured": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "shots": {}}
+    if CAPTURE.exists():
+        # Keep the shots not being retaken: the nudge is captured on its own afternoon.
+        record["shots"] = json.loads(CAPTURE.read_text(encoding="utf8")).get("shots", {})
     for key, commands in SHOTS.items():
+        if only and key != only:
+            continue
+        if not only and key == "term-nudge":
+            continue
+        if key == "term-count":
+            _clear_reminder_marker()
         record["shots"][key] = []
         for argv in commands:
             t0 = time.perf_counter()
-            proc = subprocess.run(["cmd", "/c", *argv], capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=180)
+            # `volley` is the venv's console script; run it through this Python
+            # so the capture works wherever the venv is, while the typed line
+            # on screen stays the command a parent types.
+            real = [sys.executable, "-m", "volley_ingest.cli", *argv[1:]] if argv[0] == "volley" else ["cmd", "/c", *argv]
+            proc = subprocess.run(real, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=3000, cwd=str(HERE.parent))
             out = (proc.stdout + proc.stderr).rstrip()
+            # The parent's page link carries the household key in its fragment; never on camera.
+            out = "\n".join((l.split("#")[0] + "#[your key]") if "/mine/#" in l else l for l in out.splitlines())
             record["shots"][key].append({"argv": argv, "output": out, "seconds": round(time.perf_counter() - t0, 2), "code": proc.returncode})
             print(f"  {' '.join(argv)}: {proc.returncode}, {len(out.splitlines())} lines")
     CAPTURE.write_text(json.dumps(record, indent=1), encoding="utf8")
@@ -83,7 +113,7 @@ html,body{{margin:0;background:#12151b;color:#e8e6e1;font:{fs}px/1.5 'Cascadia M
 .bar span{{margin-left:auto;color:#7c828d}}
 pre{{margin:0;padding:{pad2}px;white-space:pre-wrap;word-break:break-word}}
 .p{{color:#7aa2ff}}.k{{color:#f3f1ec}}.d{{color:#aeb3bd}}
-</style></head><body><div class="frame"><div class="bar">volley, on the operator's own Bee<span>a real run, rendered</span></div><pre id="t"></pre></div></body></html>"""
+</style></head><body><div class="frame"><div class="bar"><b id="lbl">volley, on the builder's own Bee</b><span>a real run, rendered</span></div><pre id="t"></pre></div></body></html>"""
 
 
 def render() -> int:
@@ -101,7 +131,7 @@ def render() -> int:
         stale.unlink()
 
     with sync_playwright() as pw:
-        browser = pw.chromium.launch()
+        browser = pw.chromium.launch(channel="chrome")
         ctx = browser.new_context(viewport={"width": WIDTH, "height": HEIGHT}, device_scale_factor=1,
                                   record_video_dir=str(raw_dir), record_video_size={"width": WIDTH, "height": HEIGHT})
         page = ctx.new_page()
@@ -124,8 +154,19 @@ def render() -> int:
                 append(ch, "k")
                 page.wait_for_timeout(45)
 
+        # What each terminal beat is, said in the frame's own bar so the
+        # viewer never mistakes a replay or a stand-in for something else.
+        LABELS = {
+            "term-count": "REAL BEE, A REPLAYED RESEARCH CONVERSATION",
+            "term-reminder": "REAL BEE, THE REMINDER IT PLACED",
+            "term-nudge": "LIVE BEE STREAM, A SPEAKER STANDING IN FOR AN ECHO",
+        }
         for beat in [b for b in BEATS if b.is_terminal]:
             shots = rec["shots"].get(beat.key, [])
+            if not shots:
+                print(f"  no capture for {beat.key}; the assembler will drop it")
+                continue
+            page.evaluate("t => { document.getElementById('lbl').textContent = t; }", LABELS.get(beat.key, "volley, on the builder's own Bee"))
             marks.append({"key": beat.key, "at": round(time.monotonic() - start, 3)})
             budget = max(beat.pause_before + narration.get(beat.key, beat.speak_seconds), beat.min_hold)
             deadline = time.monotonic() + budget

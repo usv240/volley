@@ -201,7 +201,14 @@ class Recorder:
                 "the narration changed and this action did not"
             )
         began = next(m["at"] for m in self.marks if m["key"] == key)
-        target = began + next(b.pause_before for b in BEATS if b.key == key) + spans[idx][0]
+        # Inside the sentence, by word position: a cue on its fourth word of
+        # twenty fires a fifth of the way through, so three gestures in one
+        # sentence land on their own words instead of all at its start.
+        sentence = parts[idx]
+        before = sentence.lower()[: sentence.lower().index(text.lower())]
+        frac = len(before.split()) / max(1, len(sentence.split()))
+        start, end = spans[idx]
+        target = began + next(b.pause_before for b in BEATS if b.key == key) + start + frac * (end - start)
         remaining = target - (time.monotonic() - self.start)
         if remaining > 0:
             self.page.wait_for_timeout(remaining * 1000)
@@ -251,103 +258,139 @@ class Recorder:
 # --------------------------------------------------------------------------
 
 HERO = "h1"
-# The three figures are the dl that is a direct child of main; the day
-# card has a dl of its own, and "dl" alone pointed at that one.
-STATS = "main > dl"
 HOW = "#how"
 PLAY = "#how button:has-text('Play')"
 DAY = "#day"
-NEVER = "#never"
-PRIVACY = "#privacy"
-SEND = "#privacy button:has-text('Send a transcript')"
-ALEXA = "#alexa"
-HOLD = "#alexa button:has-text('Hold a session')"
+PLAN = "#day section:has(h3:has-text('plan'))"
 EVIDENCE = "#evidence"
-CLOSE = "#never"
+ALEXA = "#alexa"
+ASK = "#alexa button:has-text('How was our talking today?')"
+SITE_EVIDENCE = SITE.rstrip("/") + "/evidence/"
+SITE_COACH = SITE.rstrip("/") + "/coach/"
+AGENTS = "#agents"
+COACH_LIST = "ul[aria-label]"
+YOURS = "#yours"
+
+# The black card the video opens on: the words, then the site under them.
+HOOK_JS = """
+(() => {
+  const k = document.createElement('div'); k.id = '__hook';
+  k.style.cssText = 'position:fixed;inset:0;z-index:2147483646;background:#12151b;display:flex;align-items:center;justify-content:center;' +
+    'color:#f3f1ec;font:600 %dpx/1.1 Fraunces, Georgia, serif;letter-spacing:-0.02em;transition:opacity 700ms ease';
+  k.textContent = '30 million words';
+  document.body.appendChild(k);
+})();
+""" % (112 * SCALE)
 
 
-def hero(r: Recorder):
+def hook(r: Recorder):
+    r.page.evaluate(HOOK_JS)
+    r.page.evaluate("document.getElementById('__cursor').style.opacity='0'")
     yield
-    r.on_phrase("within five seconds")
-    r.point(HERO, dy=-40 * SCALE)
-    r.on_phrase("no parent")
-    r.point("#top .card .display", dy=0)
+    r.on_phrase("The back-and-forth was")
+    r.page.evaluate("document.getElementById('__hook').style.opacity='0'")
+    r.page.wait_for_timeout(750)
+    r.page.evaluate("document.getElementById('__hook').remove(); document.getElementById('__cursor').style.opacity='1'")
+    r.park()
+    r.point(HERO, dy=-30 * SCALE)
     r.hold_beat()
 
 
-def stats(r: Recorder):
-    r.scroll_to(STATS, rest=URL_BAR_HEIGHT + 260 * SCALE)
+def what(r: Recorder):
     yield
-    r.on_phrase("Fourteen")
-    r.point(f"{STATS} > div:nth-child(1)", dy=-60 * SCALE)
-    r.on_phrase("Turns, not words")
-    r.point(f"{STATS} > div:nth-child(2)", dy=-60 * SCALE)
-    r.on_phrase("coachable")
-    r.point(f"{STATS} > div:nth-child(3)", dy=-60 * SCALE)
+    r.on_phrase("Meet Volley")
+    r.point("#top .card .display", dy=0)
+    r.on_phrase("On the Bee you already wear")
+    r.point("#top p.leading-relaxed.text-ink", dy=-20 * SCALE)
+    r.on_phrase("The numbers, never the words")
+    r.point("#top .card .display", dy=60 * SCALE)
     r.hold_beat()
 
 
 def how(r: Recorder):
     r.scroll_to(HOW, rest=URL_BAR_HEIGHT + 120 * SCALE)
     yield
-    r.on_phrase("Here is the rule")
+    r.on_phrase("Here is how")
     r.click(PLAY)
-    r.on_phrase("Six seconds")
+    r.on_phrase("reads who is talking")
     r.point("#how .display", dy=0)
     r.hold_beat()
 
 
-def day(r: Recorder):
+def plan(r: Recorder):
     r.scroll_to(DAY, rest=URL_BAR_HEIGHT + 120 * SCALE)
     yield
-    r.on_phrase("away, not zero")
-    r.point("#day ul li:nth-child(4)")
-    r.on_phrase("one thing for tomorrow")
-    r.point("#day blockquote")
+    r.on_phrase("Over a week")
+    r.point("#day ul li:nth-child(2)")
+    r.on_phrase("Claude on Amazon Bedrock")
+    r.scroll_to(PLAN, rest=URL_BAR_HEIGHT + 140 * SCALE)
+    r.point(f"{PLAN} h3")
+    r.on_phrase("keep the hour that works")
+    r.point(f"{PLAN} li:nth-child(1)")
+    r.on_phrase("one idea for the quiet one")
+    r.point(f"{PLAN} li:nth-child(2)")
+    r.on_phrase("one for the weekend")
+    r.point(f"{PLAN} li:nth-child(3)")
+    r.on_phrase("A gate in code")
+    r.point(f"{PLAN} p:has-text('number gate')", dy=0)
     r.hold_beat()
 
 
-def privacy(r: Recorder):
-    r.scroll_to(PRIVACY, rest=URL_BAR_HEIGHT + 120 * SCALE)
+def proof(r: Recorder):
+    r.scroll_to(EVIDENCE, rest=URL_BAR_HEIGHT + 100 * SCALE)
     yield
-    r.on_phrase("Here a transcript")
-    r.click(SEND)
-    r.page.wait_for_selector("text=Nothing got through", timeout=30_000)
-    r.on_phrase("dropped at the door")
-    r.point("#privacy table")
+    r.on_phrase("Does it hold up")
+    r.point("#evidence li.ev-row:nth-of-type(1)")
+    r.on_phrase("On the Bee")
+    r.point("#evidence li.ev-row:nth-of-type(3)")
+    r.on_phrase("child-present check")
+    r.scroll_to("#evidence li.ev-row:nth-of-type(5)", rest=URL_BAR_HEIGHT + 200 * SCALE)
+    r.point("#evidence li.ev-row:nth-of-type(5)")
     r.hold_beat()
 
 
 def alexa(r: Recorder):
     r.scroll_to(ALEXA, rest=URL_BAR_HEIGHT + 120 * SCALE)
     yield
-    r.on_phrase("real session")
-    r.click(HOLD)
-    r.page.wait_for_selector("text=DELETE session", timeout=30_000)
-    r.on_phrase("cannot repeat")
-    r.scroll_to("#alexa .card", rest=URL_BAR_HEIGHT + 80 * SCALE)
-    r.point("#alexa blockquote")
+    r.on_phrase("Parents can ask out loud")
+    r.scroll_to(ASK, rest=URL_BAR_HEIGHT + 520 * SCALE)
+    r.click(ASK)
+    r.page.wait_for_selector("#alexa dd:has-text('On the simulated family')", timeout=30_000)
+    r.point("#alexa dd:has-text('On the simulated family')")
+    r.on_phrase("Two Strands agents")
+    r.page.goto(SITE_EVIDENCE, wait_until="networkidle", timeout=90_000)
+    r.page.wait_for_selector(AGENTS, timeout=60_000)
+    r.scroll_to(AGENTS, rest=URL_BAR_HEIGHT + 120 * SCALE)
+    r.point("#agents p:has-text('Simulated Bee')")
+    r.on_phrase("simulated Bee data")
+    r.point("#agents blockquote:has-text('quietest')")
     r.hold_beat()
 
 
-def evidence(r: Recorder):
-    r.scroll_to(EVIDENCE, rest=URL_BAR_HEIGHT + 120 * SCALE)
+def beyond(r: Recorder):
+    r.page.goto(SITE_COACH, wait_until="networkidle", timeout=90_000)
+    r.page.wait_for_selector(COACH_LIST, timeout=60_000)
+    r.page.wait_for_timeout(800)
     yield
-    r.on_phrase("not yet measured")
-    r.point("#evidence .card:nth-child(1)")
-    r.on_phrase("Nothing here is a test")
-    r.point("#evidence .card:nth-child(3)")
+    r.on_phrase("For families with a home visitor")
+    r.point(f"{COACH_LIST} li:first-child", dy=-10 * SCALE)
+    r.on_phrase("open source")
+    r.page.goto(SITE, wait_until="networkidle", timeout=90_000)
+    r.page.wait_for_selector(YOURS, timeout=60_000)
+    r.scroll_to(YOURS, rest=URL_BAR_HEIGHT + 120 * SCALE)
+    r.point("#yours li:first-child pre")
     r.hold_beat()
 
 
 def close(r: Recorder):
-    r.scroll_to(CLOSE, rest=URL_BAR_HEIGHT + 140 * SCALE)
+    r.page.evaluate("window.scrollTo({top: 0, behavior: 'instant'})")
+    r.page.wait_for_timeout(300)
     r.page.evaluate("document.getElementById('__cursor').style.opacity='0'")
     yield
     r.hold_beat()
 
 
-ACTIONS = {f.__name__: f for f in (hero, stats, how, day, privacy, alexa, evidence, close)}
+ACTIONS = {f.__name__: f for f in (hook, what, how, plan, proof, alexa, beyond, close)}
 
 
 def assert_full_frame(path: Path) -> None:
@@ -373,7 +416,7 @@ def main() -> int:
         stale.unlink()
 
     with sync_playwright() as pw:
-        browser = pw.chromium.launch(args=["--force-color-profile=srgb", "--autoplay-policy=no-user-gesture-required"])
+        browser = pw.chromium.launch(channel="chrome", args=["--force-color-profile=srgb", "--autoplay-policy=no-user-gesture-required"])
         context = browser.new_context(
             viewport={"width": WIDTH, "height": HEIGHT},
             device_scale_factor=1,

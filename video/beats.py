@@ -12,7 +12,7 @@ if the two ever disagree.
 
 Two cameras
 -----------
-Most beats are the deployed website driven by a real browser at 4K. Two
+Most beats are the deployed website driven by a real browser at 4K. Three
 beats are a terminal: real commands run against the operator's own Bee,
 their real output rendered in a terminal frame the same recorder
 captures. `action` starting with `term_` means terminal footage, and the
@@ -30,8 +30,8 @@ beats.py` prints the estimate and exits non-zero if the plan is over.
 What the order is for
 ---------------------
 A judge who watches only the first fifteen seconds should leave with
-one sentence: your child's brain is built in the back-and-forth, and a
-parent has never been able to count it. Everything after is evidence in
+one sentence: the words were not the point, the back-and-forth was,
+and Volley counts it on a band parents already wear. Everything after is evidence in
 the order a sceptic asks for it: the rule counting, the operator's own
 day, what it refused to count, the transcript refused, the assistant,
 the honesty, the line.
@@ -80,101 +80,98 @@ class Beat:
 
 BEATS: list[Beat] = [
     Beat(
-        key="claim",
-        action="hero",
-        shows="The front page: the claim, the tagline, and a simulated family's day beside it.",
-        pause_before=0.8,
+        key="hook",
+        action="hook",
+        shows="Black, the words thirty million words, then the first screen under them; the headline pointed to on the back-and-forth.",
+        pause_before=0.6,
+        min_hold=15,
         say=(
-            "Your child's brain is built in the back-and-forth. "
-            "Not in how many words they hear. In how often they say something and you answer within five seconds. "
-            "That number predicted their vocabulary and IQ a decade later, and no parent has ever been able to count it."
+            "You have heard of the thirty-million-word gap. For years, parents were told: talk more. Then researchers looked inside children's brains, and the words were not the point. The back-and-forth was."
         ),
     ),
     Beat(
-        key="stakes",
-        action="stats",
-        shows="The three figures under the claim, pointed to in turn.",
+        key="volley",
+        action="what",
+        shows="The first screen: the day card's number, then the lede, then a hold on the day card.",
         say=(
-            "Fourteen to twenty-seven percent of the variance in IQ at age ten, after adjusting for income. "
-            "Turns, not words, is what the brain's language area responded to. "
-            "And it's coachable: parents shown their own recordings raised it, and the gain held to thirty months."
+            "Meet Volley: a step counter for conversations with your child. On the Bee you already wear, it counts the exchanges, shows the hour they happen, and nudges you when your best hour goes quiet. The numbers, never the words."
         ),
     ),
     Beat(
-        key="rule",
+        key="how",
         action="how",
-        shows="The twenty-second exchange played, the five-second windows fading, the count ticking up.",
+        shows="How it counts, in twenty seconds: Play pressed, the bars appearing, replies inside five seconds lit, the count reaching five.",
         min_hold=14,
         say=(
-            "Here is the rule, counting. Each bar is something somebody said. "
-            "A reply that starts inside the five-second window is a turn. Two adult bars close together merge. "
-            "Six seconds of silence ends the exchange. Five turns in twenty seconds."
+            "Here is how. A parent speaks. A child answers inside five seconds. That is one turn. Volley reads who is talking from the words and the pauses, and keeps only the count."
         ),
     ),
     Beat(
-        key="term-today",
-        action="term_today",
-        shows="A terminal: volley today against the operator's own Bee, the day printed as bars, the words counted and thrown away.",
-        min_hold=10,
+        key="term-count",
+        action="term_count",
+        shows="A terminal, labelled real Bee, a replayed research conversation: volley today on the builder's own Bee; the bar, sixty-six turns, the words thrown away, the reminder placed.",
+        min_hold=14,
         say=(
-            "On my own Bee, this morning. One command reads the day, counts, and deletes the words. "
-            "The only files it writes are the counts and a cursor."
-        ),
-    ),
-    Beat(
-        key="day",
-        action="day",
-        shows="The day like steps, the week beneath, and tomorrow's one thing beside it.",
-        say=(
-            "The day, an hour at a time. Hours with no child are away, not zero. "
-            "And one thing for tomorrow, written from the counts and, with your consent, placed in your Bee as a reminder at that hour."
+            "Now Volley on my actual Bee. We played a real family's recorded conversation to the band. One command reads it, finds sixty-six turns, deletes every word on my own computer, and places one thing to try tomorrow into the Bee itself."
         ),
     ),
     Beat(
         key="term-reminder",
         action="term_reminder",
-        shows="A terminal: the reminder appears in the Bee's todo list with its alarm, then the counter ticking during a live exchange.",
-        min_hold=8,
-        say=(
-            "It landed in the Bee. And if you want to watch it work, it counts live as you talk."
-        ),
-    ),
-    Beat(
-        key="refused",
-        action="privacy",
-        shows="A transcript full of names sent to the live server; every text field dropped; the counts kept.",
+        shows="A terminal: the reminder in the Bee's todo list, with its alarm at three the next afternoon and its sentence.",
         min_hold=9,
+        say="There it is, in the Bee, for three in the afternoon, with something to do.",
+    ),
+    Beat(
+        key="term-nudge",
+        action="term_nudge",
+        shows="A terminal, labelled live Bee stream, a speaker standing in for an Echo: volley live watching the usual hour, the hour going quiet, the nudge printed and placed in the Bee. The real run.",
+        min_hold=12,
         say=(
-            "The server never sees a word. Here a transcript with a name, a doctor, an address and an account number is sent to the real intake route. "
-            "Every one of them is dropped at the door. The counts survive."
+            "But Volley does not only count yesterday. During the hour we usually talk most, it watches the Bee's live stream, and if that hour goes quiet, a nudge reaches the Bee right then. A speaker in the room says it, the way an Echo could. While there is still time to connect."
         ),
     ),
     Beat(
-        key="agent",
+        key="plan",
+        action="plan",
+        shows="The day, an hour at a time; then the week's plan, written by Claude on Amazon Bedrock, the three lines pointed to in turn.",
+        say=(
+            "Over a week, patterns appear: a busy evening, a quiet afternoon with the child right there. Claude on Amazon Bedrock turns them into a plan the way a home visitor would: keep the hour that works, one idea for the quiet one, one for the weekend. A gate in code refuses any number the counts did not hold."
+        ),
+    ),
+    Beat(
+        key="proof",
+        action="proof",
+        shows="The evidence table: the corpus row, the Bee row, then the child-present row where two adults count as zero beside the real conversation's sixty-six.",
+        say=(
+            "Does it hold up? On twenty-six hours of independent family recordings: twenty thousand turns, and none where one person was talking alone. On the Bee, sixty-six of seventy-five. And with the child-present check on, two adults talking with no child in the room count as zero, while a real conversation keeps all sixty-six."
+        ),
+    ),
+    Beat(
+        key="ecosystem",
         action="alexa",
-        shows="A session held against the MCP server from the page, every request timed, the tool that returns no data.",
-        min_hold=9,
+        shows="Ask out loud: a question tapped, the tool call, the answer read aloud. Then the agents section on the evidence page, simulated Bee data labelled first.",
+        min_hold=15,
         say=(
-            "For Alexa Plus, an MCP server, held to a real session from this page. "
-            "It can say how the talking went and what to try tomorrow, and it cannot repeat a word, because it never has one."
+            "Parents can ask out loud. Volley's MCP server answers Alexa Plus from the counts alone; it never had a word to repeat. Two Strands agents on Bedrock, one hosted on AgentCore, explain a quiet day from the Bee's own summary. This one runs on simulated Bee data."
         ),
     ),
     Beat(
-        key="honest",
-        action="evidence",
-        shows="The evidence section: what it refused, what it beat, what nobody has done yet, each stated as measured or not yet.",
+        key="beyond",
+        action="beyond",
+        shows="The coach's list of families; then the install line and the cost.",
+        min_hold=6,
         say=(
-            "What is not yet measured says so on the front page, in the same size as the numbers. "
-            "Nothing here is a test of a child. It is a count, like steps."
+            "For families with a home visitor, a read-only view carries the coaching between visits. The counter is open source on PyPI. Four cents a family a month, on a band they already wear."
         ),
     ),
     Beat(
         key="close",
         action="close",
-        shows="What it will never say.",
-        min_hold=4,
+        shows="The first screen again, resting on the headline; the pointer hidden; the last line held.",
+        min_hold=11,
         say=(
-            "You already talk to your child. Now you can see it."
+            "Volley is not about counting every word. It is about making room for the conversations that matter. You already talk to your child. Now you can see it."
         ),
     ),
 ]
@@ -207,8 +204,8 @@ def script() -> str:
         "for a reveal.",
         "",
         "The one sentence this video has to land, in the first fifteen seconds:",
-        "**your child's brain is built in the back-and-forth, and no parent has",
-        "ever been able to count it.**",
+        "**the words were not the point; the back-and-forth was, and Volley",
+        "counts it on the Bee you already wear.**",
         "",
         "This file is written by `python video/beats.py --script` from the same",
         "data the recorders and the assembler read, and a test fails if the two",
@@ -235,19 +232,21 @@ def script() -> str:
         "",
         "## The terminal beats",
         "",
-        "Two beats show real commands against the operator's own Bee. They are",
+        "Three beats show real commands against the builder's own Bee. They are",
         "recorded by `record_term.py`, which runs the commands for real, keeps",
         "their output, and renders it in a terminal frame the same 4K recorder",
         "captures, typed at a human pace; the frame says it is a rendering of a",
-        "real run. Nothing is invented and nothing is sped up. They need the",
-        "device's speaker labels (Gate 1 in planning/PLAN.md); until then the assembler",
-        "cuts the web beats on their own and says which beats it dropped.",
+        "real run. Nothing is invented and nothing is sped up. The nudge beat is",
+        "the real afternoon run, captured when the family's usual hour comes;",
+        "until it exists the assembler cuts without it and says so.",
         "",
         "## What not to do",
         "",
         "Do not name a condition, a percentile or a child's standing. Do not say",
         "the count predicts anything about this child. Do not show a word of",
-        "any transcript, even the operator's own.",
+        "any transcript, even the builder's own. Do not present anything as a",
+        "problem, a bug or a limit: the video shows what works; the written",
+        "feedback carries the findings.",
         "",
     ]
     return "\n".join(out)
