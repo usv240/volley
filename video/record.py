@@ -408,7 +408,8 @@ def alexa(r: Recorder):
     r.point("#alexa dd:has-text('tools/call')")
     cap("MCP TOOL CALLED")
     r.on_phrase("the counts back")
-    r.page.evaluate("const d = [...document.querySelectorAll('#alexa dd')].find(e => e.textContent.includes('tools/call')); d.style.transform = 'scale(1.0)'; d.style.background = ''; const a = [...document.querySelectorAll('#alexa dd')].find(e => e.textContent.includes('On the simulated family')); a.style.transition = 'transform 400ms ease'; a.style.transformOrigin = '0 50%'; a.style.transform = 'scale(1.1)';")
+    # The tool line stays enlarged; the answer joins it, a little larger too.
+    r.page.evaluate("const a = [...document.querySelectorAll('#alexa dd')].find(e => e.textContent.includes('On the simulated family')); a.style.transition = 'transform 400ms ease'; a.style.transformOrigin = '0 50%'; a.style.transform = 'scale(1.08)';")
     r.point("#alexa dd:has-text('On the simulated family')")
     cap("COUNTS BACK")
     r.on_phrase("the answer spoken")
