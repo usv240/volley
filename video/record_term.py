@@ -33,7 +33,7 @@ from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 
-from beats import BEATS
+from beats import BEATS, phrase_offset
 from record import CLAP_MS, HEIGHT, WIDTH, find_clap
 
 HERE = Path(__file__).parent
@@ -109,11 +109,18 @@ def capture() -> int:
 PAGE = """<!doctype html><html><head><meta charset="utf-8"><style>
 html,body{{margin:0;background:#12151b;color:#e8e6e1;font:{fs}px/1.5 'Cascadia Mono','Consolas',monospace;height:100%}}
 .frame{{position:absolute;inset:{pad}px;background:#191d25;border:1px solid #2a303b;border-radius:{r}px;box-shadow:0 20px 60px rgba(0,0,0,.4);overflow:hidden}}
+.cap{{position:absolute;left:{pad}px;right:{pad}px;bottom:{pad}px;padding:{pad2}px {pad2}px;background:#191d25;border:1px solid #2a303b;border-top:0;border-radius:0 0 {r}px {r}px;font-family:Inter,system-ui,sans-serif}}
+.cap b{{display:block;font:600 {fs3}px/1.1 Inter,system-ui,sans-serif;letter-spacing:0.04em;color:#f3f1ec;min-height:{fs3}px;white-space:nowrap;overflow:hidden}}
+.cap b .arrow{{color:#7aa2ff;margin:0 .35em}}
+.cap i{{display:block;font-style:normal;font:400 {fs2}px/1.3 Inter,system-ui,sans-serif;color:#aeb3bd;margin-top:{pad3}px}}
+.callout{{position:absolute;left:{pad2}px;right:{pad2}px;top:{callout_top}px;padding:{pad2}px;background:#f3f1ec;color:#12151b;border-radius:{r}px;font:500 {fs4}px/1.25 Fraunces,Georgia,serif;letter-spacing:-0.01em;opacity:0;transform:translateY(10px);transition:opacity 500ms ease,transform 500ms ease}}
+.callout small{{display:block;font:500 {fs2}px/1.3 Inter,system-ui,sans-serif;color:#5b6170;margin-top:{pad3}px;letter-spacing:0.06em;text-transform:uppercase}}
+.hl{{color:#f3f1ec;font-weight:700}}
 .bar{{height:{bar}px;background:#222732;border-bottom:1px solid #2a303b;display:flex;align-items:center;padding:0 {pad2}px;color:#aeb3bd;font-size:{fs2}px}}
 .bar span{{margin-left:auto;color:#7c828d}}
-pre{{margin:0;padding:{pad2}px;white-space:pre-wrap;word-break:break-word}}
+pre{{position:absolute;left:0;right:0;top:{bar}px;bottom:{cap_h}px;margin:0;padding:{pad2}px;white-space:pre-wrap;word-break:break-word;overflow:hidden}}
 .p{{color:#7aa2ff}}.k{{color:#f3f1ec}}.d{{color:#aeb3bd}}
-</style></head><body><div class="frame"><div class="bar"><b id="lbl">volley, on the builder's own Bee</b><span>a real run, rendered</span></div><pre id="t"></pre></div></body></html>"""
+</style></head><body><div class="frame"><div class="bar"><b id="lbl">volley, on the builder's own Bee</b><span>a real run, rendered</span></div><pre id="t"></pre><div class="callout" id="co"></div></div><div class="cap"><b id="cap"></b><i id="sub"></i></div></body></html>"""
 
 
 def render() -> int:
@@ -123,7 +130,8 @@ def render() -> int:
     rec = json.loads(CAPTURE.read_text(encoding="utf8"))
     narration = {n["key"]: n["seconds"] for n in json.loads((OUT / "narration.json").read_text(encoding="utf8"))}
     scale = WIDTH / 1920
-    page_html = PAGE.format(fs=int(30 * scale), fs2=int(22 * scale), pad=int(80 * scale), pad2=int(28 * scale), r=int(16 * scale), bar=int(56 * scale))
+    page_html = PAGE.format(fs=int(32 * scale), fs2=int(20 * scale), fs3=int(40 * scale), fs4=int(40 * scale), pad=int(56 * scale), pad2=int(28 * scale),
+                            pad3=int(8 * scale), r=int(16 * scale), bar=int(56 * scale), callout_top=int(520 * scale), cap_h=int(132 * scale))
     (OUT / "term.html").write_text(page_html, encoding="utf8")
     raw_dir = OUT / "raw-term"
     raw_dir.mkdir(parents=True, exist_ok=True)
@@ -161,12 +169,35 @@ def render() -> int:
             "term-reminder": "REAL BEE, THE REMINDER IT PLACED",
             "term-nudge": "LIVE BEE STREAM, A SPEAKER STANDING IN FOR AN ECHO",
         }
+        # The three-word story under each terminal beat, one caption per
+        # narrated phrase, and the source named plainly beneath it.
+        CAPTIONS = {
+            "term-count": [("One command", "REAL BEE DATA"), ("sixty-six", "66 TURNS DETECTED"), ("places one thing", "REMINDER CREATED")],
+            "term-reminder": [("There it is", "IN THE BEE, DUE AT 3PM")],
+            "term-nudge": [("watches", "LIVE BEE STREAM"), ("goes quiet", "QUIET HOUR"), ("reaches the Bee", "NUDGE PLACED IN THE BEE")],
+        }
+        SUBTITLES = {
+            "term-count": "A research conversation replayed through a physical Bee; every word deleted on this computer",
+            "term-reminder": "The reminder the command placed, read back from the Bee",
+            "term-nudge": "This computer's speaker stands in for an Echo; the sentence goes into the Bee as a reminder",
+        }
+        HIGHLIGHT = ("turns with your child", "placed in your Bee", "0 kept", "alarm_at", "nudge at ", "placed in your Bee, due", "- text:")
         for beat in [b for b in BEATS if b.is_terminal]:
             shots = rec["shots"].get(beat.key, [])
             if not shots:
                 print(f"  no capture for {beat.key}; the assembler will drop it")
                 continue
             page.evaluate("t => { document.getElementById('lbl').textContent = t; }", LABELS.get(beat.key, "volley, on the builder's own Bee"))
+            page.evaluate("t => { document.getElementById('sub').textContent = t; document.getElementById('cap').textContent = ''; "
+                          "const c = document.getElementById('co'); c.style.opacity = '0'; c.innerHTML = ''; }", SUBTITLES.get(beat.key, ""))
+            spoken = narration.get(beat.key, beat.speak_seconds)
+            cues = []
+            shown: list[str] = []
+            for phrase, text in CAPTIONS.get(beat.key, []):
+                shown.append(text)
+                html_text = '<span class="arrow">&rarr;</span>'.join(html.escape(t) for t in shown)
+                cues.append([int((beat.pause_before + phrase_offset(beat.say, spoken, phrase)) * 1000), html_text])
+            page.evaluate("cues => { for (const [ms, t] of cues) setTimeout(() => { document.getElementById('cap').innerHTML = t; }, ms); }", cues)
             marks.append({"key": beat.key, "at": round(time.monotonic() - start, 3)})
             budget = max(beat.pause_before + narration.get(beat.key, beat.speak_seconds), beat.min_hold)
             deadline = time.monotonic() + budget
@@ -176,7 +207,10 @@ def render() -> int:
                 append("\n", "k")
                 page.wait_for_timeout(int(min(1.5, shot["seconds"]) * 1000))
                 for line in shot["output"].splitlines():
-                    append(line + "\n", "d")
+                    append(line + "\n", "hl" if any(k in line for k in HIGHLIGHT) else "d")
+                    if line.strip().startswith("nudge at "):
+                        said = line.split(":", 2)[-1].strip()
+                        page.evaluate("t => { const c = document.getElementById('co'); c.innerHTML = t + '<small>said aloud in the room, and placed in the Bee</small>'; c.style.opacity = '1'; c.style.transform = 'none'; }", said)
                     page.wait_for_timeout(70)
                 page.wait_for_timeout(600)
             remaining = deadline - time.monotonic()

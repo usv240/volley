@@ -82,78 +82,84 @@ BEATS: list[Beat] = [
     Beat(
         key="hook",
         action="hook",
-        shows="Black, the words thirty million words, then the first screen under them; the headline pointed to on the back-and-forth.",
+        shows="Black, the words Steps. Sleep. Heartbeats.; then the first screen under them: the headline, the lede, the day card's number.",
         pause_before=0.6,
         min_hold=15,
         say=(
-            "You have heard of the thirty-million-word gap. For years, parents were told: talk more. Then researchers looked inside children's brains, and the words were not the point. The back-and-forth was."
-        ),
-    ),
-    Beat(
-        key="volley",
-        action="what",
-        shows="The first screen: the day card's number, then the lede, then a hold on the day card.",
-        say=(
-            "Meet Volley: a step counter for conversations with your child. On the Bee you already wear, it counts the exchanges, shows the hour they happen, and nudges you when your best hour goes quiet. The numbers, never the words."
+            "We count our steps, our sleep, even our heartbeats. But what about the conversations that help children grow? "
+            "Meet Volley: a step counter for the back-and-forth between you and your child. "
+            "On the Bee you already wear, it counts the exchanges, finds your best hour, and nudges you when that hour goes quiet. "
+            "The numbers, never the words."
         ),
     ),
     Beat(
         key="how",
         action="how",
         shows="How it counts, in twenty seconds: Play pressed, the bars appearing, replies inside five seconds lit, the count reaching five.",
-        min_hold=14,
+        min_hold=13,
         say=(
-            "Here is how. A parent speaks. A child answers inside five seconds. That is one turn. Volley reads who is talking from the words and the pauses, and keeps only the count."
+            "Here is how. A parent speaks. A child answers inside five seconds. That is one turn. "
+            "Volley reads who is talking from the words and the pauses, and keeps only the count."
         ),
     ),
     Beat(
         key="term-count",
         action="term_count",
-        shows="A terminal, labelled real Bee, a replayed research conversation: volley today on the builder's own Bee; the bar, sixty-six turns, the words thrown away, the reminder placed.",
+        shows="A terminal on the builder's own Bee: volley today; three captions in turn, REAL BEE DATA, 66 TURNS DETECTED, REMINDER CREATED; under them, a research conversation replayed through a physical Bee.",
         min_hold=14,
         say=(
-            "Now Volley on my actual Bee. We played a real family's recorded conversation to the band. One command reads it, finds sixty-six turns, deletes every word on my own computer, and places one thing to try tomorrow into the Bee itself."
+            "Now on my own Bee. We played a real family's recorded conversation to the band. "
+            "One command reads it, finds sixty-six turns, deletes every word on my own computer, "
+            "and places one thing to try tomorrow into the Bee itself."
         ),
     ),
     Beat(
         key="term-reminder",
         action="term_reminder",
-        shows="A terminal: the reminder in the Bee's todo list, with its alarm at three the next afternoon and its sentence.",
+        shows="A terminal: the reminder in the Bee's todo list, its alarm at three the next afternoon, its sentence; caption IN THE BEE, DUE AT 3PM.",
         min_hold=9,
         say="There it is, in the Bee, for three in the afternoon, with something to do.",
     ),
     Beat(
         key="term-nudge",
         action="term_nudge",
-        shows="A terminal, labelled live Bee stream, a speaker standing in for an Echo: volley live watching the usual hour, the hour going quiet, the nudge printed and placed in the Bee. The real run.",
+        shows="A terminal labelled live Bee stream: volley live watching the usual hour, the hour going quiet, the nudge printed and placed in the Bee; its sentence held large for the rest of the beat. The real run.",
         min_hold=12,
         say=(
-            "But Volley does not only count yesterday. During the hour we usually talk most, it watches the Bee's live stream, and if that hour goes quiet, a nudge reaches the Bee right then. A speaker in the room says it, the way an Echo could. While there is still time to connect."
+            "Volley does not only count yesterday. During the hour we usually talk most, it watches the Bee's live stream. "
+            "If that hour goes quiet, the nudge reaches the Bee right then, and a speaker in the room says it, the way an Echo could. "
+            "One idea, while there is still time to connect."
         ),
     ),
     Beat(
         key="plan",
         action="plan",
-        shows="The day, an hour at a time; then the week's plan, written by Claude on Amazon Bedrock, the three lines pointed to in turn.",
+        shows="The day, an hour at a time; then the week's plan, written by Claude on Amazon Bedrock, the three lines pointed to in turn, then the gate line.",
         say=(
-            "Over a week, patterns appear: a busy evening, a quiet afternoon with the child right there. Claude on Amazon Bedrock turns them into a plan the way a home visitor would: keep the hour that works, one idea for the quiet one, one for the weekend. A gate in code refuses any number the counts did not hold."
+            "Over a week, patterns appear: a busy evening, a quiet afternoon with the child right there. "
+            "Claude on Amazon Bedrock turns them into practical coaching, the way a home visitor would: keep the hour that works, one idea for the quiet one, one for the weekend. "
+            "A gate in code refuses any number the counts did not hold."
         ),
     ),
     Beat(
         key="proof",
         action="proof",
-        shows="The evidence table: the corpus row, the Bee row, then the child-present row where two adults count as zero beside the real conversation's sixty-six.",
+        shows="Three large numbers, one at a time: 26.59 hours, 20,344 turns, 66 of 75; then the evidence row where two adults count as zero beside the real conversation's sixty-six.",
         say=(
-            "Does it hold up? On twenty-six hours of independent family recordings: twenty thousand turns, and none where one person was talking alone. On the Bee, sixty-six of seventy-five. And with the child-present check on, two adults talking with no child in the room count as zero, while a real conversation keeps all sixty-six."
+            "Does it hold up? Twenty-six hours of independent family recordings. "
+            "Twenty thousand turns counted, and none where one person spoke alone. "
+            "On the Bee, sixty-six of seventy-five: an undercount, and we publish it. "
+            "And with the child-present check on, two adults with no child in the room count as zero."
         ),
     ),
     Beat(
         key="ecosystem",
         action="alexa",
-        shows="Ask out loud: a question tapped, the tool call, the answer read aloud. Then the agents section on the evidence page, simulated Bee data labelled first.",
+        shows="Ask out loud: a question tapped, the tool call line, the answer read aloud. Then the agents section on the evidence page, simulated Bee data labelled first.",
         min_hold=15,
         say=(
-            "Parents can ask out loud. Volley's MCP server answers Alexa Plus from the counts alone; it never had a word to repeat. Two Strands agents on Bedrock, one hosted on AgentCore, explain a quiet day from the Bee's own summary. This one runs on simulated Bee data."
+            "Parents can ask out loud. Volley's MCP server lets Alexa Plus answer from the counts alone; it never had a word to repeat. "
+            "Two Strands agents explain a quiet day from the Bee's own summary, one hosted on AgentCore. This one runs on simulated Bee data."
         ),
     ),
     Beat(
@@ -162,16 +168,18 @@ BEATS: list[Beat] = [
         shows="The coach's list of families; then the install line and the cost.",
         min_hold=6,
         say=(
-            "For families with a home visitor, a read-only view carries the coaching between visits. The counter is open source on PyPI. Four cents a family a month, on a band they already wear."
+            "For families with a home visitor, a read-only view carries the coaching between visits: counts and the note, never a word of speech. "
+            "Open source on PyPI. Four cents a family a month, on a band they already wear."
         ),
     ),
     Beat(
         key="close",
         action="close",
-        shows="The first screen again, resting on the headline; the pointer hidden; the last line held.",
+        shows="The first screen, pointer hidden; then the final card: Volley, a step counter for conversations with your child, built on Bee and AWS.",
         min_hold=11,
         say=(
-            "Volley is not about counting every word. It is about making room for the conversations that matter. You already talk to your child. Now you can see it."
+            "Volley does not ask parents to talk more. It helps them notice when to connect. "
+            "Because what matters is not how many words we say. It is the conversations we share."
         ),
     ),
 ]
@@ -192,6 +200,27 @@ def sentence_spans(line: str, total: float) -> list[tuple[float, float]]:
         spans.append((at, at + dur))
         at += dur
     return spans
+
+
+def phrase_offset(line: str, total: float, text: str) -> float:
+    """Seconds into a narration line at which ``text`` is spoken.
+
+    Sentences take time in proportion to their words, and a phrase lands
+    at its word position inside its sentence, so three cues in one
+    sentence fire on their own words. Raises ValueError when the line has
+    no sentence containing the phrase: the narration changed and the cue
+    did not.
+    """
+    parts = sentences(line)
+    spans = sentence_spans(line, total)
+    idx = next((i for i, s in enumerate(parts) if text.lower() in s.lower()), None)
+    if idx is None:
+        raise ValueError(f"no sentence contains {text!r}")
+    sentence = parts[idx]
+    before = sentence.lower()[: sentence.lower().index(text.lower())]
+    frac = len(before.split()) / max(1, len(sentence.split()))
+    start, end = spans[idx]
+    return start + frac * (end - start)
 
 
 def script() -> str:

@@ -40,7 +40,7 @@ from pathlib import Path
 
 from playwright.sync_api import Page, sync_playwright
 
-from beats import BEATS, sentence_spans, sentences
+from beats import BEATS, phrase_offset
 
 HERE = Path(__file__).parent
 OUT = HERE / "build"
@@ -192,23 +192,15 @@ class Recorder:
         assert self.current is not None
         key = self.current
         line = next(b.say for b in BEATS if b.key == key)
-        spans = sentence_spans(line, self.spoken(key))
-        parts = sentences(line)
-        idx = next((i for i, s in enumerate(parts) if text.lower() in s.lower()), None)
-        if idx is None:
+        try:
+            offset = phrase_offset(line, self.spoken(key), text)
+        except ValueError:
             raise SystemExit(
                 f"beat {key!r} has no sentence containing {text!r}; "
                 "the narration changed and this action did not"
-            )
+            ) from None
         began = next(m["at"] for m in self.marks if m["key"] == key)
-        # Inside the sentence, by word position: a cue on its fourth word of
-        # twenty fires a fifth of the way through, so three gestures in one
-        # sentence land on their own words instead of all at its start.
-        sentence = parts[idx]
-        before = sentence.lower()[: sentence.lower().index(text.lower())]
-        frac = len(before.split()) / max(1, len(sentence.split()))
-        start, end = spans[idx]
-        target = began + next(b.pause_before for b in BEATS if b.key == key) + start + frac * (end - start)
+        target = began + next(b.pause_before for b in BEATS if b.key == key) + offset
         remaining = target - (time.monotonic() - self.start)
         if remaining > 0:
             self.page.wait_for_timeout(remaining * 1000)
@@ -276,34 +268,28 @@ HOOK_JS = """
 (() => {
   const k = document.createElement('div'); k.id = '__hook';
   k.style.cssText = 'position:fixed;inset:0;z-index:2147483646;background:#12151b;display:flex;align-items:center;justify-content:center;' +
-    'color:#f3f1ec;font:600 %dpx/1.1 Fraunces, Georgia, serif;letter-spacing:-0.02em;transition:opacity 700ms ease';
-  k.textContent = '30 million words';
+    'color:#f3f1ec;font:600 %dpx/1.1 Fraunces, Georgia, serif;letter-spacing:-0.02em;transition:opacity 700ms ease;text-align:center;padding:0 6%%';
+  k.textContent = 'Steps. Sleep. Heartbeats.';
   document.body.appendChild(k);
 })();
-""" % (112 * SCALE)
+""" % (150,)
 
 
 def hook(r: Recorder):
     r.page.evaluate(HOOK_JS)
     r.page.evaluate("document.getElementById('__cursor').style.opacity='0'")
     yield
-    r.on_phrase("The back-and-forth was")
+    r.on_phrase("But what about")
     r.page.evaluate("document.getElementById('__hook').style.opacity='0'")
     r.page.wait_for_timeout(750)
     r.page.evaluate("document.getElementById('__hook').remove(); document.getElementById('__cursor').style.opacity='1'")
     r.park()
-    r.point(HERO, dy=-30 * SCALE)
-    r.hold_beat()
-
-
-def what(r: Recorder):
-    yield
     r.on_phrase("Meet Volley")
-    r.point("#top .card .display", dy=0)
+    r.point(HERO, dy=-30 * SCALE)
     r.on_phrase("On the Bee you already wear")
     r.point("#top p.leading-relaxed.text-ink", dy=-20 * SCALE)
     r.on_phrase("The numbers, never the words")
-    r.point("#top .card .display", dy=60 * SCALE)
+    r.point("#top .card .display", dy=0)
     r.hold_beat()
 
 
@@ -336,14 +322,43 @@ def plan(r: Recorder):
     r.hold_beat()
 
 
+STATS = [
+    ("26.59 h", "of independent family recordings, 54 sessions"),
+    ("20,344", "turns counted, none inside a stretch where one person spoke alone"),
+    ("66 of 75", "turns found on the Bee from a replayed conversation: an undercount, published"),
+]
+STATS_JS = """
+(() => {
+  const k = document.createElement('div'); k.id = '__stats';
+  k.style.cssText = 'position:fixed;inset:0;z-index:2147483646;background:#12151b;color:#f3f1ec;display:grid;' +
+    'align-content:center;gap:%dpx;padding:0 %dpx 80px;opacity:0;transition:opacity 500ms ease';
+  k.innerHTML = %s.map(([n, l], i) =>
+    '<div class="__stat" style="opacity:0;transform:translateY(12px);transition:opacity 500ms ease,transform 500ms ease;' +
+    'display:grid;grid-template-columns:%dpx 1fr;align-items:baseline;gap:%dpx;border-top:1px solid #2a303b;padding-top:%dpx">' +
+    '<div style="font:600 %dpx/1 Fraunces, Georgia, serif;letter-spacing:-0.02em;font-variant-numeric:tabular-nums">' + n + '</div>' +
+    '<div style="font:400 %dpx/1.3 Inter, system-ui, sans-serif;color:#aeb3bd;max-width:28ch">' + l + '</div></div>').join('');
+  document.body.appendChild(k);
+  requestAnimationFrame(() => { k.style.opacity = '1'; });
+  window.__stat = i => { const el = document.querySelectorAll('.__stat')[i]; el.style.opacity = '1'; el.style.transform = 'none'; };
+})();
+""" % (24, 160, json.dumps(STATS), 560, 48, 24, 112, 32)
+
+
 def proof(r: Recorder):
     r.scroll_to(EVIDENCE, rest=URL_BAR_HEIGHT + 100 * SCALE)
+    r.page.evaluate("document.getElementById('__cursor').style.opacity='0'")
+    r.page.evaluate(STATS_JS)
     yield
-    r.on_phrase("Does it hold up")
-    r.point("#evidence li.ev-row:nth-of-type(1)")
+    r.on_phrase("Twenty-six hours")
+    r.page.evaluate("window.__stat(0)")
+    r.on_phrase("Twenty thousand turns")
+    r.page.evaluate("window.__stat(1)")
     r.on_phrase("On the Bee")
-    r.point("#evidence li.ev-row:nth-of-type(3)")
+    r.page.evaluate("window.__stat(2)")
     r.on_phrase("child-present check")
+    r.page.evaluate("document.getElementById('__stats').style.opacity='0'")
+    r.page.wait_for_timeout(550)
+    r.page.evaluate("document.getElementById('__stats').remove(); document.getElementById('__cursor').style.opacity='1'")
     r.scroll_to("#evidence li.ev-row:nth-of-type(5)", rest=URL_BAR_HEIGHT + 200 * SCALE)
     r.point("#evidence li.ev-row:nth-of-type(5)")
     r.hold_beat()
@@ -356,13 +371,15 @@ def alexa(r: Recorder):
     r.scroll_to(ASK, rest=URL_BAR_HEIGHT + 520 * SCALE)
     r.click(ASK)
     r.page.wait_for_selector("#alexa dd:has-text('On the simulated family')", timeout=30_000)
+    r.point("#alexa dd:has-text('tools/call')")
+    r.on_phrase("never had a word")
     r.point("#alexa dd:has-text('On the simulated family')")
     r.on_phrase("Two Strands agents")
     r.page.goto(SITE_EVIDENCE, wait_until="networkidle", timeout=90_000)
     r.page.wait_for_selector(AGENTS, timeout=60_000)
     r.scroll_to(AGENTS, rest=URL_BAR_HEIGHT + 120 * SCALE)
     r.point("#agents p:has-text('Simulated Bee')")
-    r.on_phrase("simulated Bee data")
+    r.on_phrase("one hosted on AgentCore")
     r.point("#agents blockquote:has-text('quietest')")
     r.hold_beat()
 
@@ -374,7 +391,7 @@ def beyond(r: Recorder):
     yield
     r.on_phrase("For families with a home visitor")
     r.point(f"{COACH_LIST} li:first-child", dy=-10 * SCALE)
-    r.on_phrase("open source")
+    r.on_phrase("Open source on PyPI")
     r.page.goto(SITE, wait_until="networkidle", timeout=90_000)
     r.page.wait_for_selector(YOURS, timeout=60_000)
     r.scroll_to(YOURS, rest=URL_BAR_HEIGHT + 120 * SCALE)
@@ -382,15 +399,31 @@ def beyond(r: Recorder):
     r.hold_beat()
 
 
+CLOSE_JS = """
+(() => {
+  const k = document.createElement('div'); k.id = '__close';
+  k.style.cssText = 'position:fixed;inset:0;z-index:2147483646;background:#12151b;color:#f3f1ec;display:flex;flex-direction:column;' +
+    'align-items:center;justify-content:center;text-align:center;padding:0 8%%;opacity:0;transition:opacity 900ms ease';
+  k.innerHTML = '<div style="font:600 %dpx/1 Fraunces, Georgia, serif;letter-spacing:-0.02em">Volley</div>' +
+    '<div style="font:400 %dpx/1.3 Fraunces, Georgia, serif;margin-top:%dpx;max-width:24ch">A step counter for conversations with your child.</div>' +
+    '<div style="font:500 %dpx/1.3 Inter, system-ui, sans-serif;color:#aeb3bd;margin-top:%dpx;letter-spacing:0.08em;text-transform:uppercase">Built on Bee and AWS</div>';
+  document.body.appendChild(k);
+  requestAnimationFrame(() => { k.style.opacity = '1'; });
+})();
+""" % (160, 52, 36, 22, 64)
+
+
 def close(r: Recorder):
     r.page.evaluate("window.scrollTo({top: 0, behavior: 'instant'})")
     r.page.wait_for_timeout(300)
     r.page.evaluate("document.getElementById('__cursor').style.opacity='0'")
     yield
+    r.on_phrase("Because what matters")
+    r.page.evaluate(CLOSE_JS)
     r.hold_beat()
 
 
-ACTIONS = {f.__name__: f for f in (hook, what, how, plan, proof, alexa, beyond, close)}
+ACTIONS = {f.__name__: f for f in (hook, how, plan, proof, alexa, beyond, close)}
 
 
 def assert_full_frame(path: Path) -> None:
@@ -461,7 +494,9 @@ def main() -> int:
     # Marks were taken on the clock; the file runs on its own time. The
     # clap is the one event seen by both.
     offset = find_clap(dest) - clap_clock
-    if not 0.0 <= offset <= 6.0:
+    # The offset is the first page's load before the clap; a slow CloudFront
+    # morning has reached seven seconds. Beyond twelve the clap was misread.
+    if not 0.0 <= offset <= 12.0:
         raise SystemExit(f"the picture is offset {offset:.2f}s from the clock, which is not credible")
     for m in r.marks:
         m["at"] = round(m["at"] + offset, 3)
