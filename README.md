@@ -2,80 +2,97 @@
 
 **A step counter for conversations with your child.**
 
-**Judging this?** [docs/FOR_JUDGES.md](docs/FOR_JUDGES.md) maps every Rules.md requirement and judging criterion to the file, command or link that proves it.
+The Bee on a parent's wrist already hears the day. Volley counts the back-and-forth exchanges between the parent and the child, keeps the counts, throws the words away on the parent's own computer, and puts one thing to try tomorrow into the Bee as a reminder. During the hour the family usually talks most, it watches the Bee's live stream and sends a nudge the moment that hour goes quiet.
 
-The Bee on a parent's wrist already hears the day. Volley counts the
-back-and-forth exchanges between the parent and the child, keeps the
-counts, throws the words away on the parent's own machine, and says one
-thing to try tomorrow. The number it counts is the most validated one in
-early childhood; the only instrument that measures it has never been
-sold to a parent.
+- Site: https://da78ygi6ol1oi.cloudfront.net
+- API and MCP server: https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws (interactive docs at `/v1/docs`, MCP at `/mcp`)
+- Open source counter on PyPI: https://pypi.org/project/serve-return/
+- For judges: [docs/FOR_JUDGES.md](docs/FOR_JUDGES.md) maps every rule and criterion to the file or link that shows it.
 
-Status: built during the hackathon window against the plan in `docs/`,
-which was written first so the build is judged against it; first
-running end to end on 2026-09-29, and extended since (see the commits). The API and MCP server
-are live at https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws (interactive docs at `/v1/docs`) and the site at https://da78ygi6ol1oi.cloudfront.net.
-The rule has run on 26.59 hours of public parent-child recordings
-(the CHILDES Gleason corpus, 2026-09-30): 20,344 turns from the
-human speaker labels, zero in any stretch where one person spoke alone.
-What is not measured says so on the site in the same type size as
-the numbers.
+Track: Bee, with Alexa+ through an MCP server and an Agent Skill. Mini challenges: AWS Builder, Open Source.
 
-**No speaker labels, no problem, measured.** The Bee labels every speaker
-"Unknown" (30,134 of 30,134 utterances on this account,
-`harness/bee/unknown_tally.json`). `volley setup
---blind` reads who is the child and who the adult from the words and
-the pauses instead, with `serve_return.blind`, trained on CHILDES. On
-families it never saw: the day's turn count within 9.6 percent of the
-true count in the median session (49 of 54 sessions within 20
-percent, +1.6 percent in total), turns per hour correlated with the
-truth at 0.874. The fairest baseline, every line a new speaker scaled
-the same way, matches the total and is worse per session (13.4 percent)
-and per hour (0.766); a pause-only count misses 87.3 percent, but this
-corpus's alignment zeroes most pauses, so that one is a weak baseline. The
-raw blind count runs low by a steady 11 to 15 percent because misread
-roles merge exchanges; a scale learned only from other families corrects
-it. Every
-session is in `harness/blind/results.json`; `python harness/blind/run.py`
-reproduces it.
+## What it does
 
-**On the Bee itself, no person in the room.** A real CHILDES mother-child conversation, voiced by Amazon Polly with an adult and a child voice at its original timing, played to the band for 190 seconds: the Bee wrote 124 utterances for 125 played and kept 75 of 75 turns, so its segmentation loses none. Volley's blind count with a model and scale that never saw this family: 66 (-12.0 percent; 58 before the scale), 76.6 percent of lines given the right speaker. A second family at dinner, three voices, 290 seconds, played on 2026-10-22: 62 of 96 turns with no labels (`harness/beeloop/dinner.json`). On 2026-10-22 `volley live --nudge --say` ran for real: watching the usual hour, it spoke the nudge in the room at 15:20 and placed it in the Bee (`harness/live/nudge-2026-10-22.json`). `harness/beeloop` reproduces the playback. 158 tests.
+- **Counts turns.** A parent speaks, the child answers inside five seconds, or the other way round: that is one turn. The rule is the one the research uses.
+- **Keeps the numbers, never the words.** `volley today` reads the Bee's transcript on the parent's computer, counts, and drops the words. The only files written hold counts.
+- **Reads who is talking.** The Bee labels every speaker "Unknown", so Volley reads the roles from the words and the pauses with a small model trained on a public corpus.
+- **Places one thing to try tomorrow into the Bee** as a reminder set for the family's best hour.
+- **Nudges in the moment.** `volley live --nudge --say` watches the live stream during the usual best hour; if it is twenty minutes in and quiet, one sentence goes into the Bee and a speaker in the room says it, the way an Echo could.
+- **Answers out loud.** An MCP server lets Alexa+ answer "How was our talking today?" from the counts alone. Two Strands agents, one hosted on Amazon Bedrock AgentCore, explain a quiet day. Claude on Amazon Bedrock writes the week's plan behind a gate that refuses any number the counts did not hold.
+- **Carries coaching between visits.** A read-only share link shows a home visitor the days, the week and the note, and nothing else.
 
-| Document | What it answers |
-|---|---|
-| [docs/FOR_JUDGES.md](docs/FOR_JUDGES.md) | **Start here.** Every Rules.md requirement and judging criterion, with the file or link that proves it |
-| [docs/DESIGN.md](docs/DESIGN.md) | The technical design: packages, the turn rule, privacy by construction, API, MCP, AWS, tests as claims |
-| [docs/SITE.md](docs/SITE.md) | The landing page and product surface: every section, its copy outline, the i-buttons, light and dark, mobile and desktop, the first-time-visitor path |
-| [docs/EVIDENCE.md](docs/EVIDENCE.md) | The science, what each number is and is not, and how the site is allowed to say it |
-| [docs/PRIOR_ART.md](docs/PRIOR_ART.md) | Who has done what, named before a judge has to find it |
-| [docs/HONESTY.md](docs/HONESTY.md) | Privacy, consent, what it never does, the limits, and the kill criteria |
-| [docs/planning/](docs/planning/) | The pre-build plan, gates and audits, kept as a record; superseded by FOR_JUDGES.md |
-| [docs/AGENT.md](docs/AGENT.md) | The two Strands agents over the MCP server, their gate, and two real runs |
+## Why it matters
 
-Track: Bee (primary), Alexa+ (an Agent Skill backed by an MCP server).
-Mini challenges: AWS Builder, Open Source (`serve-return`, MIT, on PyPI: `pip install serve-return`, https://pypi.org/project/serve-return/).
+The number of adult-child conversational turns a child takes part in predicts language and brain outcomes better than the number of words heard [1, 2, 3], and coaching parents to raise that number works [4, 5, 6]. The instrument researchers use to count it is sold to clinics and programmes, not to parents. Volley counts it on a band a parent already wears, for about four cents a family a month (`docs/cost.json`).
 
-Sibling projects in this hackathon, each with its own repository and
-docs: Earshot (Fire TV, hearing in noise), Bellwether (Bee, speech as a
-vital sign), EveryWord (Fire TV), Nightlight (Ring). Volley reuses
-Bellwether's Bee client, server, stack and video pipeline; it shares no
-claim with it. Bellwether follows one adult's own speech over months;
-Volley counts the exchanges between a parent and a child, today.
+## Architecture
+
+```mermaid
+flowchart LR
+    Bee[Bee band and app] -->|Bee CLI: transcript, live stream| Ingest[volley, on the parent's computer]
+    Ingest -->|counts only| Local[(counts, local JSON)]
+    Ingest -->|bee todos create| Bee
+    Ingest -->|nudge spoken| Speaker[Amazon Polly, a speaker in the room]
+    Ingest -->|POST counts| API[API on AWS Lambda, DynamoDB]
+    API --> Site[Site on CloudFront: your day, the week, a coach's view]
+    API --> MCP[MCP server, Streamable HTTP]
+    MCP --> Alexa[Alexa+ and the Agent Skill]
+    MCP --> Coach[Strands Coach agent, hosted on Amazon Bedrock AgentCore]
+    API --> Bedrock[Claude on Amazon Bedrock: tomorrow's note, the week's plan, behind a number gate]
+    Tuesday[Strands Tuesday agent, on the parent's computer] --> MCP
+    Tuesday -->|daily summary only| BeeMCP[Bee's own MCP server]
+```
+
+Every box is in the code: `apps/ingest` (the command line and the live watcher), `packages/serve-return` (the turn rule and the role model), `apps/server` (API, MCP server, Bedrock), `apps/agent` (the two Strands agents), `apps/agentcore` (the hosted Coach), `apps/web` (the site), `infra` (AWS CDK).
+
+## What is real and what is simulated
+
+- **Real Bee, replayed conversation.** The on-device numbers come from a real recorded parent-child conversation from a public research corpus, voiced by Amazon Polly with an adult and a child voice at its original timing, played to the builder's own Bee. No person was recorded.
+- **Real live run.** The nudge ran on the builder's Bee on 2026-10-22, watching the usual hour on the live stream; it fired at 15:20 and the reminder landed in the Bee (`harness/live/nudge-2026-10-22.json`, times and counts only).
+- **Simulated family on the site.** The public site shows a generated family, labelled as simulated on every card. A parent's own day appears on their own page after `volley connect`.
+- **Simulated Bee for the Tuesday agent's public run.** The agents section on the evidence page says so in its first line.
+
+## Evidence
+
+Every number below is read from a committed result file; the site reads the same files.
+
+| What | Result | File |
+|---|---|---|
+| Public corpus, human speaker labels | 54 sessions, 26.59 hours, 20,344 reference turns, 0 turns inside the 34 stretches where one person spoke alone | `harness/childes/results.json` |
+| Without speaker labels, families the model never saw | median session error 9.6 percent, 49 of 54 sessions within 20 percent, turns per hour correlated with the truth at 0.874 | `harness/blind/results.json` |
+| On the Bee, a replayed conversation, 190 seconds | the Bee wrote 124 lines for 125 played; with the true speakers it kept 75 of 75 turns; Volley with no labels found 66 | `harness/beeloop/results.json` |
+| A second family at dinner, three voices, 290 seconds | the Bee wrote 152 lines for 166 played, 88 of 96 turns with the true speakers; Volley with no labels found 62 | `harness/beeloop/dinner.json` |
+| Two adults, no child, with the child-present check on | 21 false turns to 0, one adult voice 14 to 0, and 66 of 66 real turns kept | `harness/beeloop/controls.json`, `harness/beeloop/with_child.json` |
+| The nudge, live | watched 15:00 for 38 minutes, fired at 15:20, placed in the Bee, 0 words kept | `harness/live/nudge-2026-10-22.json` |
+| Speaker labels on this Bee account | 30,134 of 30,134 lines labelled Unknown, which is why the roles are read from the words | `harness/bee/unknown_tally.json` |
+| Cost | 4.4 cents a family a month, AWS Price List, us-east-1 | `docs/cost.json` |
+
+`python harness/childes/run.py`, `python harness/blind/run.py` and `python harness/beeloop/score.py` reproduce them. [docs/EVIDENCE.md](docs/EVIDENCE.md) says what each number is and how the site is allowed to say it. The product path on the Bee, command by command, is in [docs/BEE_DAY.md](docs/BEE_DAY.md).
+
+## Research
+
+Full list with every PMID and DOI, checked by a test: `docs/citations.json`.
+
+1. Gilkerson J et al. Language Experience in the Second Year of Life and Language Outcomes in Late Childhood. Pediatrics 2018. PMID 30201624.
+2. Romeo RR et al. Beyond the 30-Million-Word Gap: Children's Conversational Exposure Is Associated With Language-Related Brain Function. Psychological Science 2018. PMID 29442613.
+3. Romeo RR et al. Language Exposure Relates to Structural Neural Connectivity in Childhood. Journal of Neuroscience 2018. PMID 30104336.
+4. Romeo RR et al. Neuroplasticity associated with changes in conversational turn-taking following a family-based intervention. Developmental Cognitive Neuroscience 2021. PMID 34052580.
+5. Ferjan Ramirez N et al. Parent coaching increases conversational turns and advances infant language development. PNAS 2020. PMID 32015127.
+6. Leung CYY et al. Enriching home language environment among families from low-SES backgrounds: A randomized controlled trial of a home visiting curriculum. Early Childhood Research Quarterly 2020. DOI 10.1016/j.ecresq.2018.12.005.
+7. Ferjan Ramirez N et al. Comparing Automatic and Manual Measures of Parent-Infant Conversational Turns: A Word of Caution. Child Development 2021. DOI 10.1111/cdev.13495.
+8. Gleason JB. CHILDES Gleason corpus. DOI 10.21415/T5101R, used under the TalkBank ground rules; transcripts never leave the builder's machine.
 
 ## Run it
+
+No AWS account and no Bee are needed for this.
 
 ```
 python -m venv .venv && . .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -e "packages/serve-return[dev]" -e "apps/ingest[dev]" -e "apps/server[dev]" -e "apps/agent[dev]"
-python -m pytest packages apps harness -q          # 158 tests, the same two lines CI runs
-cd apps/web && npm ci && npm test && npm run dev   # the site, on localhost:3000
+cd apps/web && npm ci && npm run dev              # the site, on localhost:3000
 ```
 
-No AWS account and no Bee are needed for any of that.
-
 ### If you own a Bee
-
-No clone. Three lines, checked in a fresh environment:
 
 ```
 pip install serve-return "volley-bee @ git+https://github.com/usv240/volley#subdirectory=apps/ingest"
@@ -83,34 +100,45 @@ volley setup --blind         # the Bee labels every speaker Unknown; Volley read
 volley today                 # count since the last run, throw the words away, remind tomorrow
 ```
 
-`volley setup --daily 20:30` counts every evening without typing, using
-the computer's own scheduler; `--only-with-child yes` sets aside stretches
-with no child's voice, so evenings with other adults do not count (measured
-in harness/beeloop/with_child.py). `volley connect` gives your counts a page of your own; `volley today
---conversation <id>` counts one session and reads nothing else.
-`volley share` makes a read-only link for whoever coaches your family,
-a home visitor for instance: it shows the days, the week and the note at
-`/coach`, cannot post, share or delete, and `volley share --revoke` ends
-it. The same button is on your own page.
+Also: `volley setup --daily 20:30` counts every evening on its own; `volley setup --only-with-child yes` sets aside stretches with no child's voice; `volley live --nudge --say` watches the usual hour and nudges; `volley connect` gives your counts a page of your own; `volley share` makes the read-only link for whoever coaches your family. To let your own assistant use the counts: `npx skills add usv240/volley`.
 
-To let your own assistant answer questions about the counts, add the
-Agent Skill the same way Bee's own skill is added:
-`npx skills add usv240/volley`.
+## Tests
 
-## Built with
+```
+.venv\Scripts\python.exe -m pytest -q apps/agent/tests apps/ingest/tests apps/server/tests packages/serve-return/tests harness/childes
+cd apps/web && npx vitest run
+```
 
-Every tool this project uses, and the file that uses it.
+158 Python tests and 36 web tests pass. Among them: every Bee CLI argument is pinned; the Agent Skill is pinned to the MCP server's tools; the citations resolve; the public text matches the measured numbers; the note gate refuses numbers the rules did not choose.
+
+## AWS and tools used
 
 | Tool | What it does here | Where |
 |---|---|---|
-| Bee CLI | conversations, changes, the live stream, and tomorrow's reminder written back into the Bee | [`apps/ingest/volley_ingest/bee.py`](apps/ingest/volley_ingest/bee.py) |
-| Bee's own MCP server | the Tuesday agent holds it beside Volley's, behind a four-tool allow-list | [`apps/agent/volley_agent/tuesday.py`](apps/agent/volley_agent/tuesday.py) |
-| MCP server, spec 2025-11-25, Streamable HTTP | the Alexa+ surface: seven tools, signed sessions, conformance-probed live | [`apps/server/volley_server/mcp.py`](apps/server/volley_server/mcp.py) |
-| Agent Skill | tells an agent how to use the seven tools; a test pins it to the server | [`skills/volley/SKILL.md`](skills/volley/SKILL.md) |
-| Amazon Bedrock (Claude) | phrases tomorrow's one thing behind a gate that refuses any number the rules did not choose | [`apps/server/volley_server/bedrock.py`](apps/server/volley_server/bedrock.py) |
-| Strands Agents SDK | the Coach and the Tuesday agent, both behind the same number gate | [`apps/agent/volley_agent`](apps/agent/volley_agent) |
-| Amazon Bedrock AgentCore Runtime | hosts the Coach as an invocable endpoint | [`apps/agentcore`](apps/agentcore) |
-| Amazon Polly | voices a real CHILDES conversation, adult and child, for the on-device test | [`harness/beeloop/make.py`](harness/beeloop/make.py) |
-| Amazon DynamoDB, AWS Lambda, Amazon S3, Amazon CloudFront, AWS CDK | households and counts, the service, the site, one deploy | [`infra/bin/app.ts`](infra/bin/app.ts) |
-| CHILDES (TalkBank) | the corpus the count and the role model are measured on | [`harness/childes/run.py`](harness/childes/run.py) |
+| Bee CLI | transcripts, the live stream, and the reminder written back into the Bee | `apps/ingest/volley_ingest/bee.py` |
+| Bee's own MCP server | the Tuesday agent reads the day's summary through it, behind a four-tool allow-list | `apps/agent/volley_agent/tuesday.py` |
+| MCP server, spec 2025-11-25, Streamable HTTP | the Alexa+ surface: seven tools, signed sessions | `apps/server/volley_server/mcp.py` |
+| Agent Skill | how an assistant uses the seven tools; a test pins it to the server | `skills/volley/SKILL.md` |
+| Amazon Bedrock (Claude) | tomorrow's note and the week's plan, behind the number gate | `apps/server/volley_server/bedrock.py`, `plan.py` |
+| Strands Agents | the Coach and the Tuesday agent | `apps/agent/volley_agent` |
+| Amazon Bedrock AgentCore | hosts the Coach as an invocable endpoint | `apps/agentcore` |
+| Amazon Polly | voices the replayed conversation for the on-device test, and says the nudge in the room | `harness/beeloop/make.py`, `apps/ingest/volley_ingest/nudge.py` |
+| AWS Lambda, Amazon DynamoDB, Amazon S3, Amazon CloudFront, AWS CDK | the service, the households, the site, one deploy | `infra/bin/app.ts` |
 
+[docs/AWS.md](docs/AWS.md) has the deploy steps and the cost model. [PRODUCT_FEEDBACK.md](PRODUCT_FEEDBACK.md) is the feedback on the Bee and the AWS tools, with the feature requests that would make Volley simpler.
+
+## Privacy
+
+- The parent wears the band. The child wears nothing.
+- Words are read on the parent's computer and dropped; counts are the only thing written or posted. A test runs the command and checks that no text is written.
+- The parent's own page reads counts with a key that travels in a link fragment, which browsers never send to a server.
+- The coach's link is read-only; it can show counts and the note and cannot post, share or delete.
+- The Tuesday agent sees the Bee's own daily summary and nothing else; transcript, search, photo and location tools are never offered to it.
+
+[docs/HONESTY.md](docs/HONESTY.md) has the full privacy and consent account.
+
+## Licence
+
+Code: MIT. The role model file (`packages/serve-return/serve_return/models/NOTICE.md`) is trained on the CHILDES Gleason corpus and ships under CC BY-NC-SA 3.0.
+
+Sibling entries in this hackathon, each its own repository: Bellwether (Bee), Earshot and EveryWord (Fire TV), Nightlight (Ring).

@@ -314,7 +314,7 @@ site; a test checks it.
 volley/
   README.md
   LICENSE                     MIT
-  docs/                       design, evidence, honesty; planning/ is the pre-build record
+  docs/                       design, evidence, honesty
   packages/serve-return/      the counter and the role model
   apps/ingest/                the Bee client and the volley command
   apps/coach/                 the one thing for tomorrow

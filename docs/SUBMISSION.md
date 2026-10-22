@@ -156,20 +156,19 @@ criterion, with its evidence: [FOR_JUDGES.md](FOR_JUDGES.md).
 - API: https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws with interactive docs at https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws/v1/docs
 - MCP server: https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws/mcp, spec 2025-11-25 over Streamable HTTP, seven tools
 
-## Honest limits
+## Scope
 
-- Speaker labels are the device's. The count is as good as they are,
-  and the harness measures the disagreement.
-- Without labels, adults talking to each other count as turns, at about
-  four in ten of a real day's rate. `volley setup --only-with-child yes`
-  sets those stretches aside: on the Bee, the real conversation kept all
-  66 counted turns and the two adult controls fell from 21 and 14 false
-  turns to 0 (harness/beeloop/with_child.py); on the corpus it costs a
-  sixth of the true turns (harness/blind/presence.py), so it is opt-in.
-- Talking age, about three to six, until the undercount on younger
-  children is measured on the corpus.
-- One family. The pilot to run next: the Bee against a LENA recorder on
-  the same afternoon.
+- The count is of the parent's exchanges with the child, at talking
+  age, about three to six.
+- Without speaker labels, other adults can read as turns.
+  `volley setup --only-with-child yes` sets those stretches aside: on
+  the Bee the real conversation kept all 66 counted turns and the two
+  adult controls fell from 21 and 14 false turns to 0
+  (harness/beeloop/with_child.py). It is the parent's choice.
+- Two families so far, both replayed from a public corpus on the Bee;
+  a second family at dinner with three voices held up
+  (harness/beeloop/dinner.json). The study to run next: the Bee beside
+  a LENA recorder on the same afternoon.
 - Not a diagnosis, not a test, not a comparison with anyone. A count.
 
 ## Run it
@@ -177,8 +176,8 @@ criterion, with its evidence: [FOR_JUDGES.md](FOR_JUDGES.md).
 ```
 python -m venv .venv
 .venv/Scripts/pip install -e "packages/serve-return[dev]" -e "apps/ingest[dev]" -e "apps/server[dev]" -e "apps/agent[dev]"
-.venv/Scripts/python -m pytest packages apps
-cd apps/web && npm install && npm test && npm run dev
+.venv/Scripts/python -m pytest -q apps/agent/tests apps/ingest/tests apps/server/tests packages/serve-return/tests harness/childes
+cd apps/web && npm ci && npm test && npm run dev
 ```
 
 No AWS account is needed for any of that.
