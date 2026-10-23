@@ -4,6 +4,7 @@
 
 The Bee on a parent's wrist already hears the day. Volley counts the back-and-forth exchanges between the parent and the child, keeps the counts, throws the words away on the parent's own computer, and puts one thing to try tomorrow into the Bee as a reminder. During the hour the family usually talks most, it watches the Bee's live stream and sends a nudge the moment that hour goes quiet.
 
+- Demo video (2:56): https://youtu.be/yyk436YlJcY
 - Site: https://da78ygi6ol1oi.cloudfront.net
 - API and MCP server: https://6gm5fp5kuipgvjgr5zmhghq63u0hmmvd.lambda-url.us-east-1.on.aws (interactive docs at `/v1/docs`, MCP at `/mcp`)
 - Open source counter on PyPI: https://pypi.org/project/serve-return/
