@@ -23,6 +23,10 @@ SHOTS = [
     ("3-ask-out-loud.png", "/", "text=By voice, in this browser", "Ask out loud: the live MCP answer, read aloud"),
     ("4-measured.png", "/", "#evidence", "Every result and its verdict, the opt-in check included"),
     ("5-families-you-follow.png", "/coach/", None, "The coach's view of the families who shared"),
+    ("6-how-it-counts.png", "/", "#how", "How it counts: a reply inside five seconds is one turn"),
+    ("7-the-weeks-plan.png", "/", "#day section:has(h3:has-text('plan'))", "The week's plan, written by Claude on Amazon Bedrock behind the number gate"),
+    ("8-two-agents.png", "/evidence/", "#agents", "Two Strands agents that may only say what a tool returned"),
+    ("9-your-own-day.png", "/", "#yours", "Your own day in ten minutes: six steps with a Bee"),
 ]
 
 
@@ -41,6 +45,11 @@ def main() -> int:
                 box = el.bounding_box()
                 page.evaluate("y => window.scrollBy(0, y - 90)", box["y"] if box else 0)
                 page.wait_for_timeout(500)
+            if name.startswith("6-"):
+                play = page.locator("#how button", has_text="Play").first
+                if play.count():
+                    play.click()
+                    page.wait_for_timeout(9000)
             if name.startswith("3-"):
                 chip = page.locator("button", has_text="How was our talking today?").first
                 if chip.count():
