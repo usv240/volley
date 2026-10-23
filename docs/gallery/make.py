@@ -24,7 +24,7 @@ SHOTS = [
     ("4-measured.png", "/", "#evidence", "Every result and its verdict, the opt-in check included"),
     ("5-families-you-follow.png", "/coach/", None, "The coach's view of the families who shared"),
     ("6-how-it-counts.png", "/", "#how", "How it counts: a reply inside five seconds is one turn"),
-    ("7-the-weeks-plan.png", "/", "#day section:has(h3:has-text('plan'))", "The week's plan, written by Claude on Amazon Bedrock behind the number gate"),
+    ("7-the-weeks-plan.png", "/", "text=This week's plan", "The week's plan, written by Claude on Amazon Bedrock behind the number gate"),
     ("8-two-agents.png", "/evidence/", "#agents", "Two Strands agents that may only say what a tool returned"),
     ("9-your-own-day.png", "/", "#yours", "Your own day in ten minutes: six steps with a Bee"),
 ]
